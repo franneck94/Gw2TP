@@ -75,7 +75,9 @@ async def on_message(
         return
 
     if message.content.startswith(f"{COMMAND_PREFIX} help"):
-        help_message = "Available commands:\n" + f"/{COMMAND_PREFIX} \n".join(COMMANDS_LIST)
+        help_message = "Available commands:\n" + "".join(
+            [f"{COMMAND_PREFIX} {cmd}\n" for cmd in COMMANDS_LIST]
+        )
         await message.channel.send(help_message)
         return
 
