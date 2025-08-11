@@ -1,0 +1,12 @@
+requests
+pandas
+beautifulsoup4
+ruff
+pydantic
+isort
+fastapi
+uvicorn
+httpx
+flask
+aiohttp
+discord.py
