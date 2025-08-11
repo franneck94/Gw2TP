@@ -3,7 +3,6 @@ from typing import Any
 
 import aiohttp
 import discord
-from discord import app_commands
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
@@ -21,26 +20,15 @@ def is_running_on_railway():
     return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
 
 
-class MyClient(discord.Client):
-    def __init__(self, *, intents: discord.Intents):
-        super().__init__(intents=intents)
-        self.tree = app_commands.CommandTree(self)
-
-    async def setup_hook(self):
-        await self.tree.sync()
-
-
-uses_server = is_running_on_railway()
 intents = discord.Intents.default()
 intents.message_content = True
+client = discord.Client(intents=intents)
+uses_server = is_running_on_railway()
 port = int(os.environ.get("PORT", 8000))
 if uses_server:
     api_base = "https://gw2tp-production.up.railway.app/api/"
 else:
     api_base = "http://127.0.0.1:8000/api/"
-intents = discord.Intents.default()
-intents.message_content = True
-client = MyClient(intents=intents)
 
 COMMANDS_LIST = [
     "gear_salvage",
@@ -51,21 +39,6 @@ COMMANDS_LIST = [
     "get_price",
 ]
 
-async def gw2tp_autocomplete(interaction: discord.Interaction, current: str):
-    return [
-        app_commands.Choice(name=cmd, value=cmd)
-        for cmd in COMMANDS_LIST
-        if current.lower() in cmd
-    ]
-
-@app_commands.command(name="gw2tp", description="GW2TP commands")
-@app_commands.describe(command="Command to run")
-@app_commands.autocomplete(command=gw2tp_autocomplete)
-async def gw2tp(interaction: discord.Interaction, command: str):
-    await interaction.response.send_message(f"Selected command: {command}")
-
-
-client.tree.add_command(gw2tp)
 
 def create_price_embed(
     data: dict[str, float],
@@ -102,7 +75,7 @@ async def on_message(
         return
 
     if message.content.startswith(f"{COMMAND_PREFIX} help"):
-        help_message = "Available commands:\n" + "\n".join(COMMANDS_LIST)
+        help_message = "Available commands:\n" + f"/{COMMAND_PREFIX} \n".join(COMMANDS_LIST)
         await message.channel.send(help_message)
         return
 
@@ -126,7 +99,9 @@ async def on_message(
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
     else:
-        await message.channel.send("Unknown command. Use `/gw2tp help` for a list of commands.")
+        await message.channel.send(
+            "Unknown command. Use `/gw2tp help` for a list of commands."
+        )
         return
 
     async with aiohttp.ClientSession() as session:
