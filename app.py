@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any, Dict, Tuple
 
 import httpx
@@ -13,22 +14,45 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
 from html_template import HTML_PAGE
-from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
-                   CHARM_OF_POTENCE_ID, CHARM_OF_SKILL_ID, ECTO_ITEM_ID,
-                   ELABORATE_TOTEM_ID, ELDER_WOOD_ID, ELDER_WOOD_LOG_ID,
-                   ELDER_WOOD_PLANK_ID, GOSSAMER_SCRAP_ID, HARDENED_LEATHER_ID,
-                   INTRICATE_TOTEM_ID, LARGE_BONE_ID, LARGE_CLAW_ID,
-                   LARGE_FANG_ID, LUCENT_MOTE_ID, MIRTHIL_ID, MITHRIL_INGOT_ID,
-                   MITHRIL_ORE_ID, ORICHALCUM_ID, PILE_OF_LUCENT_CRYSTAL_ID,
-                   POTENT_BLOOD_ID, RARE_UNID_ITEM_ID, RELIC_OF_FIREWORKS_ID,
-                   SCHOLAR_RUNE_ID, SILK_SCRAP_ID, SYMBOL_OF_CONTROL_ID,
-                   SYMBOL_OF_ENH_ID, SYMBOL_OF_PAIN_ID, THICK_LEATHER_ID,
-                   UNID_ITEM_ID)
+from items import (
+    ANCIENT_WOOD_ID,
+    CHARM_OF_BRILLIANCE_ID,
+    CHARM_OF_POTENCE_ID,
+    CHARM_OF_SKILL_ID,
+    ECTO_ITEM_ID,
+    ELABORATE_TOTEM_ID,
+    ELDER_WOOD_ID,
+    ELDER_WOOD_LOG_ID,
+    ELDER_WOOD_PLANK_ID,
+    GOSSAMER_SCRAP_ID,
+    HARDENED_LEATHER_ID,
+    INTRICATE_TOTEM_ID,
+    LARGE_BONE_ID,
+    LARGE_CLAW_ID,
+    LARGE_FANG_ID,
+    LUCENT_MOTE_ID,
+    MIRTHIL_ID,
+    MITHRIL_INGOT_ID,
+    MITHRIL_ORE_ID,
+    ORICHALCUM_ID,
+    PILE_OF_LUCENT_CRYSTAL_ID,
+    POTENT_BLOOD_ID,
+    RARE_UNID_ITEM_ID,
+    RELIC_OF_FIREWORKS_ID,
+    SCHOLAR_RUNE_ID,
+    SILK_SCRAP_ID,
+    SYMBOL_OF_CONTROL_ID,
+    SYMBOL_OF_ENH_ID,
+    SYMBOL_OF_PAIN_ID,
+    THICK_LEATHER_ID,
+    UNID_ITEM_ID,
+)
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
+port = int(os.environ.get("PORT", 8000))
 
 
 def copper_to_gsc(
@@ -451,7 +475,7 @@ app = Starlette(
 if __name__ == "__main__":
     uvicorn.run(
         "flask_fastapi_shared:app",
-        host="127.0.0.1",
-        port=8000,
+        host="0.0.0.0",
+        port=port,
         reload=True,
     )
