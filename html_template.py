@@ -137,6 +137,14 @@ STYLE = """
     th { background-color: #1f1f1f; color: #fff; }
     button { padding: 8px 12px; font-size: 14px; cursor: pointer; background-color: #333; color: #fff; border: 1px solid #555; }
     button:hover { background-color: #444; }
+    #fetch-popup {
+            display: none;
+            position: fixed;
+    }
+    #fetch-popup.show {
+        display: block;
+        opacity: 1;
+    }
 </style>
 """
 
@@ -220,7 +228,7 @@ for (const [key, value] of Object.entries(data)) {
 
 SCRIPT = f"""
 <script>
-    async function fetchPrices() {{
+    async function _fetchPrices() {{
         await Promise.all([
             (async () => {{ {get_fetch_price_html(RARE_UNID_ITEM_ID)} }})(),
             (async () => {{ {get_fetch_price_html(ECTO_ITEM_ID)} }})(),
@@ -230,6 +238,21 @@ SCRIPT = f"""
             (async () => {{ {get_fireworks_html()} }})(),
             (async () => {{ {get_rare_gear_craft_html()} }})(),
         ]);
+    }}
+
+
+    function showFetchPopup() {{
+        const popup = document.getElementById('fetch-popup');
+        popup.classList.add('show');
+        setTimeout(() => {{
+            popup.classList.remove('show');
+        }}, 1000);
+        console.log("Prices fetched and updated.");
+    }}
+
+    async function fetchPrices() {{
+        await _fetchPrices();
+        showFetchPopup();
     }}
 
     window.addEventListener('DOMContentLoaded', fetchPrices);
@@ -245,6 +268,7 @@ HTML_PAGE = f"""
     {SCRIPT}
 </head>
 <body>
+    <div id="fetch-popup">Prices updated!</div>
     <h1 style="text-align: center;">
             Guild Wars 2 TP King
     </h1>

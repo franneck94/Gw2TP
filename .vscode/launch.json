@@ -5,9 +5,9 @@
             "name": "Flask + FastAPI Server",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/app.py",
+            "module": "uvicorn",
             "console": "integratedTerminal",
-            "args": [],
+            "args": ["app:app", "--reload"],
             "justMyCode": true
         },
         {
