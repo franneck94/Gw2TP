@@ -8,12 +8,15 @@ from flask import Flask, jsonify, render_template_string, request
 from html_template import HTML_PAGE
 from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
                    CHARM_OF_POTENCE_ID, CHARM_OF_SKILL_ID, ECTO_ITEM_ID,
-                   ELABORATE_TOTEM_ID, ELDER_WOOD_ID, GOSSAMER_SCRAP_ID,
-                   HARDENED_LEATHER_ID, LUCENT_MOTE_ID, MIRTHIL_ID,
-                   ORICHALCUM_ID, PILE_OF_LUCENT_CRYSTAL_ID, RARE_UNID_ITEM_ID,
-                   RELIC_OF_FIREWORKS_ID, SCHOLAR_RUNE_ID, SILK_SCRAP_ID,
-                   SYMBOL_OF_CONTROL_ID, SYMBOL_OF_ENH_ID, SYMBOL_OF_PAIN_ID,
-                   THICK_LEATHER_ID, UNID_ITEM_ID)
+                   ELABORATE_TOTEM_ID, ELDER_WOOD_ID, ELDER_WOOD_LOG_ID,
+                   ELDER_WOOD_PLANK_ID, GOSSAMER_SCRAP_ID, HARDENED_LEATHER_ID,
+                   INTRICATE_TOTEM_ID, LARGE_BONE_ID, LARGE_CLAW_ID,
+                   LARGE_FANG_ID, LUCENT_MOTE_ID, MIRTHIL_ID, MITHRIL_INGOT_ID,
+                   MITHRIL_ORE_ID, ORICHALCUM_ID, PILE_OF_LUCENT_CRYSTAL_ID,
+                   POTENT_BLOOD_ID, RARE_UNID_ITEM_ID, RELIC_OF_FIREWORKS_ID,
+                   SCHOLAR_RUNE_ID, SILK_SCRAP_ID, SYMBOL_OF_CONTROL_ID,
+                   SYMBOL_OF_ENH_ID, SYMBOL_OF_PAIN_ID, THICK_LEATHER_ID,
+                   UNID_ITEM_ID)
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
@@ -46,6 +49,15 @@ def gsc_to_copper(
     copper: int,
 ) -> int:
     return gold * 10000 + silver * 100 + copper
+
+
+def get_sub_dict(item_name: str, copper_price: int) -> Dict[str, Any]:
+    g, s, c = copper_to_gsc(copper_price)
+    return {
+        f"{item_name}_g": g,
+        f"{item_name}_s": s,
+        f"{item_name}_c": c,
+    }
 
 
 def fetch_tp_prices(
@@ -142,6 +154,89 @@ def get_gear_to_ecto() -> Any:
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/rare_gear_craft")
+def get_rare_gear_craft() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                ECTO_ITEM_ID,
+                MITHRIL_INGOT_ID,
+                MITHRIL_ORE_ID,
+                ELDER_WOOD_PLANK_ID,
+                ELDER_WOOD_LOG_ID,
+                LARGE_CLAW_ID,
+                POTENT_BLOOD_ID,
+                LARGE_BONE_ID,
+                INTRICATE_TOTEM_ID,
+                LARGE_FANG_ID,
+            ]
+        )
+        ecto_sell_after_taxes_copper = result[ECTO_ITEM_ID]["sell_copper"] * 0.85
+        mithril_ore_buy_copper = result[MITHRIL_ORE_ID]["buy_copper"]
+        mithril_ingot_buy_copper = result[MITHRIL_INGOT_ID]["buy_copper"]
+        elder_wood_log_buy_copper = result[ELDER_WOOD_LOG_ID]["buy_copper"]
+        elder_wood_plank_buy_copper = result[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        large_claw_buy_copper = result[LARGE_CLAW_ID]["buy_copper"]
+        potent_blood_buy_copper = result[POTENT_BLOOD_ID]["buy_copper"]
+        large_bone_buy_copper = result[LARGE_BONE_ID]["buy_copper"]
+        intricate_totem_buy_copper = result[INTRICATE_TOTEM_ID]["buy_copper"]
+        large_fang_buy_copper = result[LARGE_FANG_ID]["buy_copper"]
+
+        lowest_t5_mat = min(
+            large_claw_buy_copper,
+            potent_blood_buy_copper,
+            large_bone_buy_copper,
+            intricate_totem_buy_copper,
+            large_fang_buy_copper,
+        )
+
+        crafting_cost_ingot = (
+            mithril_ingot_buy_copper
+            if mithril_ingot_buy_copper < 2.0 * mithril_ore_buy_copper
+            else mithril_ore_buy_copper * 2.0
+        )
+        crafting_cost_plank = (
+            elder_wood_plank_buy_copper
+            if elder_wood_plank_buy_copper < 3.0 * elder_wood_log_buy_copper
+            else elder_wood_log_buy_copper * 3.0
+        )
+
+        crafting_cost_backing = 2.0 * crafting_cost_ingot
+        crafting_cost_boss = 2.0 * crafting_cost_ingot
+        crafting_cost_dowwl = 2.0 * crafting_cost_plank + 3.0 * crafting_cost_ingot
+        crafting_cost_inscr = 15.0 * lowest_t5_mat + 2.0 * crafting_cost_dowwl
+
+        crafting_cost_with_cheap_materials = (
+            crafting_cost_inscr + crafting_cost_backing + crafting_cost_boss
+        )
+        rare_gear_craft_profit_copper = (
+            ecto_sell_after_taxes_copper * 0.9
+        ) - crafting_cost_with_cheap_materials
+
+        data = {
+            **get_sub_dict("mithril_ore__to_ingot_cost", mithril_ore_buy_copper * 2.0),
+            **get_sub_dict("mithril_ingot_cost", mithril_ingot_buy_copper),
+            **get_sub_dict(
+                "elder_wood_log_to_plank_cost", elder_wood_log_buy_copper * 3.0
+            ),
+            **get_sub_dict("elder_wood_plank_cost", elder_wood_plank_buy_copper),
+            **get_sub_dict("large_claw_buy_cost", large_claw_buy_copper),
+            **get_sub_dict("potent_blood_buy_cost", potent_blood_buy_copper),
+            **get_sub_dict("large_bone_buy_cost", large_bone_buy_copper),
+            **get_sub_dict("intricate_totem_buy_cost", intricate_totem_buy_copper),
+            **get_sub_dict("large_fang_buy_cost", large_fang_buy_copper),
+            **get_sub_dict(
+                "crafting_cost_with_cheap_materials", crafting_cost_with_cheap_materials
+            ),
+            **get_sub_dict("ecto_sell_after_taxes2", ecto_sell_after_taxes_copper),
+            **get_sub_dict("rare_gear_craft_profit", rare_gear_craft_profit_copper),
+        }
+
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/api/scholar_rune")
 def get_scholar_rune() -> Any:
     try:
@@ -161,9 +256,6 @@ def get_scholar_rune() -> Any:
         charm_data = result[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
         lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
         scholar_rune_sell_copper = result[SCHOLAR_RUNE_ID]["sell_copper"]
-        scholar_rune_sell_g, scholar_rune_sell_s, scholar_rune_sell_c = copper_to_gsc(
-            scholar_rune_sell_copper
-        )
 
         scholar_crafting_cost_copper = (
             ecto_data * 5.0
@@ -180,32 +272,15 @@ def get_scholar_rune() -> Any:
 
         profit = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost_copper
         profit2 = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost2_copper
-        scholar_profit_g, scholar_profit_s, scholar_profit_c = copper_to_gsc(profit)
-        scholar_profit2_g, scholar_profit2_s, scholar_profit2_c = copper_to_gsc(profit2)
-
-        scholar_crafting_cost_g, scholar_crafting_cost_s, scholar_crafting_cost_c = (
-            copper_to_gsc(scholar_crafting_cost_copper)
-        )
-        scholar_crafting_cost2_g, scholar_crafting_cost2_s, scholar_crafting_cost2_c = (
-            copper_to_gsc(scholar_crafting_cost2_copper)
-        )
 
         data = {
-            "scholar_crafting_cost_g": scholar_crafting_cost_g,
-            "scholar_crafting_cost_s": scholar_crafting_cost_s,
-            "scholar_crafting_cost_c": scholar_crafting_cost_c,
-            "scholar_crafting_cost2_g": scholar_crafting_cost2_g,
-            "scholar_crafting_cost2_s": scholar_crafting_cost2_s,
-            "scholar_crafting_cost2_c": scholar_crafting_cost2_c,
-            "scholar_sell_g": scholar_rune_sell_g,
-            "scholar_sell_s": scholar_rune_sell_s,
-            "scholar_sell_c": scholar_rune_sell_c,
-            "scholar_profit_g": scholar_profit_g,
-            "scholar_profit_s": scholar_profit_s,
-            "scholar_profit_c": scholar_profit_c,
-            "scholar_profit2_g": scholar_profit2_g,
-            "scholar_profit2_s": scholar_profit2_s,
-            "scholar_profit2_c": scholar_profit2_c,
+            **get_sub_dict("scholar_crafting_cost", scholar_crafting_cost_copper),
+            **get_sub_dict(
+                "scholar_crafting_cost_with_lucent_motes", scholar_crafting_cost2_copper
+            ),
+            **get_sub_dict("scholar_rune_sell", scholar_rune_sell_copper),
+            **get_sub_dict("scholar_profit", profit),
+            **get_sub_dict("scholar_profit_with_lucent_motes", profit2),
         }
 
         return jsonify(data)
@@ -230,11 +305,6 @@ def get_relic_of_fireworks() -> Any:
         charm_data = result[CHARM_OF_SKILL_ID]["buy_copper"]
         lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
         relic_of_fireworks_sell_copper = result[RELIC_OF_FIREWORKS_ID]["sell_copper"]
-        (
-            relic_of_fireworks_sell_g,
-            relic_of_fireworks_sell_s,
-            relic_of_fireworks_sell_c,
-        ) = copper_to_gsc(relic_of_fireworks_sell_copper)
 
         fireworks_crafting_cost_copper = (
             ecto_data * 15.0 + lucent_crystal_data * 48.0 + charm_data * 3.0
@@ -247,40 +317,16 @@ def get_relic_of_fireworks() -> Any:
         profit2 = (
             relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost2_copper
         )
-        fireworks_profit_g, fireworks_profit_s, fireworks_profit_c = copper_to_gsc(
-            profit
-        )
-        fireworks_profit2_g, fireworks_profit2_s, fireworks_profit2_c = copper_to_gsc(
-            profit2
-        )
-
-        (
-            fireworks_crafting_cost_g,
-            fireworks_crafting_cost_s,
-            fireworks_crafting_cost_c,
-        ) = copper_to_gsc(fireworks_crafting_cost_copper)
-        (
-            fireworks_crafting_cost2_g,
-            fireworks_crafting_cost2_s,
-            fireworks_crafting_cost2_c,
-        ) = copper_to_gsc(fireworks_crafting_cost2_copper)
 
         data = {
-            "fireworks_crafting_cost_g": fireworks_crafting_cost_g,
-            "fireworks_crafting_cost_s": fireworks_crafting_cost_s,
-            "fireworks_crafting_cost_c": fireworks_crafting_cost_c,
-            "fireworks_crafting_cost2_g": fireworks_crafting_cost2_g,
-            "fireworks_crafting_cost2_s": fireworks_crafting_cost2_s,
-            "fireworks_crafting_cost2_c": fireworks_crafting_cost2_c,
-            "fireworks_sell_g": relic_of_fireworks_sell_g,
-            "fireworks_sell_s": relic_of_fireworks_sell_s,
-            "fireworks_sell_c": relic_of_fireworks_sell_c,
-            "fireworks_profit_g": fireworks_profit_g,
-            "fireworks_profit_s": fireworks_profit_s,
-            "fireworks_profit_c": fireworks_profit_c,
-            "fireworks_profit2_g": fireworks_profit2_g,
-            "fireworks_profit2_s": fireworks_profit2_s,
-            "fireworks_profit2_c": fireworks_profit2_c,
+            **get_sub_dict("fireworks_crafting_cost", fireworks_crafting_cost_copper),
+            **get_sub_dict(
+                "fireworks_crafting_cost_with_lucent_motes",
+                fireworks_crafting_cost2_copper,
+            ),
+            **get_sub_dict("fireworks_sell", relic_of_fireworks_sell_copper),
+            **get_sub_dict("fireworks_profit", profit),
+            **get_sub_dict("fireworks_profit_with_lucent_motes", profit2),
         }
 
         return jsonify(data)
@@ -331,31 +377,11 @@ def get_gear_salvage() -> Any:
         charm_of_skill_data = result[CHARM_OF_SKILL_ID]
 
         buy_stack_copper = gear_data["buy_copper"] * 250.0
-        buy_stack_g, buy_stack_s, buy_stack_c = copper_to_gsc(buy_stack_copper)
-
         lucent_mote_copper = lucent_mote_data["sell_copper"]
-        lucent_mote_stack_sell_g, lucent_mote_stack_sell_s, lucent_mote_stack_sell_c = (
-            copper_to_gsc(lucent_mote_copper * 250.0)
-        )
-
         mithril_copper = mithril_data["sell_copper"]
-        mithril_stack_sell_g, mithril_stack_sell_s, mithril_stack_sell_c = (
-            copper_to_gsc(mithril_copper * 250.0)
-        )
-
         elder_wood_copper = elder_wood_data["sell_copper"]
-        elder_wood_stack_sell_g, elder_wood_stack_sell_s, elder_wood_stack_sell_c = (
-            copper_to_gsc(elder_wood_copper * 250.0)
-        )
-
         ecto_sellcopper = ecto_data["sell_copper"]
-
         thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
-        (
-            thick_leather_stack_sell_g,
-            thick_leather_stack_sell_s,
-            thick_leather_stack_sell_c,
-        ) = copper_to_gsc(thick_leather_data_sell_copper * 250.0)
 
         gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
         silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
@@ -390,29 +416,16 @@ def get_gear_salvage() -> Any:
             - 30.0 * 245  # Runecrafter
             - 60 * 5  # Silver Fed
         )
-        profit_stack_g, profit_stack_s, profit_stack_c = copper_to_gsc(
-            profit_stack_copper
-        )
 
         data = {
-            "gear_stack_buy_g": buy_stack_g,
-            "gear_stack_buy_s": buy_stack_s,
-            "gear_stack_buy_c": buy_stack_c,
-            "lucent_mote_sell_g": lucent_mote_stack_sell_g,
-            "lucent_mote_sell_s": lucent_mote_stack_sell_s,
-            "lucent_mote_sell_c": lucent_mote_stack_sell_c,
-            "mithril_sell_g": mithril_stack_sell_g,
-            "mithril_sell_s": mithril_stack_sell_s,
-            "mithril_sell_c": mithril_stack_sell_c,
-            "elder_wood_sell_g": elder_wood_stack_sell_g,
-            "elder_wood_sell_s": elder_wood_stack_sell_s,
-            "elder_wood_sell_c": elder_wood_stack_sell_c,
-            "thick_leather_sell_g": thick_leather_stack_sell_g,
-            "thick_leather_sell_s": thick_leather_stack_sell_s,
-            "thick_leather_sell_c": thick_leather_stack_sell_c,
-            "profit_stack_g": profit_stack_g,
-            "profit_stack_s": profit_stack_s,
-            "profit_stack_c": profit_stack_c,
+            **get_sub_dict("gear_stack_buy", buy_stack_copper),
+            **get_sub_dict("lucent_mote_sell", lucent_mote_copper * 250.0),
+            **get_sub_dict("mithril_sell", mithril_copper * 250.0),
+            **get_sub_dict("elder_wood_sell", elder_wood_copper * 250.0),
+            **get_sub_dict(
+                "thick_leather_sell", thick_leather_data_sell_copper * 250.0
+            ),
+            **get_sub_dict("profit_stack", profit_stack_copper),
         }
         return jsonify(data)
     except Exception as e:
