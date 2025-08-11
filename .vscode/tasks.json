@@ -2,9 +2,16 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Python: Main File",
+            "label": "Flask + FastAPI Server",
             "type": "shell",
-            "command": "${command:python.interpreterPath} ${workspaceFolder}/app.py",
+            "command": "python -m uvicorn app:app --reload",
+            "args": [],
+            "group": "build"
+        },
+        {
+            "label": "Discord Bot",
+            "type": "shell",
+            "command": "${command:python.interpreterPath} ${workspaceFolder}/discord_app.py",
             "args": [],
             "group": "build"
         }
