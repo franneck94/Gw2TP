@@ -123,7 +123,7 @@ RARE_WEAPON_CRAFT_TABLE = f"""
     {get_price_row_html("large_bone_buy_cost")}
     {get_price_row_html("intricate_totem_buy_cost")}
     {get_price_row_html("large_fang_buy_cost")}
-    {get_price_row_html("crafting_cost_with_cheap_materials")}
+    {get_price_row_html("crafting_cost_with_cheapest_t5")}
     {get_price_row_html("ecto_sell_after_taxes2")}
     {get_price_row_html("rare_gear_craft_profit")}
 </table>
@@ -205,6 +205,7 @@ for (const [key, value] of Object.entries(data)) {
 }
 """
 
+
 def get_rare_gear_craft_html() -> str:
     return """
 const response = await fetch(`/api/rare_gear_craft`);
@@ -244,7 +245,9 @@ HTML_PAGE = f"""
     {SCRIPT}
 </head>
 <body>
-    <h1 style="text-align: center;">Guild Wars 2 TP King</h1>
+    <h1 style="text-align: center;">
+            Guild Wars 2 TP King
+    </h1>
     <div style="display: flex; justify-content: center;">
         <button onclick="fetchPrices()" style="margin-bottom: 20px;">Refresh Prices</button>
     </div>
@@ -259,17 +262,29 @@ HTML_PAGE = f"""
             <h2 style="text-align: center;">Rare Gear to Ecto</h2>
             {GEAR_TO_ECTO_TABLE}
 
-            <h2 style="text-align: center;">Rare Weapon Craft</h2>
-            {RARE_WEAPON_CRAFT_TABLE}
-        </div>
-        <div style="flex: 1;">
             <h2 style="text-align: center;">Gear Ident & Salvaging</h2>
             {GEAR_SALVAGE_TABLE}
+        </div>
+        <div style="flex: 1;">
+            <h2 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rare Weapon Craft
+                </a>
+            </h2>
+            {RARE_WEAPON_CRAFT_TABLE}
 
-            <h2 style="text-align: center;">Scholar Runes</h2>
+            <h2 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Scholar" target="_blank" style="color: inherit; text-decoration: none;">
+                    Scholar Runes
+                </a>
+            </h2>
             {SCHOLAR_RUNE_TABLE}
 
-            <h2 style="text-align: center;">Relic of Fireworks</h2>
+            <h2 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_Fireworks" target="_blank" style="color: inherit; text-decoration: none;">
+                    Relic of Fireworks
+                </a>
+            </h2>
             {FIREWORKS_TABLE}
         </div>
     </div>

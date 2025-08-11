@@ -226,7 +226,7 @@ def get_rare_gear_craft() -> Any:
             **get_sub_dict("intricate_totem_buy_cost", intricate_totem_buy_copper),
             **get_sub_dict("large_fang_buy_cost", large_fang_buy_copper),
             **get_sub_dict(
-                "crafting_cost_with_cheap_materials", crafting_cost_with_cheap_materials
+                "crafting_cost_with_cheapest_t5", crafting_cost_with_cheap_materials
             ),
             **get_sub_dict("ecto_sell_after_taxes2", ecto_sell_after_taxes_copper),
             **get_sub_dict("rare_gear_craft_profit", rare_gear_craft_profit_copper),
@@ -300,17 +300,17 @@ def get_relic_of_fireworks() -> Any:
                 RELIC_OF_FIREWORKS_ID,
             ]
         )
-        ecto_data = result[ECTO_ITEM_ID]["buy_copper"]
-        lucent_crystal_data = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
-        charm_data = result[CHARM_OF_SKILL_ID]["buy_copper"]
-        lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
+        ecto_price_copper = result[ECTO_ITEM_ID]["buy_copper"]
+        lucent_crystal_price_copper = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+        charm_price_copper = result[CHARM_OF_SKILL_ID]["buy_copper"]
+        lucent_mote_price_copper = result[LUCENT_MOTE_ID]["buy_copper"]
         relic_of_fireworks_sell_copper = result[RELIC_OF_FIREWORKS_ID]["sell_copper"]
 
         fireworks_crafting_cost_copper = (
-            ecto_data * 15.0 + lucent_crystal_data * 48.0 + charm_data * 3.0
+            ecto_price_copper * 15.0 + lucent_crystal_price_copper * 48.0 + charm_price_copper * 3.0
         )
         fireworks_crafting_cost2_copper = (
-            ecto_data * 15.0 + lucent_mote_data * 480.0 + charm_data * 3.0
+            ecto_price_copper * 15.0 + lucent_mote_price_copper * 480.0 + charm_price_copper * 3.0
         )
 
         profit = relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost_copper
