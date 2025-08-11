@@ -3,7 +3,14 @@ from __future__ import annotations
 from typing import Any, Dict, Tuple
 
 import httpx
-from flask import Flask, jsonify, render_template_string, request
+import uvicorn
+from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+from flask import Flask, render_template_string
+from starlette.applications import Starlette
+from starlette.middleware.wsgi import WSGIMiddleware
+from starlette.routing import Mount
 
 from html_template import HTML_PAGE
 from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
@@ -20,7 +27,8 @@ from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
-app = Flask(__name__)
+fastapi_app = FastAPI()
+flask_app = Flask(__name__)
 
 
 def copper_to_gsc(
@@ -100,22 +108,22 @@ def fetch_tp_prices(
     return result
 
 
-@app.route("/")
+@flask_app.route("/")
 def index() -> str:
     return render_template_string(HTML_PAGE)
 
 
-@app.route("/api/price")
-def get_price() -> Any:
+@fastapi_app.get("/price")
+async def get_price(item_id: int):
     try:
-        item_id = request.args.get("item_id", type=int)
-        data = fetch_tp_prices([item_id])
-        return jsonify(data[item_id])
+        with flask_app.app_context():
+            data = fetch_tp_prices([item_id])
+            return JSONResponse(content=jsonable_encoder(data[item_id]))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@app.route("/api/gear_to_ecto")
+@fastapi_app.get("/gear_to_ecto")
 def get_gear_to_ecto() -> Any:
     try:
         result = fetch_tp_prices([ECTO_ITEM_ID, RARE_UNID_ITEM_ID])
@@ -149,12 +157,12 @@ def get_gear_to_ecto() -> Any:
             "gear_to_ecto_profit_c": profit_c,
         }
 
-        return jsonify(data)
+        return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@app.route("/api/rare_gear_craft")
+@fastapi_app.get("/rare_gear_craft")
 def get_rare_gear_craft() -> Any:
     try:
         result = fetch_tp_prices(
@@ -232,12 +240,12 @@ def get_rare_gear_craft() -> Any:
             **get_sub_dict("rare_gear_craft_profit", rare_gear_craft_profit_copper),
         }
 
-        return jsonify(data)
+        return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@app.route("/api/scholar_rune")
+@fastapi_app.get("/scholar_rune")
 def get_scholar_rune() -> Any:
     try:
         result = fetch_tp_prices(
@@ -283,12 +291,12 @@ def get_scholar_rune() -> Any:
             **get_sub_dict("scholar_profit_with_lucent_motes", profit2),
         }
 
-        return jsonify(data)
+        return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@app.route("/api/relic_of_fireworks")
+@fastapi_app.get("/relic_of_fireworks")
 def get_relic_of_fireworks() -> Any:
     try:
         result = fetch_tp_prices(
@@ -307,10 +315,14 @@ def get_relic_of_fireworks() -> Any:
         relic_of_fireworks_sell_copper = result[RELIC_OF_FIREWORKS_ID]["sell_copper"]
 
         fireworks_crafting_cost_copper = (
-            ecto_price_copper * 15.0 + lucent_crystal_price_copper * 48.0 + charm_price_copper * 3.0
+            ecto_price_copper * 15.0
+            + lucent_crystal_price_copper * 48.0
+            + charm_price_copper * 3.0
         )
         fireworks_crafting_cost2_copper = (
-            ecto_price_copper * 15.0 + lucent_mote_price_copper * 480.0 + charm_price_copper * 3.0
+            ecto_price_copper * 15.0
+            + lucent_mote_price_copper * 480.0
+            + charm_price_copper * 3.0
         )
 
         profit = relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost_copper
@@ -329,12 +341,12 @@ def get_relic_of_fireworks() -> Any:
             **get_sub_dict("fireworks_profit_with_lucent_motes", profit2),
         }
 
-        return jsonify(data)
+        return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@app.route("/api/gear_salvage")
+@fastapi_app.get("/gear_salvage")
 def get_gear_salvage() -> Any:
     try:
         result = fetch_tp_prices(
@@ -427,10 +439,19 @@ def get_gear_salvage() -> Any:
             ),
             **get_sub_dict("profit_stack", profit_stack_copper),
         }
-        return jsonify(data)
+        return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
+
+app = Starlette(
+    routes=[Mount("/api", app=fastapi_app), Mount("/", app=WSGIMiddleware(flask_app))]
+)
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    uvicorn.run(
+        "flask_fastapi_shared:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+    )

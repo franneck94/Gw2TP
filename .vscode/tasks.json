@@ -2,16 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Python: Current File",
-            "type": "shell",
-            "command": "${command:python.interpreterPath} ${file}",
-            "args": [],
-            "group": "build"
-        },
-        {
             "label": "Python: Main File",
             "type": "shell",
-            "command": "${command:python.interpreterPath} ${workspaceFolder}/main.py",
+            "command": "${command:python.interpreterPath} ${workspaceFolder}/app.py",
             "args": [],
             "group": "build"
         }
