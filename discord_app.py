@@ -5,12 +5,16 @@ import aiohttp
 import discord
 
 TOKEN = os.getenv("DISCORD_TOKEN")
+USER_SERVER = True
 
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 port = int(os.environ.get("PORT", 8000))
-api_base = f"http://0.0.0.0:{port}/api/"
+if USER_SERVER:
+    api_base  = "https://gw2tp-production.up.railway.app/api/"
+else:
+    api_base = f"http://0.0.0.0:{port}/api/"
 
 
 def create_price_embed(
