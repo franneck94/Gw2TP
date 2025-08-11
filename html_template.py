@@ -138,8 +138,19 @@ STYLE = """
     button { padding: 8px 12px; font-size: 14px; cursor: pointer; background-color: #333; color: #fff; border: 1px solid #555; }
     button:hover { background-color: #444; }
     #fetch-popup {
-            display: none;
-            position: fixed;
+        display: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 80px;
+        background: #222;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-align: center;
+        width: fit-content;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        z-index: 100;
     }
     #fetch-popup.show {
         display: block;
