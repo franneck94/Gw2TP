@@ -8,11 +8,12 @@ from flask import Flask, jsonify, render_template_string, request
 from html_template import HTML_PAGE
 from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
                    CHARM_OF_POTENCE_ID, CHARM_OF_SKILL_ID, ECTO_ITEM_ID,
-                   ELDER_WOOD_ID, GOSSAMER_SCRAP_ID, HARDENED_LEATHER_ID,
-                   LUCENT_MOTE_ID, MIRTHIL_ID, ORICHALCUM_ID,
-                   RARE_UNID_ITEM_ID, SILK_SCRAP_ID, SYMBOL_OF_CONTROL_ID,
-                   SYMBOL_OF_ENH_ID, SYMBOL_OF_PAIN_ID, THICK_LEATHER_ID,
-                   UNID_ITEM_ID)
+                   ELABORATE_TOTEM_ID, ELDER_WOOD_ID, GOSSAMER_SCRAP_ID,
+                   HARDENED_LEATHER_ID, LUCENT_MOTE_ID, MIRTHIL_ID,
+                   ORICHALCUM_ID, PILE_OF_LUCENT_CRYSTAL_ID, RARE_UNID_ITEM_ID,
+                   RELIC_OF_FIREWORKS_ID, SCHOLAR_RUNE_ID, SILK_SCRAP_ID,
+                   SYMBOL_OF_CONTROL_ID, SYMBOL_OF_ENH_ID, SYMBOL_OF_PAIN_ID,
+                   THICK_LEATHER_ID, UNID_ITEM_ID)
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
@@ -134,6 +135,152 @@ def get_gear_to_ecto() -> Any:
             "gear_to_ecto_profit_g": profit_g,
             "gear_to_ecto_profit_s": profit_s,
             "gear_to_ecto_profit_c": profit_c,
+        }
+
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/scholar_rune")
+def get_scholar_rune() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                ECTO_ITEM_ID,
+                ELABORATE_TOTEM_ID,
+                PILE_OF_LUCENT_CRYSTAL_ID,
+                CHARM_OF_BRILLIANCE_ID,
+                LUCENT_MOTE_ID,
+                SCHOLAR_RUNE_ID,
+            ]
+        )
+        ecto_data = result[ECTO_ITEM_ID]["buy_copper"]
+        totem_data = result[ELABORATE_TOTEM_ID]["buy_copper"]
+        lucent_crystal_data = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+        charm_data = result[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
+        lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
+        scholar_rune_sell_copper = result[SCHOLAR_RUNE_ID]["sell_copper"]
+        scholar_rune_sell_g, scholar_rune_sell_s, scholar_rune_sell_c = copper_to_gsc(
+            scholar_rune_sell_copper
+        )
+
+        scholar_crafting_cost_copper = (
+            ecto_data * 5.0
+            + totem_data * 5.0
+            + lucent_crystal_data * 8.0
+            + charm_data * 2.0
+        )
+        scholar_crafting_cost2_copper = (
+            ecto_data * 5.0
+            + totem_data * 5.0
+            + lucent_mote_data * 80.0
+            + charm_data * 2.0
+        )
+
+        profit = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost_copper
+        profit2 = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost2_copper
+        scholar_profit_g, scholar_profit_s, scholar_profit_c = copper_to_gsc(profit)
+        scholar_profit2_g, scholar_profit2_s, scholar_profit2_c = copper_to_gsc(profit2)
+
+        scholar_crafting_cost_g, scholar_crafting_cost_s, scholar_crafting_cost_c = (
+            copper_to_gsc(scholar_crafting_cost_copper)
+        )
+        scholar_crafting_cost2_g, scholar_crafting_cost2_s, scholar_crafting_cost2_c = (
+            copper_to_gsc(scholar_crafting_cost2_copper)
+        )
+
+        data = {
+            "scholar_crafting_cost_g": scholar_crafting_cost_g,
+            "scholar_crafting_cost_s": scholar_crafting_cost_s,
+            "scholar_crafting_cost_c": scholar_crafting_cost_c,
+            "scholar_crafting_cost2_g": scholar_crafting_cost2_g,
+            "scholar_crafting_cost2_s": scholar_crafting_cost2_s,
+            "scholar_crafting_cost2_c": scholar_crafting_cost2_c,
+            "scholar_sell_g": scholar_rune_sell_g,
+            "scholar_sell_s": scholar_rune_sell_s,
+            "scholar_sell_c": scholar_rune_sell_c,
+            "scholar_profit_g": scholar_profit_g,
+            "scholar_profit_s": scholar_profit_s,
+            "scholar_profit_c": scholar_profit_c,
+            "scholar_profit2_g": scholar_profit2_g,
+            "scholar_profit2_s": scholar_profit2_s,
+            "scholar_profit2_c": scholar_profit2_c,
+        }
+
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/relic_of_fireworks")
+def get_relic_of_fireworks() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                ECTO_ITEM_ID,
+                PILE_OF_LUCENT_CRYSTAL_ID,
+                CHARM_OF_SKILL_ID,
+                LUCENT_MOTE_ID,
+                RELIC_OF_FIREWORKS_ID,
+            ]
+        )
+        ecto_data = result[ECTO_ITEM_ID]["buy_copper"]
+        lucent_crystal_data = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+        charm_data = result[CHARM_OF_SKILL_ID]["buy_copper"]
+        lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
+        relic_of_fireworks_sell_copper = result[RELIC_OF_FIREWORKS_ID]["sell_copper"]
+        (
+            relic_of_fireworks_sell_g,
+            relic_of_fireworks_sell_s,
+            relic_of_fireworks_sell_c,
+        ) = copper_to_gsc(relic_of_fireworks_sell_copper)
+
+        fireworks_crafting_cost_copper = (
+            ecto_data * 15.0 + lucent_crystal_data * 48.0 + charm_data * 3.0
+        )
+        fireworks_crafting_cost2_copper = (
+            ecto_data * 15.0 + lucent_mote_data * 480.0 + charm_data * 3.0
+        )
+
+        profit = relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost_copper
+        profit2 = (
+            relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost2_copper
+        )
+        fireworks_profit_g, fireworks_profit_s, fireworks_profit_c = copper_to_gsc(
+            profit
+        )
+        fireworks_profit2_g, fireworks_profit2_s, fireworks_profit2_c = copper_to_gsc(
+            profit2
+        )
+
+        (
+            fireworks_crafting_cost_g,
+            fireworks_crafting_cost_s,
+            fireworks_crafting_cost_c,
+        ) = copper_to_gsc(fireworks_crafting_cost_copper)
+        (
+            fireworks_crafting_cost2_g,
+            fireworks_crafting_cost2_s,
+            fireworks_crafting_cost2_c,
+        ) = copper_to_gsc(fireworks_crafting_cost2_copper)
+
+        data = {
+            "fireworks_crafting_cost_g": fireworks_crafting_cost_g,
+            "fireworks_crafting_cost_s": fireworks_crafting_cost_s,
+            "fireworks_crafting_cost_c": fireworks_crafting_cost_c,
+            "fireworks_crafting_cost2_g": fireworks_crafting_cost2_g,
+            "fireworks_crafting_cost2_s": fireworks_crafting_cost2_s,
+            "fireworks_crafting_cost2_c": fireworks_crafting_cost2_c,
+            "fireworks_sell_g": relic_of_fireworks_sell_g,
+            "fireworks_sell_s": relic_of_fireworks_sell_s,
+            "fireworks_sell_c": relic_of_fireworks_sell_c,
+            "fireworks_profit_g": fireworks_profit_g,
+            "fireworks_profit_s": fireworks_profit_s,
+            "fireworks_profit_c": fireworks_profit_c,
+            "fireworks_profit2_g": fireworks_profit2_g,
+            "fireworks_profit2_s": fireworks_profit2_s,
+            "fireworks_profit2_c": fireworks_profit2_c,
         }
 
         return jsonify(data)

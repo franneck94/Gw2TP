@@ -109,6 +109,88 @@ GEAR_SALVAGE_TABLE = """
 </table>
 """
 
+SCHOLAR_RUNE_TABLE = """
+<table>
+    <tr>
+        <th></th>
+        <th>Gold</th>
+        <th>Silver</th>
+        <th>copper</th>
+    </tr>
+    <tr>
+        <td>Crafting Cost</td>
+        <td id="scholar_crafting_cost_g">-</td>
+        <td id="scholar_crafting_cost_s">-</td>
+        <td id="scholar_crafting_cost_c">-</td>
+    </tr>
+    <tr>
+        <td>Crafting Cost (w/ Lucent Motes)</td>
+        <td id="scholar_crafting_cost2_g">-</td>
+        <td id="scholar_crafting_cost2_s">-</td>
+        <td id="scholar_crafting_cost2_c">-</td>
+    </tr>
+    <tr>
+        <td>Sell Value</td>
+        <td id="scholar_sell_g">-</td>
+        <td id="scholar_sell_s">-</td>
+        <td id="scholar_sell_c">-</td>
+    </tr>
+    <tr>
+        <td>Profit</td>
+        <td id="scholar_profit_g">-</td>
+        <td id="scholar_profit_s">-</td>
+        <td id="scholar_profit_c">-</td>
+    </tr>
+    <tr>
+        <td>Profit (w/ Lucent Motes)</td>
+        <td id="scholar_profit2_g">-</td>
+        <td id="scholar_profit2_s">-</td>
+        <td id="scholar_profit2_c">-</td>
+    </tr>
+</table>
+"""
+
+FIREWORKS_TABLE = """
+<table>
+    <tr>
+        <th></th>
+        <th>Gold</th>
+        <th>Silver</th>
+        <th>copper</th>
+    </tr>
+    <tr>
+        <td>Crafting Cost</td>
+        <td id="fireworks_crafting_cost_g">-</td>
+        <td id="fireworks_crafting_cost_s">-</td>
+        <td id="fireworks_crafting_cost_c">-</td>
+    </tr>
+    <tr>
+        <td>Crafting Cost (w/ Lucent Motes)</td>
+        <td id="fireworks_crafting_cost2_g">-</td>
+        <td id="fireworks_crafting_cost2_s">-</td>
+        <td id="fireworks_crafting_cost2_c">-</td>
+    </tr>
+    <tr>
+        <td>Sell Value</td>
+        <td id="fireworks_sell_g">-</td>
+        <td id="fireworks_sell_s">-</td>
+        <td id="fireworks_sell_c">-</td>
+    </tr>
+    <tr>
+        <td>Profit</td>
+        <td id="fireworks_profit_g">-</td>
+        <td id="fireworks_profit_s">-</td>
+        <td id="fireworks_profit_c">-</td>
+    </tr>
+    <tr>
+        <td>Profit (w/ Lucent Motes)</td>
+        <td id="fireworks_profit2_g">-</td>
+        <td id="fireworks_profit2_s">-</td>
+        <td id="fireworks_profit2_c">-</td>
+    </tr>
+</table>
+"""
+
 STYLE = """
 <style>
     body { background-color: #121212; color: #e0e0e0; font-family: Arial, sans-serif; margin: 20px; }
@@ -190,6 +272,58 @@ document.getElementById('profit_stack_s').innerText = data.profit_stack_s;
 document.getElementById('profit_stack_c').innerText = data.profit_stack_c;
 """
 
+def get_scholar_rune_html() -> str:
+    return """
+const response = await fetch(`/api/scholar_rune`);
+const data = await response.json();
+
+document.getElementById('scholar_crafting_cost_g').innerText = data.scholar_crafting_cost_g;
+document.getElementById('scholar_crafting_cost_s').innerText = data.scholar_crafting_cost_s;
+document.getElementById('scholar_crafting_cost_c').innerText = data.scholar_crafting_cost_c;
+
+document.getElementById('scholar_crafting_cost2_g').innerText = data.scholar_crafting_cost2_g;
+document.getElementById('scholar_crafting_cost2_s').innerText = data.scholar_crafting_cost2_s;
+document.getElementById('scholar_crafting_cost2_c').innerText = data.scholar_crafting_cost2_c;
+
+document.getElementById('scholar_sell_g').innerText = data.scholar_sell_g;
+document.getElementById('scholar_sell_s').innerText = data.scholar_sell_s;
+document.getElementById('scholar_sell_c').innerText = data.scholar_sell_c;
+
+document.getElementById('scholar_profit_g').innerText = data.scholar_profit_g;
+document.getElementById('scholar_profit_s').innerText = data.scholar_profit_s;
+document.getElementById('scholar_profit_c').innerText = data.scholar_profit_c;
+
+document.getElementById('scholar_profit2_g').innerText = data.scholar_profit2_g;
+document.getElementById('scholar_profit2_s').innerText = data.scholar_profit2_s;
+document.getElementById('scholar_profit2_c').innerText = data.scholar_profit2_c;
+"""
+
+def get_fireworks_html() -> str:
+    return """
+const response = await fetch(`/api/relic_of_fireworks`);
+const data = await response.json();
+
+document.getElementById('fireworks_crafting_cost_g').innerText = data.fireworks_crafting_cost_g;
+document.getElementById('fireworks_crafting_cost_s').innerText = data.fireworks_crafting_cost_s;
+document.getElementById('fireworks_crafting_cost_c').innerText = data.fireworks_crafting_cost_c;
+
+document.getElementById('fireworks_crafting_cost2_g').innerText = data.fireworks_crafting_cost2_g;
+document.getElementById('fireworks_crafting_cost2_s').innerText = data.fireworks_crafting_cost2_s;
+document.getElementById('fireworks_crafting_cost2_c').innerText = data.fireworks_crafting_cost2_c;
+
+document.getElementById('fireworks_sell_g').innerText = data.fireworks_sell_g;
+document.getElementById('fireworks_sell_s').innerText = data.fireworks_sell_s;
+document.getElementById('fireworks_sell_c').innerText = data.fireworks_sell_c;
+
+document.getElementById('fireworks_profit_g').innerText = data.fireworks_profit_g;
+document.getElementById('fireworks_profit_s').innerText = data.fireworks_profit_s;
+document.getElementById('fireworks_profit_c').innerText = data.fireworks_profit_c;
+
+document.getElementById('fireworks_profit2_g').innerText = data.fireworks_profit2_g;
+document.getElementById('fireworks_profit2_s').innerText = data.fireworks_profit2_s;
+document.getElementById('fireworks_profit2_c').innerText = data.fireworks_profit2_c;
+"""
+
 
 SCRIPT = f"""
 <script>
@@ -199,6 +333,8 @@ SCRIPT = f"""
             (async () => {{ {get_fetch_price_html(ECTO_ITEM_ID)} }})(),
             (async () => {{ {get_rare_gear_to_ecto_html()} }})(),
             (async () => {{ {get_rare_salvage_html()} }})(),
+            (async () => {{ {get_scholar_rune_html()} }})(),
+            (async () => {{ {get_fireworks_html()} }})(),
         ]);
     }}
 
@@ -216,22 +352,28 @@ HTML_PAGE = f"""
 </head>
 <body>
     <h1>Guild Wars 2 TP King</h1>
-
     <button onclick="fetchPrices()">Refresh Prices</button>
+    <div style="display: flex; gap: 40px;">
+        <div style="flex: 1;">
+            <h2>Ectoplasm</h2>
+            {ECTO_TABLE}
 
-    <div id="19721">
-        <h2>Ectoplasm</h2>
-        {ECTO_TABLE}
-    </div>
+            <h2>Rare Unid Gear</h2>
+            {RARE_GEAR_TABLE}
 
-    <div id="50016">
-        <h2>Rare Unid Gear</h2>
+            <h2>Rare Gear to Ecto</h2>
+            {GEAR_TO_ECTO_TABLE}
+        </div>
+        <div style="flex: 1;">
+            <h2>Gear Ident & Salvaging</h2>
+            {GEAR_SALVAGE_TABLE}
 
-        {RARE_GEAR_TABLE}
+            <h2>Scholar Runes</h2>
+            {SCHOLAR_RUNE_TABLE}
 
-        {GEAR_TO_ECTO_TABLE}
-
-        {GEAR_SALVAGE_TABLE}
+            <h2>Relic of Fireworks</h2>
+            {FIREWORKS_TABLE}
+        </div>
     </div>
 </body>
 </html>
