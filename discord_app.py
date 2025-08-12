@@ -72,10 +72,17 @@ async def on_message(
         return
 
     if message.content.startswith(f"{COMMAND_PREFIX} help"):
-        help_message = "Available commands:\n" + "".join(
-            [f"{COMMAND_PREFIX} {cmd}\n" for cmd in COMMANDS_LIST],
+        embed = discord.Embed(
+            title="GW2TP Bot Commands",
+            color=0x3498DB,
         )
-        await message.channel.send(help_message)
+        for cmd in COMMANDS_LIST:
+            embed.add_field(
+                name="",
+                value=f"{COMMAND_PREFIX} {cmd}",
+                inline=False,
+            )
+        await message.channel.send(embed=embed)
         return
 
     if message.content.startswith(f"{COMMAND_PREFIX} gear_salvage"):
@@ -110,10 +117,12 @@ async def on_message(
         )
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
-    else:
+    elif message.content.startswith(COMMAND_PREFIX):
         await message.channel.send(
             "Unknown command. Use `/gw2tp help` for a list of commands.",
         )
+        return
+    else:
         return
 
     async with aiohttp.ClientSession() as session:  # noqa: SIM117
