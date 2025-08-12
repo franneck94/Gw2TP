@@ -1,4 +1,6 @@
-from items import ECTO_ITEM_ID, RARE_UNID_ITEM_ID
+# ruff: noqa: E501
+from items import ECTO_ITEM_ID
+from items import RARE_UNID_ITEM_ID
 
 
 def get_price_row_html(

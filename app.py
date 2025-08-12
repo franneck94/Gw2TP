@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, Tuple
+from typing import Any
+from typing import Dict
+from typing import Tuple
 
 import httpx
 import uvicorn
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from flask import Flask, render_template_string
+from flask import Flask
+from flask import render_template_string
 from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
@@ -47,12 +50,13 @@ from items import SYMBOL_OF_PAIN_ID
 from items import THICK_LEATHER_ID
 from items import UNID_ITEM_ID
 
+
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 GW2BLTC_API_URL: str = "https://www.gw2bltc.com/api/v2/tp/history"
 
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
-port = int(os.environ.get("PORT", 8000))
+port = int(os.environ.get("PORT", "8000"))
 
 
 def copper_to_gsc(
@@ -94,16 +98,16 @@ def get_sub_dict(item_name: str, copper_price: int) -> Dict[str, Any]:
 
 def fetch_tp_prices(
     item_ids: list[int],
-) -> dict[int, dict[str, any]]:
+) -> dict[int, dict[str, Any]]:
     params = {"ids": ",".join(str(i) for i in item_ids)}
     with httpx.Client() as client:
         response = client.get(GW2_COMMERCE_URL, params=params, timeout=10.0)
     response.raise_for_status()
     data = response.json()
     if not isinstance(data, list) or len(data) == 0:
-        raise RuntimeError("No items found")
+        raise RuntimeError("No items found")  # noqa: EM101
 
-    fetched_data: dict[int, dict[str, any]] = {}
+    fetched_data: dict[int, dict[str, Any]] = {}
     for item in data:
         item_id = int(item["id"])
         buy_price = int(item["buys"]["unit_price"])
@@ -138,7 +142,7 @@ def index() -> str:
 
 
 @fastapi_app.get("/price")
-async def get_price(item_id: int):
+async def get_price(item_id: int) -> JSONResponse:
     try:
         with flask_app.app_context():
             data = fetch_tp_prices([item_id])
@@ -148,7 +152,7 @@ async def get_price(item_id: int):
 
 
 @fastapi_app.get("/gear_to_ecto")
-def get_gear_to_ecto() -> Any:
+def get_gear_to_ecto() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices([ECTO_ITEM_ID, RARE_UNID_ITEM_ID])
         ecto_data = fetched_data[ECTO_ITEM_ID]
@@ -187,7 +191,7 @@ def get_gear_to_ecto() -> Any:
 
 
 @fastapi_app.get("/rare_weapon_craft")
-def get_rare_weapon_craft() -> Any:
+def get_rare_weapon_craft() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -201,17 +205,25 @@ def get_rare_weapon_craft() -> Any:
                 LARGE_BONE_ID,
                 INTRICATE_TOTEM_ID,
                 LARGE_FANG_ID,
-            ]
+            ],
         )
-        ecto_sell_after_taxes_copper = fetched_data[ECTO_ITEM_ID]["sell_copper"] * 0.85
+        ecto_sell_after_taxes_copper = (
+            fetched_data[ECTO_ITEM_ID]["sell_copper"] * 0.85
+        )
         mithril_ore_buy_copper = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
         mithril_ingot_buy_copper = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
-        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
-        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID][
+            "buy_copper"
+        ]
+        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID][
+            "buy_copper"
+        ]
         large_claw_buy_copper = fetched_data[LARGE_CLAW_ID]["buy_copper"]
         potent_blood_buy_copper = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
         large_bone_buy_copper = fetched_data[LARGE_BONE_ID]["buy_copper"]
-        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
+        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID][
+            "buy_copper"
+        ]
         large_fang_buy_copper = fetched_data[LARGE_FANG_ID]["buy_copper"]
 
         lowest_t5_mat = min(
@@ -235,7 +247,9 @@ def get_rare_weapon_craft() -> Any:
 
         crafting_cost_backing = 2.0 * crafting_cost_ingot
         crafting_cost_boss = 2.0 * crafting_cost_ingot
-        crafting_cost_dowwl = 2.0 * crafting_cost_plank + 3.0 * crafting_cost_ingot
+        crafting_cost_dowwl = (
+            2.0 * crafting_cost_plank + 3.0 * crafting_cost_ingot
+        )
         crafting_cost_inscr = 15.0 * lowest_t5_mat + 2.0 * crafting_cost_dowwl
 
         crafting_cost_with_cheap_materials = (
@@ -247,7 +261,10 @@ def get_rare_weapon_craft() -> Any:
 
         data = {
             **get_sub_dict("crafting_cost", crafting_cost_with_cheap_materials),
-            **get_sub_dict("ecto_sell_after_taxes", ecto_sell_after_taxes_copper),
+            **get_sub_dict(
+                "ecto_sell_after_taxes",
+                ecto_sell_after_taxes_copper,
+            ),
             **get_sub_dict("profit", rare_gear_craft_profit_copper),
         }
 
@@ -257,7 +274,7 @@ def get_rare_weapon_craft() -> Any:
 
 
 @fastapi_app.get("/t5_mats_buy")
-def get_t5_mats_buy() -> Any:
+def get_t5_mats_buy() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -270,27 +287,42 @@ def get_t5_mats_buy() -> Any:
                 LARGE_BONE_ID,
                 INTRICATE_TOTEM_ID,
                 LARGE_FANG_ID,
-            ]
+            ],
         )
         mithril_ore_buy_copper = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
         mithril_ingot_buy_copper = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
-        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
-        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID][
+            "buy_copper"
+        ]
+        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID][
+            "buy_copper"
+        ]
         large_claw_buy_copper = fetched_data[LARGE_CLAW_ID]["buy_copper"]
         potent_blood_buy_copper = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
         large_bone_buy_copper = fetched_data[LARGE_BONE_ID]["buy_copper"]
-        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
+        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID][
+            "buy_copper"
+        ]
         large_fang_buy_copper = fetched_data[LARGE_FANG_ID]["buy_copper"]
 
         data = {
-            **get_sub_dict("mithril_ore_to_ingot", mithril_ore_buy_copper * 2.0),
+            **get_sub_dict(
+                "mithril_ore_to_ingot",
+                mithril_ore_buy_copper * 2.0,
+            ),
             **get_sub_dict("mithril_ingot_buy", mithril_ingot_buy_copper),
-            **get_sub_dict("elder_wood_log_to_plank", elder_wood_log_buy_copper * 3.0),
+            **get_sub_dict(
+                "elder_wood_log_to_plank",
+                elder_wood_log_buy_copper * 3.0,
+            ),
             **get_sub_dict("elder_wood_plank_buy", elder_wood_plank_buy_copper),
             **get_sub_dict("large_claw_buy_buy", large_claw_buy_copper),
             **get_sub_dict("potent_blood_buy_buy", potent_blood_buy_copper),
             **get_sub_dict("large_bone_buy_buy", large_bone_buy_copper),
-            **get_sub_dict("intricate_totem_buy_buy", intricate_totem_buy_copper),
+            **get_sub_dict(
+                "intricate_totem_buy_buy",
+                intricate_totem_buy_copper,
+            ),
             **get_sub_dict("large_fang_buy_buy", large_fang_buy_copper),
         }
 
@@ -300,7 +332,7 @@ def get_t5_mats_buy() -> Any:
 
 
 @fastapi_app.get("/scholar_rune")
-def get_scholar_rune() -> Any:
+def get_scholar_rune() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -310,11 +342,13 @@ def get_scholar_rune() -> Any:
                 CHARM_OF_BRILLIANCE_ID,
                 LUCENT_MOTE_ID,
                 SCHOLAR_RUNE_ID,
-            ]
+            ],
         )
         ecto_data = fetched_data[ECTO_ITEM_ID]["buy_copper"]
         totem_data = fetched_data[ELABORATE_TOTEM_ID]["buy_copper"]
-        lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+        lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID][
+            "buy_copper"
+        ]
         charm_data = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
         lucent_mote_data = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
         scholar_rune_sell_copper = fetched_data[SCHOLAR_RUNE_ID]["sell_copper"]
@@ -333,12 +367,15 @@ def get_scholar_rune() -> Any:
         )
 
         profit = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost_copper
-        profit2 = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost2_copper
+        profit2 = (
+            scholar_rune_sell_copper * 0.85 - scholar_crafting_cost2_copper
+        )
 
         data = {
             **get_sub_dict("crafting_cost", scholar_crafting_cost_copper),
             **get_sub_dict(
-                "crafting_cost_with_lucent_motes", scholar_crafting_cost2_copper
+                "crafting_cost_with_lucent_motes",
+                scholar_crafting_cost2_copper,
             ),
             **get_sub_dict("sell", scholar_rune_sell_copper),
             **get_sub_dict("profit", profit),
@@ -351,7 +388,7 @@ def get_scholar_rune() -> Any:
 
 
 @fastapi_app.get("/relic_of_fireworks")
-def get_relic_of_fireworks() -> Any:
+def get_relic_of_fireworks() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -360,7 +397,7 @@ def get_relic_of_fireworks() -> Any:
                 CHARM_OF_SKILL_ID,
                 LUCENT_MOTE_ID,
                 RELIC_OF_FIREWORKS_ID,
-            ]
+            ],
         )
         ecto_price_copper = fetched_data[ECTO_ITEM_ID]["buy_copper"]
         lucent_crystal_price_copper = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID][
@@ -383,13 +420,20 @@ def get_relic_of_fireworks() -> Any:
             + charm_price_copper * 3.0
         )
 
-        profit = relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost_copper
+        profit = (
+            relic_of_fireworks_sell_copper * 0.85
+            - fireworks_crafting_cost_copper
+        )
         profit2 = (
-            relic_of_fireworks_sell_copper * 0.85 - fireworks_crafting_cost2_copper
+            relic_of_fireworks_sell_copper * 0.85
+            - fireworks_crafting_cost2_copper
         )
 
         data = {
-            **get_sub_dict("fireworks_crafting_cost", fireworks_crafting_cost_copper),
+            **get_sub_dict(
+                "fireworks_crafting_cost",
+                fireworks_crafting_cost_copper,
+            ),
             **get_sub_dict(
                 "fireworks_crafting_cost_with_lucent_motes",
                 fireworks_crafting_cost2_copper,
@@ -405,7 +449,7 @@ def get_relic_of_fireworks() -> Any:
 
 
 @fastapi_app.get("/common_gear_salvage")
-def get_common_gear_salvage() -> Any:
+def get_common_gear_salvage() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -427,7 +471,7 @@ def get_common_gear_salvage() -> Any:
                 CHARM_OF_POTENCE_ID,
                 CHARM_OF_SKILL_ID,
                 COMMON_GEAR_ID,
-            ]
+            ],
         )
 
         ecto_data = fetched_data[ECTO_ITEM_ID]
@@ -463,7 +507,9 @@ def get_common_gear_salvage() -> Any:
         symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
         orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
         symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
-        charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
+        charm_of_brilliance_sell_copper = charm_of_brilliance_data[
+            "sell_copper"
+        ]
         charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
         charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
@@ -500,7 +546,7 @@ def get_common_gear_salvage() -> Any:
 
 
 @fastapi_app.get("/gear_salvage")
-def get_gear_salvage() -> Any:
+def get_gear_salvage() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -521,7 +567,7 @@ def get_gear_salvage() -> Any:
                 CHARM_OF_BRILLIANCE_ID,
                 CHARM_OF_POTENCE_ID,
                 CHARM_OF_SKILL_ID,
-            ]
+            ],
         )
 
         ecto_data = fetched_data[ECTO_ITEM_ID]
@@ -557,7 +603,9 @@ def get_gear_salvage() -> Any:
         symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
         orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
         symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
-        charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
+        charm_of_brilliance_sell_copper = charm_of_brilliance_data[
+            "sell_copper"
+        ]
         charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
         charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
@@ -593,7 +641,7 @@ def get_gear_salvage() -> Any:
 
 
 @fastapi_app.get("/t5_mats_sell")
-def get_t5_mats_sell() -> Any:
+def get_t5_mats_sell() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -601,7 +649,7 @@ def get_t5_mats_sell() -> Any:
                 MIRTHIL_ID,
                 ELDER_WOOD_ID,
                 THICK_LEATHER_ID,
-            ]
+            ],
         )
         lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
         mithril_data = fetched_data[MIRTHIL_ID]
@@ -618,7 +666,8 @@ def get_t5_mats_sell() -> Any:
             **get_sub_dict("mithril_sell", mithril_copper * 250.0),
             **get_sub_dict("elder_wood_sell", elder_wood_copper * 250.0),
             **get_sub_dict(
-                "thick_leather_sell", thick_leather_data_sell_copper * 250.0
+                "thick_leather_sell",
+                thick_leather_data_sell_copper * 250.0,
             ),
         }
         return JSONResponse(content=jsonable_encoder(data))
@@ -627,13 +676,16 @@ def get_t5_mats_sell() -> Any:
 
 
 app = Starlette(
-    routes=[Mount("/api", app=fastapi_app), Mount("/", app=WSGIMiddleware(flask_app))]
+    routes=[
+        Mount("/api", app=fastapi_app),
+        Mount("/", app=WSGIMiddleware(flask_app)),
+    ],
 )
 
 if __name__ == "__main__":
     uvicorn.run(
         "flask_fastapi_shared:app",
-        host="0.0.0.0",
+        host="0.0.0.0",  # noqa: S104
         port=port,
         reload=True,
     )

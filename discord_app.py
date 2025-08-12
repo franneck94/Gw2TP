@@ -4,6 +4,7 @@ from typing import Any
 import aiohttp
 import discord
 
+
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
 COMMANDS = [
@@ -16,7 +17,7 @@ COMMANDS = [
 ]
 
 
-def is_running_on_railway():
+def is_running_on_railway():  # noqa: ANN201
     return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
 
 
@@ -24,7 +25,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 uses_server = is_running_on_railway()
-port = int(os.environ.get("PORT", 8000))
+port = int(os.environ.get("PORT", "8000"))
 if uses_server:
     api_base = "https://gw2tp-production.up.railway.app/api/"
 else:
@@ -76,7 +77,7 @@ async def on_message(
 
     if message.content.startswith(f"{COMMAND_PREFIX} help"):
         help_message = "Available commands:\n" + "".join(
-            [f"{COMMAND_PREFIX} {cmd}\n" for cmd in COMMANDS_LIST]
+            [f"{COMMAND_PREFIX} {cmd}\n" for cmd in COMMANDS_LIST],
         )
         await message.channel.send(help_message)
         return
@@ -97,16 +98,16 @@ async def on_message(
         title = "Rare Gear to Ecto"
         api_url = api_base + "gear_to_ecto"
     elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
-        item_id = message.content.split()[2] if len(message.content.split()) > 1 else ""
+        item_id = message.content.split()[2] if len(message.content.split()) > 1 else ""  # noqa: E501
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
     else:
         await message.channel.send(
-            "Unknown command. Use `/gw2tp help` for a list of commands."
+            "Unknown command. Use `/gw2tp help` for a list of commands.",
         )
         return
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:  # noqa: SIM117
         async with session.get(api_url) as resp:
             data: dict[str, Any] = await resp.json()
 
