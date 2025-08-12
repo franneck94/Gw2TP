@@ -7,14 +7,16 @@ import discord
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
-COMMANDS = [
-    f"{COMMAND_PREFIX} gear_salvage",
-    f"{COMMAND_PREFIX} relic_of_fireworks",
-    f"{COMMAND_PREFIX} scholar_rune",
-    f"{COMMAND_PREFIX} rare_gear_craft",
-    f"{COMMAND_PREFIX} gear_to_ecto",
-    f"{COMMAND_PREFIX} get_price [ITEM_ID]",
+COMMANDS_LIST = [
+    "gear_salvage",
+    "common_gear_salvage",
+    "relic_of_fireworks",
+    "scholar_rune",
+    "rare_gear_craft",
+    "gear_to_ecto",
+    "get_price",
 ]
+COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
 
 def is_running_on_railway():  # noqa: ANN201
@@ -30,15 +32,6 @@ if uses_server:
     api_base = "https://gw2tp-production.up.railway.app/api/"
 else:
     api_base = "http://127.0.0.1:8000/api/"
-
-COMMANDS_LIST = [
-    "gear_salvage",
-    "relic_of_fireworks",
-    "scholar_rune",
-    "rare_gear_craft",
-    "gear_to_ecto",
-    "get_price",
-]
 
 
 def create_price_embed(
@@ -61,7 +54,7 @@ def create_price_embed(
 
         embed.add_field(
             name=name,
-            value=f"🪙 Gold: {g}\n🥈 Silver: {s}\n🥉 Copper: {c}",
+            value=f"{g} 🪙   {s} ⚪   {c} 🟤",
             inline=False,
         )
 
@@ -98,7 +91,11 @@ async def on_message(
         title = "Rare Gear to Ecto"
         api_url = api_base + "gear_to_ecto"
     elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
-        item_id = message.content.split()[2] if len(message.content.split()) > 1 else ""  # noqa: E501
+        item_id = (
+            message.content.split()[2]
+            if len(message.content.split()) > 1
+            else ""
+        )  # noqa: E501
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
     else:
