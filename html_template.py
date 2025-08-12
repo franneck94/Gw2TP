@@ -1,6 +1,16 @@
 # ruff: noqa: E501
-from items import ECTO_ITEM_ID
+from items import ECTOPLASM_ID
 from items import RARE_UNID_ITEM_ID
+
+
+TABLE_HEADER = """
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+"""
 
 
 def get_price_row_html(
@@ -19,12 +29,7 @@ def get_price_row_html(
 
 def get_flip_table_html(item_id: int) -> str:
     return f"""<table>
-        <tr>
-            <th>Type</th>
-            <th>Gold</th>
-            <th>Silver</th>
-            <th>Copper</th>
-        </tr>
+        {TABLE_HEADER}
         <tr>
             <td>Buy Order</td>
             <td id="{item_id}_buy_g">-</td>
@@ -46,17 +51,12 @@ def get_flip_table_html(item_id: int) -> str:
     </table>"""
 
 
-ECTO_TABLE = get_flip_table_html(ECTO_ITEM_ID)
+ECTO_TABLE = get_flip_table_html(ECTOPLASM_ID)
 RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_ITEM_ID)
 
 GEAR_TO_ECTO_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("ecto_sell_after_taxes", "gear_to_ecto")}
     {get_price_row_html("buy", "gear_to_ecto")}
     {get_price_row_html("gear_to_ecto_profit", "gear_to_ecto")}
@@ -65,12 +65,7 @@ GEAR_TO_ECTO_TABLE = f"""
 
 GEAR_SALVAGE_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("stack_buy", "gear_salvage")}
     {get_price_row_html("profit_stack", "gear_salvage")}
 </table>
@@ -78,12 +73,7 @@ GEAR_SALVAGE_TABLE = f"""
 
 T5_MATS_SELL_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("lucent_mote_sell", "t5_mats_sell")}
     {get_price_row_html("mithril_sell", "t5_mats_sell")}
     {get_price_row_html("elder_wood_sell", "t5_mats_sell")}
@@ -93,32 +83,30 @@ T5_MATS_SELL_TABLE = f"""
 
 T5_MATS_BUY_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
-    {get_price_row_html("mithril_ore_to_ingot", "t5_mats_buy")}
-    {get_price_row_html("mithril_ingot_buy", "t5_mats_buy")}
-    {get_price_row_html("elder_wood_log_to_plank", "t5_mats_buy")}
-    {get_price_row_html("elder_wood_plank_buy", "t5_mats_buy")}
-    {get_price_row_html("large_claw_buy_buy", "t5_mats_buy")}
-    {get_price_row_html("potent_blood_buy_buy", "t5_mats_buy")}
-    {get_price_row_html("large_bone_buy_buy", "t5_mats_buy")}
-    {get_price_row_html("intricate_totem_buy_buy", "t5_mats_buy")}
-    {get_price_row_html("large_fang_buy_buy", "t5_mats_buy")}
+    {TABLE_HEADER}
+    {get_price_row_html("large_claw_buy", "t5_mats_buy")}
+    {get_price_row_html("potent_blood_buy", "t5_mats_buy")}
+    {get_price_row_html("large_bone_buy", "t5_mats_buy")}
+    {get_price_row_html("intricate_totem_buy", "t5_mats_buy")}
+    {get_price_row_html("large_fang_buy", "t5_mats_buy")}
+</table>
+"""
+
+MATS_CRAFT_COMPARE_TABLE = f"""
+<table>
+    {TABLE_HEADER}
+    {get_price_row_html("mithril_ore_to_ingot", "mats_crafting_compare")}
+    {get_price_row_html("mithril_ingot_buy", "mats_crafting_compare")}
+    {get_price_row_html("elder_wood_log_to_plank", "mats_crafting_compare")}
+    {get_price_row_html("elder_wood_plank_buy", "mats_crafting_compare")}
+    {get_price_row_html("lucent_mote_to_crystal", "mats_crafting_compare")}
+    {get_price_row_html("lucent_crystal_buy", "mats_crafting_compare")}
 </table>
 """
 
 COMMON_GEAR_SALVAGE_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("stack_buy", "common_gear_salvage")}
     {get_price_row_html("profit_stack", "common_gear_salvage")}
 </table>
@@ -126,44 +114,35 @@ COMMON_GEAR_SALVAGE_TABLE = f"""
 
 SCHOLAR_RUNE_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("crafting_cost", "scholar_rune")}
-    {get_price_row_html("crafting_cost_with_lucent_motes", "scholar_rune")}
     {get_price_row_html("sell", "scholar_rune")}
     {get_price_row_html("profit", "scholar_rune")}
-    {get_price_row_html("profit_with_lucent_motes", "scholar_rune")}
+</table>
+"""
+
+DRAGONHUNTER_RUNE_TABLE = f"""
+<table>
+    {TABLE_HEADER}
+    {get_price_row_html("guardian_crafting_cost", "dragonhunter_rune")}
+    {get_price_row_html("crafting_cost", "dragonhunter_rune")}
+    {get_price_row_html("sell", "dragonhunter_rune")}
+    {get_price_row_html("profit", "dragonhunter_rune")}
 </table>
 """
 
 FIREWORKS_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
-    {get_price_row_html("fireworks_crafting_cost", "relic_of_fireworks")}
-    {get_price_row_html("fireworks_crafting_cost_with_lucent_motes", "relic_of_fireworks")}
-    {get_price_row_html("fireworks_sell", "relic_of_fireworks")}
-    {get_price_row_html("fireworks_profit", "relic_of_fireworks")}
-    {get_price_row_html("fireworks_profit_with_lucent_motes", "relic_of_fireworks")}
+    {TABLE_HEADER}
+    {get_price_row_html("crafting_cost", "relic_of_fireworks")}
+    {get_price_row_html("sell", "relic_of_fireworks")}
+    {get_price_row_html("profit", "relic_of_fireworks")}
 </table>
 """
 
 RARE_WEAPON_CRAFT_TABLE = f"""
 <table>
-    <tr>
-        <th></th>
-        <th>Gold</th>
-        <th>Silver</th>
-        <th>copper</th>
-    </tr>
+    {TABLE_HEADER}
     {get_price_row_html("crafting_cost", "rare_weapon_craft")}
     {get_price_row_html("ecto_sell_after_taxes", "rare_weapon_craft")}
     {get_price_row_html("profit", "rare_weapon_craft")}
@@ -202,7 +181,7 @@ STYLE = """
 
 
 PROFIT_CALCULATION_HTML = """
-<h2 style="text-align: center;">Profit Calculator</h2>
+<h3 style="text-align: center;">Profit Calculator</h3>
 <div style="display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 24px;">
     <div style="display: flex; flex-direction: column; align-items: center;">
         <label for="manual-buy-g">Buy Price:</label>
@@ -278,6 +257,10 @@ def get_scholar_rune_html() -> str:
     return get_all_fetch_price_html("scholar_rune")
 
 
+def get_dragonhunter_rune_html() -> str:
+    return get_all_fetch_price_html("dragonhunter_rune")
+
+
 def get_fireworks_html() -> str:
     return get_all_fetch_price_html("relic_of_fireworks")
 
@@ -298,19 +281,25 @@ def get_t5_mats_buy() -> str:
     return get_all_fetch_price_html("t5_mats_buy")
 
 
+def get_mats_crafting_compare() -> str:
+    return get_all_fetch_price_html("mats_crafting_compare")
+
+
 SCRIPT = f"""
 <script>
 async function _fetchPrices() {{
     await Promise.all([
         (async () => {{ {get_fetch_price_html(RARE_UNID_ITEM_ID)} }})(),
-        (async () => {{ {get_fetch_price_html(ECTO_ITEM_ID)} }})(),
+        (async () => {{ {get_fetch_price_html(ECTOPLASM_ID)} }})(),
         (async () => {{ {get_rare_gear_to_ecto_html()} }})(),
         (async () => {{ {get_rare_salvage_html()} }})(),
         (async () => {{ {get_scholar_rune_html()} }})(),
+        (async () => {{ {get_dragonhunter_rune_html()} }})(),
         (async () => {{ {get_fireworks_html()} }})(),
         (async () => {{ {get_rare_weapon_craft_html()} }})(),
         (async () => {{ {get_t5_mats_sell()} }})(),
         (async () => {{ {get_t5_mats_buy()} }})(),
+        (async () => {{ {get_mats_crafting_compare()} }})(),
         (async () => {{ {get_common_gear_salvage_html()} }})(),
     ]);
 }}
@@ -398,56 +387,66 @@ HTML_PAGE = f"""
         <div style="flex: 1;">
             {PROFIT_CALCULATION_HTML}
 
-            <h2 style="text-align: center;">Rare Unid. Gear</h2>
+            <h3 style="text-align: center;">Rare Unid. Gear</h3>
             {RARE_GEAR_TABLE}
 
-            <h2 style="text-align: center;">Rare Gear to Ecto</h2>
+            <h3 style="text-align: center;">Rare Gear to Ecto</h3>
             {GEAR_TO_ECTO_TABLE}
 
-            <h2 style="text-align: center;">
+            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Piece_of_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
                     Green Gear Ident & Salvaging
                 </a>
-            </h2>
+            </h3>
             {GEAR_SALVAGE_TABLE}
 
-            <h2 style="text-align: center;">
+            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Piece_of_Common_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
                     Common Gear Ident & Salvaging
                 </a>
-            </h2>
+            </h3>
             {COMMON_GEAR_SALVAGE_TABLE}
         </div>
         <div style="flex: 1;">
-            <h2 style="text-align: center;">Ectoplasm</h2>
+            <h3 style="text-align: center;">Ectoplasm</h3>
             {ECTO_TABLE}
 
-            <h2 style="text-align: center;">T5 Mats Sell Order</h2>
-            {T5_MATS_SELL_TABLE}
+            <h3 style="text-align: center;">Mats Crafting Compare</h3>
+            {MATS_CRAFT_COMPARE_TABLE}
 
-            <h2 style="text-align: center;">T5 Mats Buy Order</h2>
+            <h3 style="text-align: center;">T5 Mats Buy Order</h3>
             {T5_MATS_BUY_TABLE}
+
+            <h3 style="text-align: center;">T5 Mats Sell Order</h3>
+            {T5_MATS_SELL_TABLE}
         </div>
         <div style="flex: 1;">
-            <h2 style="text-align: center;">
+            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
                     Rare Weapon Craft
                 </a>
-            </h2>
+            </h3>
             {RARE_WEAPON_CRAFT_TABLE}
 
-            <h2 style="text-align: center;">
+            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Scholar" target="_blank" style="color: inherit; text-decoration: none;">
                     Scholar Runes
                 </a>
-            </h2>
+            </h3>
             {SCHOLAR_RUNE_TABLE}
 
-            <h2 style="text-align: center;">
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
+                    Dragonhunter Runes
+                </a>
+            </h3>
+            {DRAGONHUNTER_RUNE_TABLE}
+
+            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_Fireworks" target="_blank" style="color: inherit; text-decoration: none;">
                     Relic of Fireworks
                 </a>
-            </h2>
+            </h3>
             {FIREWORKS_TABLE}
         </div>
     </div>

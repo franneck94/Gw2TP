@@ -17,6 +17,7 @@ COMMANDS_LIST = [
     "get_price",
     "t5_mats_buy",
     "t5_mats_sell",
+    "dragonhunter_rune",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -86,6 +87,9 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} scholar_rune"):
         title = "Scholar Rune"
         api_url = api_base + "scholar_rune"
+    elif message.content.startswith(f"{COMMAND_PREFIX} dragonhunter_rune"):
+        title = "Dragonhunter Rune"
+        api_url = api_base + "dragonhunter_rune"
     elif message.content.startswith(f"{COMMAND_PREFIX} rare_weapon_craft"):
         title = "Rare Weapon Craft"
         api_url = api_base + "rare_weapon_craft"
