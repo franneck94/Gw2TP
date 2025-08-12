@@ -14,39 +14,17 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
 from html_template import HTML_PAGE
-from items import (
-    ANCIENT_WOOD_ID,
-    CHARM_OF_BRILLIANCE_ID,
-    CHARM_OF_POTENCE_ID,
-    CHARM_OF_SKILL_ID,
-    ECTO_ITEM_ID,
-    ELABORATE_TOTEM_ID,
-    ELDER_WOOD_ID,
-    ELDER_WOOD_LOG_ID,
-    ELDER_WOOD_PLANK_ID,
-    GOSSAMER_SCRAP_ID,
-    HARDENED_LEATHER_ID,
-    INTRICATE_TOTEM_ID,
-    LARGE_BONE_ID,
-    LARGE_CLAW_ID,
-    LARGE_FANG_ID,
-    LUCENT_MOTE_ID,
-    MIRTHIL_ID,
-    MITHRIL_INGOT_ID,
-    MITHRIL_ORE_ID,
-    ORICHALCUM_ID,
-    PILE_OF_LUCENT_CRYSTAL_ID,
-    POTENT_BLOOD_ID,
-    RARE_UNID_ITEM_ID,
-    RELIC_OF_FIREWORKS_ID,
-    SCHOLAR_RUNE_ID,
-    SILK_SCRAP_ID,
-    SYMBOL_OF_CONTROL_ID,
-    SYMBOL_OF_ENH_ID,
-    SYMBOL_OF_PAIN_ID,
-    THICK_LEATHER_ID,
-    UNID_ITEM_ID,
-)
+from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
+                   CHARM_OF_POTENCE_ID, CHARM_OF_SKILL_ID, COMMON_GEAR_ID,
+                   ECTO_ITEM_ID, ELABORATE_TOTEM_ID, ELDER_WOOD_ID,
+                   ELDER_WOOD_LOG_ID, ELDER_WOOD_PLANK_ID, GOSSAMER_SCRAP_ID,
+                   HARDENED_LEATHER_ID, INTRICATE_TOTEM_ID, LARGE_BONE_ID,
+                   LARGE_CLAW_ID, LARGE_FANG_ID, LUCENT_MOTE_ID, MIRTHIL_ID,
+                   MITHRIL_INGOT_ID, MITHRIL_ORE_ID, ORICHALCUM_ID,
+                   PILE_OF_LUCENT_CRYSTAL_ID, POTENT_BLOOD_ID,
+                   RARE_UNID_ITEM_ID, RELIC_OF_FIREWORKS_ID, SCHOLAR_RUNE_ID,
+                   SILK_SCRAP_ID, SYMBOL_OF_CONTROL_ID, SYMBOL_OF_ENH_ID,
+                   SYMBOL_OF_PAIN_ID, THICK_LEATHER_ID, UNID_ITEM_ID)
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
@@ -173,9 +151,9 @@ def get_gear_to_ecto() -> Any:
             "ecto_sell_after_taxes_g": ecto_data["sell_after_taxes_g"],
             "ecto_sell_after_taxes_s": ecto_data["sell_after_taxes_s"],
             "ecto_sell_after_taxes_c": ecto_data["sell_after_taxes_c"],
-            "rare_gear_buy_g": rare_gear_data["buy_g"],
-            "rare_gear_buy_s": rare_gear_data["buy_s"],
-            "rare_gear_buy_c": rare_gear_data["buy_c"],
+            "buy_order_g": rare_gear_data["buy_g"],
+            "buy_order_s": rare_gear_data["buy_s"],
+            "buy_order_c": rare_gear_data["buy_c"],
             "gear_to_ecto_profit_g": profit_g,
             "gear_to_ecto_profit_s": profit_s,
             "gear_to_ecto_profit_c": profit_c,
@@ -186,8 +164,8 @@ def get_gear_to_ecto() -> Any:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@fastapi_app.get("/rare_gear_craft")
-def get_rare_gear_craft() -> Any:
+@fastapi_app.get("/rare_weapon_craft")
+def get_rare_weapon_craft() -> Any:
     try:
         result = fetch_tp_prices(
             [
@@ -246,22 +224,52 @@ def get_rare_gear_craft() -> Any:
         ) - crafting_cost_with_cheap_materials
 
         data = {
-            **get_sub_dict("mithril_ore__to_ingot_cost", mithril_ore_buy_copper * 2.0),
-            **get_sub_dict("mithril_ingot_cost", mithril_ingot_buy_copper),
-            **get_sub_dict(
-                "elder_wood_log_to_plank_cost", elder_wood_log_buy_copper * 3.0
-            ),
-            **get_sub_dict("elder_wood_plank_cost", elder_wood_plank_buy_copper),
-            **get_sub_dict("large_claw_buy_cost", large_claw_buy_copper),
-            **get_sub_dict("potent_blood_buy_cost", potent_blood_buy_copper),
-            **get_sub_dict("large_bone_buy_cost", large_bone_buy_copper),
-            **get_sub_dict("intricate_totem_buy_cost", intricate_totem_buy_copper),
-            **get_sub_dict("large_fang_buy_cost", large_fang_buy_copper),
-            **get_sub_dict(
-                "crafting_cost_with_cheapest_t5", crafting_cost_with_cheap_materials
-            ),
-            **get_sub_dict("ecto_sell_after_taxes2", ecto_sell_after_taxes_copper),
-            **get_sub_dict("rare_gear_craft_profit", rare_gear_craft_profit_copper),
+            **get_sub_dict("crafting_cost", crafting_cost_with_cheap_materials),
+            **get_sub_dict("ecto_sell_after_taxes", ecto_sell_after_taxes_copper),
+            **get_sub_dict("profit", rare_gear_craft_profit_copper),
+        }
+
+        return JSONResponse(content=jsonable_encoder(data))
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+
+@fastapi_app.get("/t5_mats_buy")
+def get_t5_mats_buy() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                MITHRIL_INGOT_ID,
+                MITHRIL_ORE_ID,
+                ELDER_WOOD_PLANK_ID,
+                ELDER_WOOD_LOG_ID,
+                LARGE_CLAW_ID,
+                POTENT_BLOOD_ID,
+                LARGE_BONE_ID,
+                INTRICATE_TOTEM_ID,
+                LARGE_FANG_ID,
+            ]
+        )
+        mithril_ore_buy_copper = result[MITHRIL_ORE_ID]["buy_copper"]
+        mithril_ingot_buy_copper = result[MITHRIL_INGOT_ID]["buy_copper"]
+        elder_wood_log_buy_copper = result[ELDER_WOOD_LOG_ID]["buy_copper"]
+        elder_wood_plank_buy_copper = result[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        large_claw_buy_copper = result[LARGE_CLAW_ID]["buy_copper"]
+        potent_blood_buy_copper = result[POTENT_BLOOD_ID]["buy_copper"]
+        large_bone_buy_copper = result[LARGE_BONE_ID]["buy_copper"]
+        intricate_totem_buy_copper = result[INTRICATE_TOTEM_ID]["buy_copper"]
+        large_fang_buy_copper = result[LARGE_FANG_ID]["buy_copper"]
+
+        data = {
+            **get_sub_dict("mithril_ore_to_ingot", mithril_ore_buy_copper * 2.0),
+            **get_sub_dict("mithril_ingot_buy_order", mithril_ingot_buy_copper),
+            **get_sub_dict("elder_wood_log_to_plank", elder_wood_log_buy_copper * 3.0),
+            **get_sub_dict("elder_wood_plank_buy_order", elder_wood_plank_buy_copper),
+            **get_sub_dict("large_claw_buy_buy_order", large_claw_buy_copper),
+            **get_sub_dict("potent_blood_buy_buy_order", potent_blood_buy_copper),
+            **get_sub_dict("large_bone_buy_buy_order", large_bone_buy_copper),
+            **get_sub_dict("intricate_totem_buy_buy_order", intricate_totem_buy_copper),
+            **get_sub_dict("large_fang_buy_buy_order", large_fang_buy_copper),
         }
 
         return JSONResponse(content=jsonable_encoder(data))
@@ -306,13 +314,13 @@ def get_scholar_rune() -> Any:
         profit2 = scholar_rune_sell_copper * 0.85 - scholar_crafting_cost2_copper
 
         data = {
-            **get_sub_dict("scholar_crafting_cost", scholar_crafting_cost_copper),
+            **get_sub_dict("crafting_cost", scholar_crafting_cost_copper),
             **get_sub_dict(
-                "scholar_crafting_cost_with_lucent_motes", scholar_crafting_cost2_copper
+                "crafting_cost_with_lucent_motes", scholar_crafting_cost2_copper
             ),
-            **get_sub_dict("scholar_rune_sell", scholar_rune_sell_copper),
-            **get_sub_dict("scholar_profit", profit),
-            **get_sub_dict("scholar_profit_with_lucent_motes", profit2),
+            **get_sub_dict("sell_order", scholar_rune_sell_copper),
+            **get_sub_dict("profit", profit),
+            **get_sub_dict("profit_with_lucent_motes", profit2),
         }
 
         return JSONResponse(content=jsonable_encoder(data))
@@ -365,6 +373,44 @@ def get_relic_of_fireworks() -> Any:
             **get_sub_dict("fireworks_profit_with_lucent_motes", profit2),
         }
 
+        return JSONResponse(content=jsonable_encoder(data))
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+
+@fastapi_app.get("/common_gear_salvage")
+def get_common_gear_salvage() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                ECTO_ITEM_ID,
+                UNID_ITEM_ID,
+                COMMON_GEAR_ID,
+            ]
+        )
+        green_gear_data = result[UNID_ITEM_ID]
+        common_gear_data = result[COMMON_GEAR_ID]
+
+        buy_comon_copper = common_gear_data["buy_copper"]
+
+        sell_green_copper = green_gear_data["sell_copper"]
+        sell_ecto_copper = result[ECTO_ITEM_ID]["sell_copper"]
+
+        est_profit_common = 0.9
+        est_profit_green = sell_green_copper
+        est_profit_rare = sell_ecto_copper * 0.9
+        est_profit_exo = est_profit_rare
+        profit_stack_copper = (
+            est_profit_common * 0.89
+            + est_profit_green * 0.099
+            + est_profit_rare * 0.01
+            + est_profit_exo * 0.001
+        )
+
+        data = {
+            **get_sub_dict("stack_buy_order", buy_comon_copper * 250.0),
+            **get_sub_dict("profit_stack", profit_stack_copper),
+        }
         return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
@@ -426,7 +472,7 @@ def get_gear_salvage() -> Any:
         symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
         symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
         orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
-        symbol_of_control__sell_copper = symbol_of_control_data["sell_copper"]
+        symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
         charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
         charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
         charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
@@ -442,7 +488,7 @@ def get_gear_salvage() -> Any:
             + hardened_data_sell_copper * (250.0 * 0.0169) * 0.85
             + ecto_sellcopper * (250.0 * 0.0296) * 0.85
             + lucent_mote_copper * (250.0 * 0.98) * 0.85
-            + symbol_of_control__sell_copper * (250.0 * 0.0018) * 0.85
+            + symbol_of_control_sell_copper * (250.0 * 0.0018) * 0.85
             + symbol_of_enh_data_sell_copper * (250.0 * 0.001) * 0.85
             + symbol_of_pain_data_sell_copper * (250.0 * 0.0006) * 0.85
             + charm_of_brilliance_sell_copper * (250.0 * 0.0042) * 0.85
@@ -454,14 +500,42 @@ def get_gear_salvage() -> Any:
         )
 
         data = {
-            **get_sub_dict("gear_stack_buy", buy_stack_copper),
-            **get_sub_dict("lucent_mote_sell", lucent_mote_copper * 250.0),
-            **get_sub_dict("mithril_sell", mithril_copper * 250.0),
-            **get_sub_dict("elder_wood_sell", elder_wood_copper * 250.0),
-            **get_sub_dict(
-                "thick_leather_sell", thick_leather_data_sell_copper * 250.0
-            ),
+            **get_sub_dict("stack_buy_order", buy_stack_copper),
             **get_sub_dict("profit_stack", profit_stack_copper),
+        }
+        return JSONResponse(content=jsonable_encoder(data))
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+
+@fastapi_app.get("/t5_mats_sell")
+def get_t5_mats_sell() -> Any:
+    try:
+        result = fetch_tp_prices(
+            [
+                LUCENT_MOTE_ID,
+                MIRTHIL_ID,
+                ELDER_WOOD_ID,
+                THICK_LEATHER_ID,
+            ]
+        )
+        lucent_mote_data = result[LUCENT_MOTE_ID]
+        mithril_data = result[MIRTHIL_ID]
+        elder_wood_data = result[ELDER_WOOD_ID]
+        thick_leather_data = result[THICK_LEATHER_ID]
+
+        lucent_mote_copper = lucent_mote_data["sell_copper"]
+        mithril_copper = mithril_data["sell_copper"]
+        elder_wood_copper = elder_wood_data["sell_copper"]
+        thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+
+        data = {
+            **get_sub_dict("lucent_mote_sell_order", lucent_mote_copper * 250.0),
+            **get_sub_dict("mithril_sell_order", mithril_copper * 250.0),
+            **get_sub_dict("elder_wood_sell_order", elder_wood_copper * 250.0),
+            **get_sub_dict(
+                "thick_leather_sell_order", thick_leather_data_sell_copper * 250.0
+            ),
         }
         return JSONResponse(content=jsonable_encoder(data))
     except Exception as e:
