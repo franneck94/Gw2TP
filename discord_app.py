@@ -8,13 +8,15 @@ import discord
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
 COMMANDS_LIST = [
+    "rare_weapon_craft",
+    "rare_gear_to_ecto",
     "gear_salvage",
     "common_gear_salvage",
     "relic_of_fireworks",
     "scholar_rune",
-    "rare_gear_craft",
-    "gear_to_ecto",
     "get_price",
+    "t5_mats_buy",
+    "t5_mats_sell",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -84,18 +86,24 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} scholar_rune"):
         title = "Scholar Rune"
         api_url = api_base + "scholar_rune"
-    elif message.content.startswith(f"{COMMAND_PREFIX} rare_gear_craft"):
-        title = "Rare Gear Craft"
-        api_url = api_base + "rare_gear_to_ecto"
-    elif message.content.startswith(f"{COMMAND_PREFIX} gear_to_ecto"):
+    elif message.content.startswith(f"{COMMAND_PREFIX} rare_weapon_craft"):
+        title = "Rare Weapon Craft"
+        api_url = api_base + "rare_weapon_craft"
+    elif message.content.startswith(f"{COMMAND_PREFIX} rare_gear_to_ecto"):
         title = "Rare Gear to Ecto"
-        api_url = api_base + "gear_to_ecto"
+        api_url = api_base + "rare_gear_to_ecto"
+    elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_buy"):
+        title = "T5 Mats Buy Orders"
+        api_url = api_base + "t5_mats_buy"
+    elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_sell"):
+        title = "T5 Mats Sell Orders"
+        api_url = api_base + "t5_mats_sell"
     elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
         item_id = (
             message.content.split()[2]
             if len(message.content.split()) > 1
             else ""
-        )  # noqa: E501
+        )
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
     else:
