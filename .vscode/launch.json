@@ -18,6 +18,15 @@
             "console": "integratedTerminal",
             "args": [],
             "justMyCode": true
+        },
+        {
+            "name": "WIP",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/gw2tp_history.py",
+            "console": "integratedTerminal",
+            "args": [],
+            "justMyCode": true
         }
     ]
 }
