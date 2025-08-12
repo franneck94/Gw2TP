@@ -223,7 +223,7 @@ PROFIT_CALCULATION_HTML = """
     </div>
 </div>
 <div style="text-align: center; margin-bottom: 24px;">
-    <span id="manual-profit-result" style="font-size: 18px;"></span>
+    <span id="manual-profit-result" style="font-size: 18px;">Profit: 0g 0s 0c</span>
 </div>
 """
 
@@ -402,10 +402,18 @@ HTML_PAGE = f"""
             <h2 style="text-align: center;">Rare Gear to Ecto</h2>
             {GEAR_TO_ECTO_TABLE}
 
-            <h2 style="text-align: center;">Gear Ident & Salvaging</h2>
+            <h2 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Green Gear Ident & Salvaging
+                </a>
+            </h2>
             {GEAR_SALVAGE_TABLE}
 
-            <h2 style="text-align: center;">Common Gear Ident & Salvaging</h2>
+            <h2 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Common_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Common Gear Ident & Salvaging
+                </a>
+            </h2>
             {COMMON_GEAR_SALVAGE_TABLE}
         </div>
         <div style="flex: 1;">

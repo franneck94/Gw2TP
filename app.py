@@ -14,17 +14,40 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
 from html_template import HTML_PAGE
-from items import (ANCIENT_WOOD_ID, CHARM_OF_BRILLIANCE_ID,
-                   CHARM_OF_POTENCE_ID, CHARM_OF_SKILL_ID, COMMON_GEAR_ID,
-                   ECTO_ITEM_ID, ELABORATE_TOTEM_ID, ELDER_WOOD_ID,
-                   ELDER_WOOD_LOG_ID, ELDER_WOOD_PLANK_ID, GOSSAMER_SCRAP_ID,
-                   HARDENED_LEATHER_ID, INTRICATE_TOTEM_ID, LARGE_BONE_ID,
-                   LARGE_CLAW_ID, LARGE_FANG_ID, LUCENT_MOTE_ID, MIRTHIL_ID,
-                   MITHRIL_INGOT_ID, MITHRIL_ORE_ID, ORICHALCUM_ID,
-                   PILE_OF_LUCENT_CRYSTAL_ID, POTENT_BLOOD_ID,
-                   RARE_UNID_ITEM_ID, RELIC_OF_FIREWORKS_ID, SCHOLAR_RUNE_ID,
-                   SILK_SCRAP_ID, SYMBOL_OF_CONTROL_ID, SYMBOL_OF_ENH_ID,
-                   SYMBOL_OF_PAIN_ID, THICK_LEATHER_ID, UNID_ITEM_ID)
+from items import (
+    ANCIENT_WOOD_ID,
+    CHARM_OF_BRILLIANCE_ID,
+    CHARM_OF_POTENCE_ID,
+    CHARM_OF_SKILL_ID,
+    COMMON_GEAR_ID,
+    ECTO_ITEM_ID,
+    ELABORATE_TOTEM_ID,
+    ELDER_WOOD_ID,
+    ELDER_WOOD_LOG_ID,
+    ELDER_WOOD_PLANK_ID,
+    GOSSAMER_SCRAP_ID,
+    HARDENED_LEATHER_ID,
+    INTRICATE_TOTEM_ID,
+    LARGE_BONE_ID,
+    LARGE_CLAW_ID,
+    LARGE_FANG_ID,
+    LUCENT_MOTE_ID,
+    MIRTHIL_ID,
+    MITHRIL_INGOT_ID,
+    MITHRIL_ORE_ID,
+    ORICHALCUM_ID,
+    PILE_OF_LUCENT_CRYSTAL_ID,
+    POTENT_BLOOD_ID,
+    RARE_UNID_ITEM_ID,
+    RELIC_OF_FIREWORKS_ID,
+    SCHOLAR_RUNE_ID,
+    SILK_SCRAP_ID,
+    SYMBOL_OF_CONTROL_ID,
+    SYMBOL_OF_ENH_ID,
+    SYMBOL_OF_PAIN_ID,
+    THICK_LEATHER_ID,
+    UNID_ITEM_ID,
+)
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 
@@ -81,7 +104,7 @@ def fetch_tp_prices(
     if not isinstance(data, list) or len(data) == 0:
         raise RuntimeError("No items found")
 
-    result: dict[int, dict[str, any]] = {}
+    fetched_data: dict[int, dict[str, any]] = {}
     for item in data:
         item_id = int(item["id"])
         buy_price = int(item["buys"]["unit_price"])
@@ -91,7 +114,7 @@ def fetch_tp_prices(
         sell_g, sell_s, sell_c = copper_to_gsc(sell_price)
         flip_g, flip_s, flip_c = copper_to_gsc(flip_profit)
 
-        result[item_id] = {
+        fetched_data[item_id] = {
             "buy_copper": buy_price,
             "sell_copper": sell_price,
             "buy_g": buy_g,
@@ -107,7 +130,7 @@ def fetch_tp_prices(
             "sell_after_taxes_s": int((sell_price * 0.85 % 10000) // 100),
             "sell_after_taxes_c": int(sell_price * 0.85 % 100),
         }
-    return result
+    return fetched_data
 
 
 @flask_app.route("/")
@@ -128,9 +151,9 @@ async def get_price(item_id: int):
 @fastapi_app.get("/gear_to_ecto")
 def get_gear_to_ecto() -> Any:
     try:
-        result = fetch_tp_prices([ECTO_ITEM_ID, RARE_UNID_ITEM_ID])
-        ecto_data = result[ECTO_ITEM_ID]
-        rare_gear_data = result[RARE_UNID_ITEM_ID]
+        fetched_data = fetch_tp_prices([ECTO_ITEM_ID, RARE_UNID_ITEM_ID])
+        ecto_data = fetched_data[ECTO_ITEM_ID]
+        rare_gear_data = fetched_data[RARE_UNID_ITEM_ID]
         ecto_ident_rate = 0.9
 
         ecto_sell_after_taxes = gsc_to_copper(
@@ -167,7 +190,7 @@ def get_gear_to_ecto() -> Any:
 @fastapi_app.get("/rare_weapon_craft")
 def get_rare_weapon_craft() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 ECTO_ITEM_ID,
                 MITHRIL_INGOT_ID,
@@ -181,16 +204,16 @@ def get_rare_weapon_craft() -> Any:
                 LARGE_FANG_ID,
             ]
         )
-        ecto_sell_after_taxes_copper = result[ECTO_ITEM_ID]["sell_copper"] * 0.85
-        mithril_ore_buy_copper = result[MITHRIL_ORE_ID]["buy_copper"]
-        mithril_ingot_buy_copper = result[MITHRIL_INGOT_ID]["buy_copper"]
-        elder_wood_log_buy_copper = result[ELDER_WOOD_LOG_ID]["buy_copper"]
-        elder_wood_plank_buy_copper = result[ELDER_WOOD_PLANK_ID]["buy_copper"]
-        large_claw_buy_copper = result[LARGE_CLAW_ID]["buy_copper"]
-        potent_blood_buy_copper = result[POTENT_BLOOD_ID]["buy_copper"]
-        large_bone_buy_copper = result[LARGE_BONE_ID]["buy_copper"]
-        intricate_totem_buy_copper = result[INTRICATE_TOTEM_ID]["buy_copper"]
-        large_fang_buy_copper = result[LARGE_FANG_ID]["buy_copper"]
+        ecto_sell_after_taxes_copper = fetched_data[ECTO_ITEM_ID]["sell_copper"] * 0.85
+        mithril_ore_buy_copper = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
+        mithril_ingot_buy_copper = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
+        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
+        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        large_claw_buy_copper = fetched_data[LARGE_CLAW_ID]["buy_copper"]
+        potent_blood_buy_copper = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
+        large_bone_buy_copper = fetched_data[LARGE_BONE_ID]["buy_copper"]
+        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
+        large_fang_buy_copper = fetched_data[LARGE_FANG_ID]["buy_copper"]
 
         lowest_t5_mat = min(
             large_claw_buy_copper,
@@ -237,7 +260,7 @@ def get_rare_weapon_craft() -> Any:
 @fastapi_app.get("/t5_mats_buy")
 def get_t5_mats_buy() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 MITHRIL_INGOT_ID,
                 MITHRIL_ORE_ID,
@@ -250,15 +273,15 @@ def get_t5_mats_buy() -> Any:
                 LARGE_FANG_ID,
             ]
         )
-        mithril_ore_buy_copper = result[MITHRIL_ORE_ID]["buy_copper"]
-        mithril_ingot_buy_copper = result[MITHRIL_INGOT_ID]["buy_copper"]
-        elder_wood_log_buy_copper = result[ELDER_WOOD_LOG_ID]["buy_copper"]
-        elder_wood_plank_buy_copper = result[ELDER_WOOD_PLANK_ID]["buy_copper"]
-        large_claw_buy_copper = result[LARGE_CLAW_ID]["buy_copper"]
-        potent_blood_buy_copper = result[POTENT_BLOOD_ID]["buy_copper"]
-        large_bone_buy_copper = result[LARGE_BONE_ID]["buy_copper"]
-        intricate_totem_buy_copper = result[INTRICATE_TOTEM_ID]["buy_copper"]
-        large_fang_buy_copper = result[LARGE_FANG_ID]["buy_copper"]
+        mithril_ore_buy_copper = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
+        mithril_ingot_buy_copper = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
+        elder_wood_log_buy_copper = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
+        elder_wood_plank_buy_copper = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
+        large_claw_buy_copper = fetched_data[LARGE_CLAW_ID]["buy_copper"]
+        potent_blood_buy_copper = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
+        large_bone_buy_copper = fetched_data[LARGE_BONE_ID]["buy_copper"]
+        intricate_totem_buy_copper = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
+        large_fang_buy_copper = fetched_data[LARGE_FANG_ID]["buy_copper"]
 
         data = {
             **get_sub_dict("mithril_ore_to_ingot", mithril_ore_buy_copper * 2.0),
@@ -280,7 +303,7 @@ def get_t5_mats_buy() -> Any:
 @fastapi_app.get("/scholar_rune")
 def get_scholar_rune() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 ECTO_ITEM_ID,
                 ELABORATE_TOTEM_ID,
@@ -290,12 +313,12 @@ def get_scholar_rune() -> Any:
                 SCHOLAR_RUNE_ID,
             ]
         )
-        ecto_data = result[ECTO_ITEM_ID]["buy_copper"]
-        totem_data = result[ELABORATE_TOTEM_ID]["buy_copper"]
-        lucent_crystal_data = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
-        charm_data = result[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
-        lucent_mote_data = result[LUCENT_MOTE_ID]["buy_copper"]
-        scholar_rune_sell_copper = result[SCHOLAR_RUNE_ID]["sell_copper"]
+        ecto_data = fetched_data[ECTO_ITEM_ID]["buy_copper"]
+        totem_data = fetched_data[ELABORATE_TOTEM_ID]["buy_copper"]
+        lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+        charm_data = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
+        lucent_mote_data = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
+        scholar_rune_sell_copper = fetched_data[SCHOLAR_RUNE_ID]["sell_copper"]
 
         scholar_crafting_cost_copper = (
             ecto_data * 5.0
@@ -331,7 +354,7 @@ def get_scholar_rune() -> Any:
 @fastapi_app.get("/relic_of_fireworks")
 def get_relic_of_fireworks() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 ECTO_ITEM_ID,
                 PILE_OF_LUCENT_CRYSTAL_ID,
@@ -340,11 +363,15 @@ def get_relic_of_fireworks() -> Any:
                 RELIC_OF_FIREWORKS_ID,
             ]
         )
-        ecto_price_copper = result[ECTO_ITEM_ID]["buy_copper"]
-        lucent_crystal_price_copper = result[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
-        charm_price_copper = result[CHARM_OF_SKILL_ID]["buy_copper"]
-        lucent_mote_price_copper = result[LUCENT_MOTE_ID]["buy_copper"]
-        relic_of_fireworks_sell_copper = result[RELIC_OF_FIREWORKS_ID]["sell_copper"]
+        ecto_price_copper = fetched_data[ECTO_ITEM_ID]["buy_copper"]
+        lucent_crystal_price_copper = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID][
+            "buy_copper"
+        ]
+        charm_price_copper = fetched_data[CHARM_OF_SKILL_ID]["buy_copper"]
+        lucent_mote_price_copper = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
+        relic_of_fireworks_sell_copper = fetched_data[RELIC_OF_FIREWORKS_ID][
+            "sell_copper"
+        ]
 
         fireworks_crafting_cost_copper = (
             ecto_price_copper * 15.0
@@ -381,34 +408,91 @@ def get_relic_of_fireworks() -> Any:
 @fastapi_app.get("/common_gear_salvage")
 def get_common_gear_salvage() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
-                ECTO_ITEM_ID,
                 UNID_ITEM_ID,
+                ECTO_ITEM_ID,
+                LUCENT_MOTE_ID,
+                MIRTHIL_ID,
+                ELDER_WOOD_ID,
+                THICK_LEATHER_ID,
+                GOSSAMER_SCRAP_ID,
+                SILK_SCRAP_ID,
+                HARDENED_LEATHER_ID,
+                ANCIENT_WOOD_ID,
+                SYMBOL_OF_ENH_ID,
+                SYMBOL_OF_PAIN_ID,
+                ORICHALCUM_ID,
+                SYMBOL_OF_CONTROL_ID,
+                CHARM_OF_BRILLIANCE_ID,
+                CHARM_OF_POTENCE_ID,
+                CHARM_OF_SKILL_ID,
                 COMMON_GEAR_ID,
             ]
         )
-        green_gear_data = result[UNID_ITEM_ID]
-        common_gear_data = result[COMMON_GEAR_ID]
 
-        buy_comon_copper = common_gear_data["buy_copper"]
+        ecto_data = fetched_data[ECTO_ITEM_ID]
+        gear_data = fetched_data[COMMON_GEAR_ID]
+        lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
+        mithril_data = fetched_data[MIRTHIL_ID]
+        elder_wood_data = fetched_data[ELDER_WOOD_ID]
+        thick_leather_data = fetched_data[THICK_LEATHER_ID]
+        gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
+        silk_scrap_data = fetched_data[SILK_SCRAP_ID]
+        hardened_data = fetched_data[HARDENED_LEATHER_ID]
+        ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
+        symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
+        symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
+        orichalcum_data = fetched_data[ORICHALCUM_ID]
+        symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
+        charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
+        charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
+        charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
 
-        sell_green_copper = green_gear_data["sell_copper"]
-        sell_ecto_copper = result[ECTO_ITEM_ID]["sell_copper"]
+        buy_stack_copper = gear_data["buy_copper"] * 250.0
+        lucent_mote_copper = lucent_mote_data["sell_copper"]
+        mithril_copper = mithril_data["sell_copper"]
+        elder_wood_copper = elder_wood_data["sell_copper"]
+        ecto_sellcopper = ecto_data["sell_copper"]
+        thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
 
-        est_profit_common = 0.9
-        est_profit_green = sell_green_copper
-        est_profit_rare = sell_ecto_copper * 0.9
-        est_profit_exo = est_profit_rare
+        gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
+        silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
+        hardened_data_sell_copper = hardened_data["sell_copper"]
+        ancient_wood_data_sell_copper = ancient_wood_data["sell_copper"]
+        symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
+        symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
+        orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
+        symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
+        charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
+        charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
+        charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
+
         profit_stack_copper = (
-            est_profit_common * 0.89
-            + est_profit_green * 0.099
-            + est_profit_rare * 0.01
-            + est_profit_exo * 0.001
+            mithril_copper * (250.0 * 0.4291) * 0.85
+            + elder_wood_copper * (250.0 * 0.3884) * 0.85
+            + silk_scrap_data_sell_copper * (250.0 * 0.3059) * 0.85
+            + thick_leather_data_sell_copper * (250.0 * 0.2509) * 0.85
+            + orichalcum_data_sell_copper * (250.0 * 0.0394) * 0.85
+            + ancient_wood_data_sell_copper * (250.0 * 0.0305) * 0.85
+            + gossamer_scrap_data_sell_copper * (250.0 * 0.0153) * 0.85
+            + hardened_data_sell_copper * (250.0 * 0.0143) * 0.85
+            + ecto_sellcopper * (250.0 * 0.0095) * 0.85
+            + lucent_mote_copper * (250.0 * 0.1083) * 0.85
+            + symbol_of_control_sell_copper * (250.0 * 0.0002) * 0.85
+            + symbol_of_enh_data_sell_copper * (250.0 * 0.0006) * 0.85
+            + symbol_of_pain_data_sell_copper * (250.0 * 0.0005) * 0.85
+            + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * 0.85
+            + charm_of_potence_sell_copper * (250.0 * 0.0003) * 0.85
+            + charm_of_skilldata_sell_copper * (250.0 * 0.0003) * 0.85
+            - buy_stack_copper
+            - 3.0 * 223  # Copper Fed
+            - 30.0 * 25  # Runecrafter
+            - 60 * 2  # Silver Fed
         )
 
         data = {
-            **get_sub_dict("stack_buy", buy_comon_copper * 250.0),
+            **get_sub_dict("stack_buy", buy_stack_copper),
             **get_sub_dict("profit_stack", profit_stack_copper),
         }
         return JSONResponse(content=jsonable_encoder(data))
@@ -419,7 +503,7 @@ def get_common_gear_salvage() -> Any:
 @fastapi_app.get("/gear_salvage")
 def get_gear_salvage() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 UNID_ITEM_ID,
                 ECTO_ITEM_ID,
@@ -440,23 +524,24 @@ def get_gear_salvage() -> Any:
                 CHARM_OF_SKILL_ID,
             ]
         )
-        ecto_data = result[ECTO_ITEM_ID]
-        gear_data = result[UNID_ITEM_ID]
-        lucent_mote_data = result[LUCENT_MOTE_ID]
-        mithril_data = result[MIRTHIL_ID]
-        elder_wood_data = result[ELDER_WOOD_ID]
-        thick_leather_data = result[THICK_LEATHER_ID]
-        gossamer_scrap_data = result[GOSSAMER_SCRAP_ID]
-        silk_scrap_data = result[SILK_SCRAP_ID]
-        hardened_data = result[HARDENED_LEATHER_ID]
-        ancient_wood_data = result[ANCIENT_WOOD_ID]
-        symbol_of_enh_data = result[SYMBOL_OF_ENH_ID]
-        symbol_of_pain_data = result[SYMBOL_OF_PAIN_ID]
-        orichalcum_data = result[ORICHALCUM_ID]
-        symbol_of_control_data = result[SYMBOL_OF_CONTROL_ID]
-        charm_of_brilliance_data = result[CHARM_OF_BRILLIANCE_ID]
-        charm_of_potence_data = result[CHARM_OF_POTENCE_ID]
-        charm_of_skill_data = result[CHARM_OF_SKILL_ID]
+
+        ecto_data = fetched_data[ECTO_ITEM_ID]
+        gear_data = fetched_data[UNID_ITEM_ID]
+        lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
+        mithril_data = fetched_data[MIRTHIL_ID]
+        elder_wood_data = fetched_data[ELDER_WOOD_ID]
+        thick_leather_data = fetched_data[THICK_LEATHER_ID]
+        gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
+        silk_scrap_data = fetched_data[SILK_SCRAP_ID]
+        hardened_data = fetched_data[HARDENED_LEATHER_ID]
+        ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
+        symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
+        symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
+        orichalcum_data = fetched_data[ORICHALCUM_ID]
+        symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
+        charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
+        charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
+        charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
 
         buy_stack_copper = gear_data["buy_copper"] * 250.0
         lucent_mote_copper = lucent_mote_data["sell_copper"]
@@ -511,7 +596,7 @@ def get_gear_salvage() -> Any:
 @fastapi_app.get("/t5_mats_sell")
 def get_t5_mats_sell() -> Any:
     try:
-        result = fetch_tp_prices(
+        fetched_data = fetch_tp_prices(
             [
                 LUCENT_MOTE_ID,
                 MIRTHIL_ID,
@@ -519,10 +604,10 @@ def get_t5_mats_sell() -> Any:
                 THICK_LEATHER_ID,
             ]
         )
-        lucent_mote_data = result[LUCENT_MOTE_ID]
-        mithril_data = result[MIRTHIL_ID]
-        elder_wood_data = result[ELDER_WOOD_ID]
-        thick_leather_data = result[THICK_LEATHER_ID]
+        lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
+        mithril_data = fetched_data[MIRTHIL_ID]
+        elder_wood_data = fetched_data[ELDER_WOOD_ID]
+        thick_leather_data = fetched_data[THICK_LEATHER_ID]
 
         lucent_mote_copper = lucent_mote_data["sell_copper"]
         mithril_copper = mithril_data["sell_copper"]
