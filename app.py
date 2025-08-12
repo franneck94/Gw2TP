@@ -14,42 +14,41 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
 from html_template import HTML_PAGE
-from items import (
-    ANCIENT_WOOD_ID,
-    CHARM_OF_BRILLIANCE_ID,
-    CHARM_OF_POTENCE_ID,
-    CHARM_OF_SKILL_ID,
-    COMMON_GEAR_ID,
-    ECTO_ITEM_ID,
-    ELABORATE_TOTEM_ID,
-    ELDER_WOOD_ID,
-    ELDER_WOOD_LOG_ID,
-    ELDER_WOOD_PLANK_ID,
-    GOSSAMER_SCRAP_ID,
-    HARDENED_LEATHER_ID,
-    INTRICATE_TOTEM_ID,
-    LARGE_BONE_ID,
-    LARGE_CLAW_ID,
-    LARGE_FANG_ID,
-    LUCENT_MOTE_ID,
-    MIRTHIL_ID,
-    MITHRIL_INGOT_ID,
-    MITHRIL_ORE_ID,
-    ORICHALCUM_ID,
-    PILE_OF_LUCENT_CRYSTAL_ID,
-    POTENT_BLOOD_ID,
-    RARE_UNID_ITEM_ID,
-    RELIC_OF_FIREWORKS_ID,
-    SCHOLAR_RUNE_ID,
-    SILK_SCRAP_ID,
-    SYMBOL_OF_CONTROL_ID,
-    SYMBOL_OF_ENH_ID,
-    SYMBOL_OF_PAIN_ID,
-    THICK_LEATHER_ID,
-    UNID_ITEM_ID,
-)
+from items import ANCIENT_WOOD_ID
+from items import CHARM_OF_BRILLIANCE_ID
+from items import CHARM_OF_POTENCE_ID
+from items import CHARM_OF_SKILL_ID
+from items import COMMON_GEAR_ID
+from items import ECTO_ITEM_ID
+from items import ELABORATE_TOTEM_ID
+from items import ELDER_WOOD_ID
+from items import ELDER_WOOD_LOG_ID
+from items import ELDER_WOOD_PLANK_ID
+from items import GOSSAMER_SCRAP_ID
+from items import HARDENED_LEATHER_ID
+from items import INTRICATE_TOTEM_ID
+from items import LARGE_BONE_ID
+from items import LARGE_CLAW_ID
+from items import LARGE_FANG_ID
+from items import LUCENT_MOTE_ID
+from items import MIRTHIL_ID
+from items import MITHRIL_INGOT_ID
+from items import MITHRIL_ORE_ID
+from items import ORICHALCUM_ID
+from items import PILE_OF_LUCENT_CRYSTAL_ID
+from items import POTENT_BLOOD_ID
+from items import RARE_UNID_ITEM_ID
+from items import RELIC_OF_FIREWORKS_ID
+from items import SCHOLAR_RUNE_ID
+from items import SILK_SCRAP_ID
+from items import SYMBOL_OF_CONTROL_ID
+from items import SYMBOL_OF_ENH_ID
+from items import SYMBOL_OF_PAIN_ID
+from items import THICK_LEATHER_ID
+from items import UNID_ITEM_ID
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
+GW2BLTC_API_URL: str = "https://www.gw2bltc.com/api/v2/tp/history"
 
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
