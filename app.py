@@ -151,9 +151,9 @@ def get_gear_to_ecto() -> Any:
             "ecto_sell_after_taxes_g": ecto_data["sell_after_taxes_g"],
             "ecto_sell_after_taxes_s": ecto_data["sell_after_taxes_s"],
             "ecto_sell_after_taxes_c": ecto_data["sell_after_taxes_c"],
-            "buy_order_g": rare_gear_data["buy_g"],
-            "buy_order_s": rare_gear_data["buy_s"],
-            "buy_order_c": rare_gear_data["buy_c"],
+            "buy_g": rare_gear_data["buy_g"],
+            "buy_s": rare_gear_data["buy_s"],
+            "buy_c": rare_gear_data["buy_c"],
             "gear_to_ecto_profit_g": profit_g,
             "gear_to_ecto_profit_s": profit_s,
             "gear_to_ecto_profit_c": profit_c,
@@ -262,14 +262,14 @@ def get_t5_mats_buy() -> Any:
 
         data = {
             **get_sub_dict("mithril_ore_to_ingot", mithril_ore_buy_copper * 2.0),
-            **get_sub_dict("mithril_ingot_buy_order", mithril_ingot_buy_copper),
+            **get_sub_dict("mithril_ingot_buy", mithril_ingot_buy_copper),
             **get_sub_dict("elder_wood_log_to_plank", elder_wood_log_buy_copper * 3.0),
-            **get_sub_dict("elder_wood_plank_buy_order", elder_wood_plank_buy_copper),
-            **get_sub_dict("large_claw_buy_buy_order", large_claw_buy_copper),
-            **get_sub_dict("potent_blood_buy_buy_order", potent_blood_buy_copper),
-            **get_sub_dict("large_bone_buy_buy_order", large_bone_buy_copper),
-            **get_sub_dict("intricate_totem_buy_buy_order", intricate_totem_buy_copper),
-            **get_sub_dict("large_fang_buy_buy_order", large_fang_buy_copper),
+            **get_sub_dict("elder_wood_plank_buy", elder_wood_plank_buy_copper),
+            **get_sub_dict("large_claw_buy_buy", large_claw_buy_copper),
+            **get_sub_dict("potent_blood_buy_buy", potent_blood_buy_copper),
+            **get_sub_dict("large_bone_buy_buy", large_bone_buy_copper),
+            **get_sub_dict("intricate_totem_buy_buy", intricate_totem_buy_copper),
+            **get_sub_dict("large_fang_buy_buy", large_fang_buy_copper),
         }
 
         return JSONResponse(content=jsonable_encoder(data))
@@ -318,7 +318,7 @@ def get_scholar_rune() -> Any:
             **get_sub_dict(
                 "crafting_cost_with_lucent_motes", scholar_crafting_cost2_copper
             ),
-            **get_sub_dict("sell_order", scholar_rune_sell_copper),
+            **get_sub_dict("sell", scholar_rune_sell_copper),
             **get_sub_dict("profit", profit),
             **get_sub_dict("profit_with_lucent_motes", profit2),
         }
@@ -408,7 +408,7 @@ def get_common_gear_salvage() -> Any:
         )
 
         data = {
-            **get_sub_dict("stack_buy_order", buy_comon_copper * 250.0),
+            **get_sub_dict("stack_buy", buy_comon_copper * 250.0),
             **get_sub_dict("profit_stack", profit_stack_copper),
         }
         return JSONResponse(content=jsonable_encoder(data))
@@ -500,7 +500,7 @@ def get_gear_salvage() -> Any:
         )
 
         data = {
-            **get_sub_dict("stack_buy_order", buy_stack_copper),
+            **get_sub_dict("stack_buy", buy_stack_copper),
             **get_sub_dict("profit_stack", profit_stack_copper),
         }
         return JSONResponse(content=jsonable_encoder(data))
@@ -530,11 +530,11 @@ def get_t5_mats_sell() -> Any:
         thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
 
         data = {
-            **get_sub_dict("lucent_mote_sell_order", lucent_mote_copper * 250.0),
-            **get_sub_dict("mithril_sell_order", mithril_copper * 250.0),
-            **get_sub_dict("elder_wood_sell_order", elder_wood_copper * 250.0),
+            **get_sub_dict("lucent_mote_sell", lucent_mote_copper * 250.0),
+            **get_sub_dict("mithril_sell", mithril_copper * 250.0),
+            **get_sub_dict("elder_wood_sell", elder_wood_copper * 250.0),
             **get_sub_dict(
-                "thick_leather_sell_order", thick_leather_data_sell_copper * 250.0
+                "thick_leather_sell", thick_leather_data_sell_copper * 250.0
             ),
         }
         return JSONResponse(content=jsonable_encoder(data))

@@ -56,7 +56,7 @@ GEAR_TO_ECTO_TABLE = f"""
         <th>copper</th>
     </tr>
     {get_price_row_html("ecto_sell_after_taxes", "gear_to_ecto")}
-    {get_price_row_html("buy_order", "gear_to_ecto")}
+    {get_price_row_html("buy", "gear_to_ecto")}
     {get_price_row_html("gear_to_ecto_profit", "gear_to_ecto")}
 </table>
 """
@@ -69,7 +69,7 @@ GEAR_SALVAGE_TABLE = f"""
         <th>Silver</th>
         <th>copper</th>
     </tr>
-    {get_price_row_html("stack_buy_order", "gear_salvage")}
+    {get_price_row_html("stack_buy", "gear_salvage")}
     {get_price_row_html("profit_stack", "gear_salvage")}
 </table>
 """
@@ -82,10 +82,10 @@ T5_MATS_SELL_TABLE = f"""
         <th>Silver</th>
         <th>copper</th>
     </tr>
-    {get_price_row_html("lucent_mote_sell_order", "t5_mats_sell")}
-    {get_price_row_html("mithril_sell_order", "t5_mats_sell")}
-    {get_price_row_html("elder_wood_sell_order", "t5_mats_sell")}
-    {get_price_row_html("thick_leather_sell_order", "t5_mats_sell")}
+    {get_price_row_html("lucent_mote_sell", "t5_mats_sell")}
+    {get_price_row_html("mithril_sell", "t5_mats_sell")}
+    {get_price_row_html("elder_wood_sell", "t5_mats_sell")}
+    {get_price_row_html("thick_leather_sell", "t5_mats_sell")}
 </table>
 """
 
@@ -98,14 +98,14 @@ T5_MATS_BUY_TABLE = f"""
         <th>copper</th>
     </tr>
     {get_price_row_html("mithril_ore_to_ingot", "t5_mats_buy")}
-    {get_price_row_html("mithril_ingot_buy_order", "t5_mats_buy")}
+    {get_price_row_html("mithril_ingot_buy", "t5_mats_buy")}
     {get_price_row_html("elder_wood_log_to_plank", "t5_mats_buy")}
-    {get_price_row_html("elder_wood_plank_buy_order", "t5_mats_buy")}
-    {get_price_row_html("large_claw_buy_buy_order", "t5_mats_buy")}
-    {get_price_row_html("potent_blood_buy_buy_order", "t5_mats_buy")}
-    {get_price_row_html("large_bone_buy_buy_order", "t5_mats_buy")}
-    {get_price_row_html("intricate_totem_buy_buy_order", "t5_mats_buy")}
-    {get_price_row_html("large_fang_buy_buy_order", "t5_mats_buy")}
+    {get_price_row_html("elder_wood_plank_buy", "t5_mats_buy")}
+    {get_price_row_html("large_claw_buy_buy", "t5_mats_buy")}
+    {get_price_row_html("potent_blood_buy_buy", "t5_mats_buy")}
+    {get_price_row_html("large_bone_buy_buy", "t5_mats_buy")}
+    {get_price_row_html("intricate_totem_buy_buy", "t5_mats_buy")}
+    {get_price_row_html("large_fang_buy_buy", "t5_mats_buy")}
 </table>
 """
 
@@ -117,7 +117,7 @@ COMMON_GEAR_SALVAGE_TABLE = f"""
         <th>Silver</th>
         <th>copper</th>
     </tr>
-    {get_price_row_html("stack_buy_order", "common_gear_salvage")}
+    {get_price_row_html("stack_buy", "common_gear_salvage")}
     {get_price_row_html("profit_stack", "common_gear_salvage")}
 </table>
 """
@@ -132,7 +132,7 @@ SCHOLAR_RUNE_TABLE = f"""
     </tr>
     {get_price_row_html("crafting_cost", "scholar_rune")}
     {get_price_row_html("crafting_cost_with_lucent_motes", "scholar_rune")}
-    {get_price_row_html("sell_order", "scholar_rune")}
+    {get_price_row_html("sell", "scholar_rune")}
     {get_price_row_html("profit", "scholar_rune")}
     {get_price_row_html("profit_with_lucent_motes", "scholar_rune")}
 </table>
@@ -196,6 +196,35 @@ STYLE = """
         opacity: 1;
     }
 </style>
+"""
+
+
+PROFIT_CALCULATION_HTML = """
+<h2 style="text-align: center;">Profit Calculator</h2>
+<div style="display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 24px;">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <label for="manual-buy-g">Buy Price:</label>
+        <div style="display: flex; gap: 4px;">
+            <input id="manual-buy-g" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="G" style="width: 40px;">
+            <input id="manual-buy-s" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="S" style="width: 40px;">
+            <input id="manual-buy-c" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="C" style="width: 40px;">
+        </div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <label for="manual-sell-g">Sell Price:</label>
+        <div style="display: flex; gap: 4px;">
+            <input id="manual-sell-g" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="G" style="width: 40px;">
+            <input id="manual-sell-s" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="S" style="width: 40px;">
+            <input id="manual-sell-c" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="C" style="width: 40px;">
+        </div>
+    </div>
+    <div style="align-self: flex-end;">
+        <button onclick="calculateManualProfit()">Calculate</button>
+    </div>
+</div>
+<div style="text-align: center; margin-bottom: 24px;">
+    <span id="manual-profit-result" style="font-size: 18px;"></span>
+</div>
 """
 
 
@@ -269,37 +298,81 @@ def get_t5_mats_buy() -> str:
 
 SCRIPT = f"""
 <script>
-    async function _fetchPrices() {{
-        await Promise.all([
-            (async () => {{ {get_fetch_price_html(RARE_UNID_ITEM_ID)} }})(),
-            (async () => {{ {get_fetch_price_html(ECTO_ITEM_ID)} }})(),
-            (async () => {{ {get_rare_gear_to_ecto_html()} }})(),
-            (async () => {{ {get_rare_salvage_html()} }})(),
-            (async () => {{ {get_scholar_rune_html()} }})(),
-            (async () => {{ {get_fireworks_html()} }})(),
-            (async () => {{ {get_rare_weapon_craft_html()} }})(),
-            (async () => {{ {get_t5_mats_sell()} }})(),
-            (async () => {{ {get_t5_mats_buy()} }})(),
-            (async () => {{ {get_common_gear_salvage_html()} }})(),
-        ]);
+async function _fetchPrices() {{
+    await Promise.all([
+        (async () => {{ {get_fetch_price_html(RARE_UNID_ITEM_ID)} }})(),
+        (async () => {{ {get_fetch_price_html(ECTO_ITEM_ID)} }})(),
+        (async () => {{ {get_rare_gear_to_ecto_html()} }})(),
+        (async () => {{ {get_rare_salvage_html()} }})(),
+        (async () => {{ {get_scholar_rune_html()} }})(),
+        (async () => {{ {get_fireworks_html()} }})(),
+        (async () => {{ {get_rare_weapon_craft_html()} }})(),
+        (async () => {{ {get_t5_mats_sell()} }})(),
+        (async () => {{ {get_t5_mats_buy()} }})(),
+        (async () => {{ {get_common_gear_salvage_html()} }})(),
+    ]);
+}}
+
+function showFetchPopup() {{
+    const popup = document.getElementById('fetch-popup');
+    popup.classList.add('show');
+    setTimeout(() => {{
+        popup.classList.remove('show');
+    }}, 1000);
+    console.log("Prices fetched and updated.");
+}}
+
+async function fetchPrices() {{
+    await _fetchPrices();
+    showFetchPopup();
+}}
+
+window.addEventListener('DOMContentLoaded', fetchPrices);
+
+function calculateManualProfit() {{
+    const buyG = parseInt(document.getElementById('manual-buy-g').value) || 0;
+    const buyS = parseInt(document.getElementById('manual-buy-s').value) || 0;
+    const buyC = parseInt(document.getElementById('manual-buy-c').value) || 0;
+    const sellG = parseInt(document.getElementById('manual-sell-g').value) || 0;
+    const sellS = parseInt(document.getElementById('manual-sell-s').value) || 0;
+    const sellC = parseInt(document.getElementById('manual-sell-c').value) || 0;
+
+    console.log(`Calculating profit: Buy - ${{buyG}}g ${{buyS}}s ${{buyC}}c, Sell - ${{sellG}}g ${{sellS}}s ${{sellC}}c`);
+
+    // Convert to copper
+    const buyTotal = buyG * 10000 + buyS * 100 + buyC;
+    const sellTotal = sellG * 10000 + sellS * 100 + sellC;
+
+    // GW2 TP takes 15% fee from sell price
+    const sellAfterTax = Math.floor(sellTotal * 0.85);
+
+    const profit = sellAfterTax - buyTotal;
+    console.log(`Profit calculated: ${{profit}} copper`);
+
+    let profitG, profitS, profitC;
+    if (profit < 0) {{
+        profitG = Math.floor((-1 * profit) / 10000);
+        profitS = Math.floor(((-1 * profit) % 10000) / 100);
+        profitC = (-1 * profit) % 100;
+    }} else {{
+        profitG = Math.floor(profit / 10000);
+        profitS = Math.floor((profit % 10000) / 100);
+        profitC = profit % 100;
     }}
 
-
-    function showFetchPopup() {{
-        const popup = document.getElementById('fetch-popup');
-        popup.classList.add('show');
-        setTimeout(() => {{
-            popup.classList.remove('show');
-        }}, 1000);
-        console.log("Prices fetched and updated.");
+    let resultText;
+    let color;
+    if (profit >= 0) {{
+        resultText = `Profit: ${{profitG}}g ${{profitS}}s ${{profitC}}c`;
+        color = "#FFD700"; // gold-ish
+    }} else {{
+        resultText = `Loss: ${{Math.abs(profitG)}}g ${{Math.abs(profitS)}}s ${{Math.abs(profitC)}}c`;
+        color = "#f44336"; // red
     }}
-
-    async function fetchPrices() {{
-        await _fetchPrices();
-        showFetchPopup();
-    }}
-
-    window.addEventListener('DOMContentLoaded', fetchPrices);
+    const resultElem = document.getElementById('manual-profit-result');
+    resultElem.innerText = resultText;
+    resultElem.style.color = color;
+}}
 </script>
 """
 
@@ -319,10 +392,9 @@ HTML_PAGE = f"""
     <div style="display: flex; justify-content: center;">
         <button onclick="fetchPrices()" style="margin-bottom: 20px;">Refresh Prices</button>
     </div>
-    <div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin: 0 auto; max-width: 1000px;">
+    <div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin: 0 auto; max-width: 1400px;">
         <div style="flex: 1;">
-            <h2 style="text-align: center;">Ectoplasm</h2>
-            {ECTO_TABLE}
+            {PROFIT_CALCULATION_HTML}
 
             <h2 style="text-align: center;">Rare Unid. Gear</h2>
             {RARE_GEAR_TABLE}
@@ -335,18 +407,18 @@ HTML_PAGE = f"""
 
             <h2 style="text-align: center;">Common Gear Ident & Salvaging</h2>
             {COMMON_GEAR_SALVAGE_TABLE}
-
-            <h2 style="text-align: center;">
-                T5 Mats Sell Order
-            </h2>
-            {T5_MATS_SELL_TABLE}
         </div>
         <div style="flex: 1;">
-            <h2 style="text-align: center;">
-                T5 Mats Buy Order
-            </h2>
-            {T5_MATS_BUY_TABLE}
+            <h2 style="text-align: center;">Ectoplasm</h2>
+            {ECTO_TABLE}
 
+            <h2 style="text-align: center;">T5 Mats Sell Order</h2>
+            {T5_MATS_SELL_TABLE}
+
+            <h2 style="text-align: center;">T5 Mats Buy Order</h2>
+            {T5_MATS_BUY_TABLE}
+        </div>
+        <div style="flex: 1;">
             <h2 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
                     Rare Weapon Craft
