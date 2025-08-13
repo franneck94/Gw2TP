@@ -115,7 +115,7 @@ async def on_message(
         api_url = api_base + "t5_mats_sell"
     elif message.content.startswith(f"{COMMAND_PREFIX} ecto"):
         title = "Ecto Price Check"
-        api_url = api_base + "price 19721"
+        api_url = api_base + "price?item_id=19721"
     elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
         item_id = (
             message.content.split()[2]
