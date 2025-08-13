@@ -18,6 +18,7 @@ COMMANDS_LIST = [
     "t5_mats_buy",
     "t5_mats_sell",
     "dragonhunter_rune",
+    "ecto",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -86,7 +87,7 @@ async def on_message(
         return
 
     if message.content.startswith(f"{COMMAND_PREFIX} gear_salvage"):
-        title = "Gear Salvage Prices"
+        title = "Gear Salvage"
         api_url = api_base + "gear_salvage"
     elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_fireworks"):
         title = "Relic of Fireworks"
@@ -100,15 +101,21 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} rare_weapon_craft"):
         title = "Rare Weapon Craft"
         api_url = api_base + "rare_weapon_craft"
-    elif message.content.startswith(f"{COMMAND_PREFIX} rare_gear_to_ecto"):
-        title = "Rare Gear to Ecto"
-        api_url = api_base + "rare_gear_to_ecto"
+    elif message.content.startswith(f"{COMMAND_PREFIX} rare_gear_salvage"):
+        title = "Rare Gear Salvage"
+        api_url = api_base + "rare_gear_salvage"
+    elif message.content.startswith(f"{COMMAND_PREFIX} common_gear_salvage"):
+        title = "Common Gear Salvage"
+        api_url = api_base + "common_gear_salvage"
     elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_buy"):
         title = "T5 Mats Buy Orders"
         api_url = api_base + "t5_mats_buy"
     elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_sell"):
         title = "T5 Mats Sell Orders"
         api_url = api_base + "t5_mats_sell"
+    elif message.content.startswith(f"{COMMAND_PREFIX} ecto"):
+        title = "Ecto Price Check"
+        api_url = api_base + "price 19721"
     elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
         item_id = (
             message.content.split()[2]
