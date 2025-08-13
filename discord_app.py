@@ -9,7 +9,7 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
 COMMANDS_LIST = [
     "rare_weapon_craft",
-    "rare_gear_to_ecto",
+    "rare_gear_salvage",
     "gear_salvage",
     "common_gear_salvage",
     "relic_of_fireworks",

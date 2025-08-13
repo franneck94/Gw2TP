@@ -1,6 +1,6 @@
 # ruff: noqa: E501
 from items import ECTOPLASM_ID
-from items import RARE_UNID_ITEM_ID
+from items import RARE_UNID_GEAR_ID
 
 
 TABLE_HEADER = """
@@ -52,14 +52,15 @@ def get_flip_table_html(item_id: int) -> str:
 
 
 ECTO_TABLE = get_flip_table_html(ECTOPLASM_ID)
-RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_ITEM_ID)
+RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_GEAR_ID)
 
-GEAR_TO_ECTO_TABLE = f"""
+RARE_GEAR_SALVAGE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("ecto_sell_after_taxes", "gear_to_ecto")}
-    {get_price_row_html("buy", "gear_to_ecto")}
-    {get_price_row_html("gear_to_ecto_profit", "gear_to_ecto")}
+    {get_price_row_html("stack_buy", "rare_gear_salvage")}
+    {get_price_row_html("salvage_costs", "rare_gear_salvage")}
+    {get_price_row_html("mats_value_after_taxes", "rare_gear_salvage")}
+    {get_price_row_html("profit_stack", "rare_gear_salvage")}
 </table>
 """
 
@@ -67,6 +68,8 @@ GEAR_SALVAGE_TABLE = f"""
 <table>
     {TABLE_HEADER}
     {get_price_row_html("stack_buy", "gear_salvage")}
+    {get_price_row_html("salvage_costs", "gear_salvage")}
+    {get_price_row_html("mats_value_after_taxes", "gear_salvage")}
     {get_price_row_html("profit_stack", "gear_salvage")}
 </table>
 """
@@ -108,6 +111,8 @@ COMMON_GEAR_SALVAGE_TABLE = f"""
 <table>
     {TABLE_HEADER}
     {get_price_row_html("stack_buy", "common_gear_salvage")}
+    {get_price_row_html("salvage_costs", "common_gear_salvage")}
+    {get_price_row_html("mats_value_after_taxes", "common_gear_salvage")}
     {get_price_row_html("profit_stack", "common_gear_salvage")}
 </table>
 """
@@ -245,8 +250,8 @@ for (const [key, value] of Object.entries(data)) {{
 """
 
 
-def get_rare_gear_to_ecto_html() -> str:
-    return get_all_fetch_price_html("gear_to_ecto")
+def get_rare_gear_salvage_html() -> str:
+    return get_all_fetch_price_html("rare_gear_salvage")
 
 
 def get_rare_salvage_html() -> str:
@@ -289,9 +294,9 @@ SCRIPT = f"""
 <script>
 async function _fetchPrices() {{
     await Promise.all([
-        (async () => {{ {get_fetch_price_html(RARE_UNID_ITEM_ID)} }})(),
+        (async () => {{ {get_fetch_price_html(RARE_UNID_GEAR_ID)} }})(),
         (async () => {{ {get_fetch_price_html(ECTOPLASM_ID)} }})(),
-        (async () => {{ {get_rare_gear_to_ecto_html()} }})(),
+        (async () => {{ {get_rare_gear_salvage_html()} }})(),
         (async () => {{ {get_rare_salvage_html()} }})(),
         (async () => {{ {get_scholar_rune_html()} }})(),
         (async () => {{ {get_dragonhunter_rune_html()} }})(),
@@ -390,8 +395,12 @@ HTML_PAGE = f"""
             <h3 style="text-align: center;">Rare Unid. Gear</h3>
             {RARE_GEAR_TABLE}
 
-            <h3 style="text-align: center;">Rare Gear to Ecto</h3>
-            {GEAR_TO_ECTO_TABLE}
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Rare_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rare Gear Ident & Salvaging
+                </a>
+            </h3>
+            {RARE_GEAR_SALVAGE}
 
             <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Piece_of_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">

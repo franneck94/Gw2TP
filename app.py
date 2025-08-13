@@ -45,7 +45,7 @@ from items import MITHRIL_ORE_ID
 from items import ORICHALCUM_ID
 from items import PILE_OF_LUCENT_CRYSTAL_ID
 from items import POTENT_BLOOD_ID
-from items import RARE_UNID_ITEM_ID
+from items import RARE_UNID_GEAR_ID
 from items import RELIC_OF_FIREWORKS_ID
 from items import SCHOLAR_RUNE_ID
 from items import SILK_SCRAP_ID
@@ -53,7 +53,7 @@ from items import SYMBOL_OF_CONTROL_ID
 from items import SYMBOL_OF_ENH_ID
 from items import SYMBOL_OF_PAIN_ID
 from items import THICK_LEATHER_ID
-from items import UNID_ITEM_ID
+from items import UNID_GEAR_ID
 
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
@@ -144,6 +144,73 @@ def fetch_tp_prices(
     return fetched_data
 
 
+def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                gear_id,
+                ECTOPLASM_ID,
+                LUCENT_MOTE_ID,
+                MIRTHIL_ID,
+                ELDER_WOOD_ID,
+                THICK_LEATHER_ID,
+                GOSSAMER_SCRAP_ID,
+                SILK_SCRAP_ID,
+                HARDENED_LEATHER_ID,
+                ANCIENT_WOOD_ID,
+                SYMBOL_OF_ENH_ID,
+                SYMBOL_OF_PAIN_ID,
+                ORICHALCUM_ID,
+                SYMBOL_OF_CONTROL_ID,
+                CHARM_OF_BRILLIANCE_ID,
+                CHARM_OF_POTENCE_ID,
+                CHARM_OF_SKILL_ID,
+                COMMON_GEAR_ID,
+            ],
+        )
+    except Exception:
+        return None
+
+    gear_data = fetched_data[gear_id]
+
+    ecto_data = fetched_data[ECTOPLASM_ID]
+    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
+    mithril_data = fetched_data[MIRTHIL_ID]
+    elder_wood_data = fetched_data[ELDER_WOOD_ID]
+    thick_leather_data = fetched_data[THICK_LEATHER_ID]
+    gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
+    silk_scrap_data = fetched_data[SILK_SCRAP_ID]
+    hardened_data = fetched_data[HARDENED_LEATHER_ID]
+    ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
+    symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
+    symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
+    orichalcum_data = fetched_data[ORICHALCUM_ID]
+    symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
+    charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
+    charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
+    charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
+
+    return (
+        ecto_data,
+        gear_data,
+        lucent_mote_data,
+        mithril_data,
+        elder_wood_data,
+        thick_leather_data,
+        gossamer_scrap_data,
+        silk_scrap_data,
+        hardened_data,
+        ancient_wood_data,
+        symbol_of_enh_data,
+        symbol_of_pain_data,
+        orichalcum_data,
+        symbol_of_control_data,
+        charm_of_brilliance_data,
+        charm_of_potence_data,
+        charm_of_skill_data,
+    )
+
+
 @flask_app.route("/")
 def index() -> str:
     return render_template_string(HTML_PAGE)
@@ -159,43 +226,82 @@ async def get_price(item_id: int) -> JSONResponse:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
 
-@fastapi_app.get("/gear_to_ecto")
-def get_gear_to_ecto() -> JSONResponse:
-    try:
-        fetched_data = fetch_tp_prices([ECTOPLASM_ID, RARE_UNID_ITEM_ID])
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+@fastapi_app.get("/rare_gear_salvage")
+def get_rare_gear_salvage() -> JSONResponse:
+    data_tpl = get_unid_gear_data(gear_id=RARE_UNID_GEAR_ID)
+    if data_tpl is None:
+        return JSONResponse(content=jsonable_encoder({"error"}))
 
-    ecto_data = fetched_data[ECTOPLASM_ID]
-    rare_gear_data = fetched_data[RARE_UNID_ITEM_ID]
-    ecto_ident_rate = 0.9
+    (
+        ecto_data,
+        gear_data,
+        lucent_mote_data,
+        mithril_data,
+        elder_wood_data,
+        thick_leather_data,
+        gossamer_scrap_data,
+        silk_scrap_data,
+        hardened_data,
+        ancient_wood_data,
+        symbol_of_enh_data,
+        symbol_of_pain_data,
+        orichalcum_data,
+        symbol_of_control_data,
+        charm_of_brilliance_data,
+        charm_of_potence_data,
+        charm_of_skill_data,
+    ) = data_tpl
 
-    ecto_sell_after_taxes = gsc_to_copper(
-        ecto_data["sell_after_taxes_g"],
-        ecto_data["sell_after_taxes_s"],
-        ecto_data["sell_after_taxes_c"],
+    buy_stack_copper = gear_data["buy_copper"] * 250.0
+    lucent_mote_copper = lucent_mote_data["sell_copper"]
+    mithril_copper = mithril_data["sell_copper"]
+    elder_wood_copper = elder_wood_data["sell_copper"]
+    ecto_sellcopper = ecto_data["sell_copper"]
+    thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+
+    gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
+    silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
+    hardened_data_sell_copper = hardened_data["sell_copper"]
+    ancient_wood_data_sell_copper = ancient_wood_data["sell_copper"]
+    symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
+    symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
+    orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
+    symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
+    charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
+    charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
+    charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
+
+    mats_value_after_taxes = (
+        mithril_copper * (250.0 * 0.4879) * GW2_SELL_TAX_RATE
+        + elder_wood_copper * (250.0 * 0.3175) * GW2_SELL_TAX_RATE
+        + silk_scrap_data_sell_copper * (250.0 * 0.3367) * GW2_SELL_TAX_RATE
+        + thick_leather_data_sell_copper * (250.0 * 0.3457) * GW2_SELL_TAX_RATE
+        + orichalcum_data_sell_copper * (250.0 * 0.041) * GW2_SELL_TAX_RATE
+        + ancient_wood_data_sell_copper * (250.0 * 0.0249) * GW2_SELL_TAX_RATE
+        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * GW2_SELL_TAX_RATE
+        + hardened_data_sell_copper * (250.0 * 0.0162) * GW2_SELL_TAX_RATE
+        + ecto_sellcopper * (250.0 * 0.8761) * GW2_SELL_TAX_RATE
+        + lucent_mote_copper * (250.0 * 0.2387) * GW2_SELL_TAX_RATE
+        + symbol_of_control_sell_copper * (250.0 * 0.001) * GW2_SELL_TAX_RATE
+        + symbol_of_enh_data_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
+        + symbol_of_pain_data_sell_copper * (250.0 * 0.0004) * GW2_SELL_TAX_RATE
+        + charm_of_brilliance_sell_copper * (250.0 * 0.0006) * GW2_SELL_TAX_RATE
+        + charm_of_potence_sell_copper * (250.0 * 0.0009) * GW2_SELL_TAX_RATE
+        + charm_of_skilldata_sell_copper * (250.0 * 0.0009) * GW2_SELL_TAX_RATE
     )
-    gear_buy = gsc_to_copper(
-        rare_gear_data["buy_g"],
-        rare_gear_data["buy_s"],
-        rare_gear_data["buy_c"],
-    )
 
-    profit = gear_buy - ecto_sell_after_taxes * ecto_ident_rate
-    profit_g, profit_s, profit_c = copper_to_gsc(profit)
+    salvage_costs = 250 * 60  # Silver Fed
+
+    profit_stack_copper = (
+        mats_value_after_taxes - buy_stack_copper - salvage_costs
+    )
 
     data = {
-        "ecto_sell_after_taxes_g": ecto_data["sell_after_taxes_g"],
-        "ecto_sell_after_taxes_s": ecto_data["sell_after_taxes_s"],
-        "ecto_sell_after_taxes_c": ecto_data["sell_after_taxes_c"],
-        "buy_g": rare_gear_data["buy_g"],
-        "buy_s": rare_gear_data["buy_s"],
-        "buy_c": rare_gear_data["buy_c"],
-        "gear_to_ecto_profit_g": profit_g,
-        "gear_to_ecto_profit_s": profit_s,
-        "gear_to_ecto_profit_c": profit_c,
+        **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("salvage_costs", salvage_costs),
+        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
+        **get_sub_dict("profit_stack", profit_stack_copper),
     }
-
     return JSONResponse(content=jsonable_encoder(data))
 
 
@@ -521,49 +627,29 @@ def get_relic_of_fireworks() -> JSONResponse:
 
 @fastapi_app.get("/common_gear_salvage")
 def get_common_gear_salvage() -> JSONResponse:
-    try:
-        fetched_data = fetch_tp_prices(
-            [
-                UNID_ITEM_ID,
-                ECTOPLASM_ID,
-                LUCENT_MOTE_ID,
-                MIRTHIL_ID,
-                ELDER_WOOD_ID,
-                THICK_LEATHER_ID,
-                GOSSAMER_SCRAP_ID,
-                SILK_SCRAP_ID,
-                HARDENED_LEATHER_ID,
-                ANCIENT_WOOD_ID,
-                SYMBOL_OF_ENH_ID,
-                SYMBOL_OF_PAIN_ID,
-                ORICHALCUM_ID,
-                SYMBOL_OF_CONTROL_ID,
-                CHARM_OF_BRILLIANCE_ID,
-                CHARM_OF_POTENCE_ID,
-                CHARM_OF_SKILL_ID,
-                COMMON_GEAR_ID,
-            ],
-        )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    data_tpl = get_unid_gear_data(gear_id=COMMON_GEAR_ID)
+    if data_tpl is None:
+        return JSONResponse(content=jsonable_encoder({"error"}))
 
-    ecto_data = fetched_data[ECTOPLASM_ID]
-    gear_data = fetched_data[COMMON_GEAR_ID]
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
-    mithril_data = fetched_data[MIRTHIL_ID]
-    elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_data = fetched_data[THICK_LEATHER_ID]
-    gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
-    silk_scrap_data = fetched_data[SILK_SCRAP_ID]
-    hardened_data = fetched_data[HARDENED_LEATHER_ID]
-    ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
-    symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
-    symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
-    orichalcum_data = fetched_data[ORICHALCUM_ID]
-    symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
-    charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
-    charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
-    charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
+    (
+        ecto_data,
+        gear_data,
+        lucent_mote_data,
+        mithril_data,
+        elder_wood_data,
+        thick_leather_data,
+        gossamer_scrap_data,
+        silk_scrap_data,
+        hardened_data,
+        ancient_wood_data,
+        symbol_of_enh_data,
+        symbol_of_pain_data,
+        orichalcum_data,
+        symbol_of_control_data,
+        charm_of_brilliance_data,
+        charm_of_potence_data,
+        charm_of_skill_data,
+    ) = data_tpl
 
     buy_stack_copper = gear_data["buy_copper"] * 250.0
     lucent_mote_copper = lucent_mote_data["sell_copper"]
@@ -584,7 +670,7 @@ def get_common_gear_salvage() -> JSONResponse:
     charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
     charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
-    profit_stack_copper = (
+    mats_value_after_taxes = (
         mithril_copper * (250.0 * 0.4291) * GW2_SELL_TAX_RATE
         + elder_wood_copper * (250.0 * 0.3884) * GW2_SELL_TAX_RATE
         + silk_scrap_data_sell_copper * (250.0 * 0.3059) * GW2_SELL_TAX_RATE
@@ -601,14 +687,22 @@ def get_common_gear_salvage() -> JSONResponse:
         + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * GW2_SELL_TAX_RATE
         + charm_of_potence_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
         + charm_of_skilldata_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
-        - buy_stack_copper
-        - 3.0 * 223  # Copper Fed
-        - 30.0 * 25  # Runecrafter
-        - 60 * 2  # Silver Fed
+    )
+
+    salvage_costs = (
+        3.0 * 223  # Copper Fed
+        + 30.0 * 25  # Runecrafter
+        + 60 * 2  # Silver Fed
+    )
+
+    profit_stack_copper = (
+        mats_value_after_taxes - buy_stack_copper - salvage_costs
     )
 
     data = {
         **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("salvage_costs", salvage_costs),
+        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
         **get_sub_dict("profit_stack", profit_stack_copper),
     }
     return JSONResponse(content=jsonable_encoder(data))
@@ -616,48 +710,29 @@ def get_common_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/gear_salvage")
 def get_gear_salvage() -> JSONResponse:
-    try:
-        fetched_data = fetch_tp_prices(
-            [
-                UNID_ITEM_ID,
-                ECTOPLASM_ID,
-                LUCENT_MOTE_ID,
-                MIRTHIL_ID,
-                ELDER_WOOD_ID,
-                THICK_LEATHER_ID,
-                GOSSAMER_SCRAP_ID,
-                SILK_SCRAP_ID,
-                HARDENED_LEATHER_ID,
-                ANCIENT_WOOD_ID,
-                SYMBOL_OF_ENH_ID,
-                SYMBOL_OF_PAIN_ID,
-                ORICHALCUM_ID,
-                SYMBOL_OF_CONTROL_ID,
-                CHARM_OF_BRILLIANCE_ID,
-                CHARM_OF_POTENCE_ID,
-                CHARM_OF_SKILL_ID,
-            ],
-        )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    data_tpl = get_unid_gear_data(gear_id=UNID_GEAR_ID)
+    if data_tpl is None:
+        return JSONResponse(content=jsonable_encoder({"error"}))
 
-    ecto_data = fetched_data[ECTOPLASM_ID]
-    gear_data = fetched_data[UNID_ITEM_ID]
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
-    mithril_data = fetched_data[MIRTHIL_ID]
-    elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_data = fetched_data[THICK_LEATHER_ID]
-    gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
-    silk_scrap_data = fetched_data[SILK_SCRAP_ID]
-    hardened_data = fetched_data[HARDENED_LEATHER_ID]
-    ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
-    symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
-    symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
-    orichalcum_data = fetched_data[ORICHALCUM_ID]
-    symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
-    charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
-    charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
-    charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
+    (
+        ecto_data,
+        gear_data,
+        lucent_mote_data,
+        mithril_data,
+        elder_wood_data,
+        thick_leather_data,
+        gossamer_scrap_data,
+        silk_scrap_data,
+        hardened_data,
+        ancient_wood_data,
+        symbol_of_enh_data,
+        symbol_of_pain_data,
+        orichalcum_data,
+        symbol_of_control_data,
+        charm_of_brilliance_data,
+        charm_of_potence_data,
+        charm_of_skill_data,
+    ) = data_tpl
 
     buy_stack_copper = gear_data["buy_copper"] * 250.0
     lucent_mote_copper = lucent_mote_data["sell_copper"]
@@ -678,7 +753,7 @@ def get_gear_salvage() -> JSONResponse:
     charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
     charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
-    profit_stack_copper = (
+    mats_value_after_taxes = (
         mithril_copper * (250.0 * 0.4299) * GW2_SELL_TAX_RATE
         + elder_wood_copper * (250.0 * 0.3564) * GW2_SELL_TAX_RATE
         + silk_scrap_data_sell_copper * (250.0 * 0.3521) * GW2_SELL_TAX_RATE
@@ -695,13 +770,18 @@ def get_gear_salvage() -> JSONResponse:
         + charm_of_brilliance_sell_copper * (250.0 * 0.0042) * GW2_SELL_TAX_RATE
         + charm_of_potence_sell_copper * (250.0 * 0.0029) * GW2_SELL_TAX_RATE
         + charm_of_skilldata_sell_copper * (250.0 * 0.0028) * GW2_SELL_TAX_RATE
-        - buy_stack_copper
-        - 30.0 * 245  # Runecrafter
-        - 60 * 5  # Silver Fed
+    )
+
+    salvage_costs = 30.0 * 245 + 60 * 5
+
+    profit_stack_copper = (
+        mats_value_after_taxes - buy_stack_copper - salvage_costs
     )
 
     data = {
         **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("salvage_costs", salvage_costs),
+        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
         **get_sub_dict("profit_stack", profit_stack_copper),
     }
     return JSONResponse(content=jsonable_encoder(data))
