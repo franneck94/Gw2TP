@@ -60,6 +60,18 @@ GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 GW2BLTC_API_URL: str = "https://www.gw2bltc.com/api/v2/tp/history"
 GW2_SELL_TAX_RATE: float = 0.85
 
+
+def is_running_on_railway():  # noqa: ANN201
+    return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
+
+
+uses_server = is_running_on_railway()
+port = int(os.environ.get("PORT", "8000"))
+if uses_server:
+    api_base = "https://gw2tp-production.up.railway.app/api/"
+else:
+    api_base = "http://127.0.0.1:8000/api/"
+
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
 port = int(os.environ.get("PORT", "8000"))
@@ -668,7 +680,7 @@ def get_common_gear_salvage() -> JSONResponse:
     symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
     charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
     charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
-    charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
+    charm_of_skill_data_sell_copper = charm_of_skill_data["sell_copper"]
 
     mats_value_after_taxes = (
         mithril_copper * (250.0 * 0.4291) * GW2_SELL_TAX_RATE
@@ -686,7 +698,7 @@ def get_common_gear_salvage() -> JSONResponse:
         + symbol_of_pain_data_sell_copper * (250.0 * 0.0005) * GW2_SELL_TAX_RATE
         + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * GW2_SELL_TAX_RATE
         + charm_of_potence_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
-        + charm_of_skilldata_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
+        + charm_of_skill_data_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
     )
 
     salvage_costs = (
@@ -783,6 +795,58 @@ def get_gear_salvage() -> JSONResponse:
         **get_sub_dict("salvage_costs", salvage_costs),
         **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
         **get_sub_dict("profit_stack", profit_stack_copper),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/profits")
+def get_profits() -> JSONResponse:
+    try:
+        dragonhunter_response = httpx.Client().get(
+            f"{api_base}dragonhunter_rune",
+        )
+        dragonhunter_data = dragonhunter_response.json()
+        scholar_response = httpx.Client().get(
+            f"{api_base}scholar_rune",
+        )
+        scholar_data = scholar_response.json()
+        fireworks_response = httpx.Client().get(
+            f"{api_base}relic_of_fireworks",
+        )
+        fireworks_data = fireworks_response.json()
+        rare_weapon_response = httpx.Client().get(
+            f"{api_base}rare_weapon_craft",
+        )
+        rare_weapon_data = rare_weapon_response.json()
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    dragonhunter_rune_profit = (
+        dragonhunter_data["profit_g"] * 10_000
+        + dragonhunter_data["profit_s"] * 100
+        + dragonhunter_data["profit_c"]
+    )
+    scholar_rune_profit = (
+        scholar_data["profit_g"] * 10_000
+        + scholar_data["profit_s"] * 100
+        + scholar_data["profit_c"]
+    )
+    fireworks_relic_profit = (
+        fireworks_data["profit_g"] * 10_000
+        + fireworks_data["profit_s"] * 100
+        + fireworks_data["profit_c"]
+    )
+    rare_weapon_craft_profit = (
+        rare_weapon_data["profit_g"] * 10_000
+        + rare_weapon_data["profit_s"] * 100
+        + rare_weapon_data["profit_c"]
+    )
+
+    data = {
+        **get_sub_dict("dragonhunter_rune", dragonhunter_rune_profit),
+        **get_sub_dict("scholar_rune", scholar_rune_profit),
+        **get_sub_dict("fireworks_relic", fireworks_relic_profit),
+        **get_sub_dict("rare_weapon_craft", rare_weapon_craft_profit),
     }
     return JSONResponse(content=jsonable_encoder(data))
 

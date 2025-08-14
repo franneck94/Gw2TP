@@ -19,6 +19,7 @@ COMMANDS_LIST = [
     "t5_mats_sell",
     "dragonhunter_rune",
     "ecto",
+    "profits",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -89,6 +90,9 @@ async def on_message(
     if message.content.startswith(f"{COMMAND_PREFIX} gear_salvage"):
         title = "Gear Salvage"
         api_url = api_base + "gear_salvage"
+    elif message.content.startswith(f"{COMMAND_PREFIX} profits"):
+        title = "Profits Overview"
+        api_url = api_base + "profits"
     elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_fireworks"):
         title = "Relic of Fireworks"
         api_url = api_base + "relic_of_fireworks"
