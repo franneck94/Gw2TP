@@ -58,7 +58,7 @@ from items import UNID_GEAR_ID
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
 GW2BLTC_API_URL: str = "https://www.gw2bltc.com/api/v2/tp/history"
-GW2_SELL_TAX_RATE: float = 0.85
+TAX_RATE: float = 0.85
 
 
 def is_running_on_railway():  # noqa: ANN201
@@ -130,7 +130,7 @@ def fetch_tp_prices(
         item_id = int(item["id"])
         buy_price = int(item["buys"]["unit_price"])
         sell_price = int(item["sells"]["unit_price"])
-        flip_profit = round(sell_price * GW2_SELL_TAX_RATE, 6) - buy_price
+        flip_profit = round(sell_price * TAX_RATE, 6) - buy_price
         buy_g, buy_s, buy_c = copper_to_gsc(buy_price)
         sell_g, sell_s, sell_c = copper_to_gsc(sell_price)
         flip_g, flip_s, flip_c = copper_to_gsc(flip_profit)
@@ -147,11 +147,9 @@ def fetch_tp_prices(
             "flip_g": flip_g,
             "flip_s": flip_s,
             "flip_c": flip_c,
-            "sell_after_taxes_g": int(sell_price * GW2_SELL_TAX_RATE // 10000),
-            "sell_after_taxes_s": int(
-                (sell_price * GW2_SELL_TAX_RATE % 10000) // 100
-            ),
-            "sell_after_taxes_c": int(sell_price * GW2_SELL_TAX_RATE % 100),
+            "sell_after_taxes_g": int(sell_price * TAX_RATE // 10000),
+            "sell_after_taxes_s": int((sell_price * TAX_RATE % 10000) // 100),
+            "sell_after_taxes_c": int(sell_price * TAX_RATE % 100),
         }
     return fetched_data
 
@@ -284,22 +282,22 @@ def get_rare_gear_salvage() -> JSONResponse:
     charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4879) * GW2_SELL_TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3175) * GW2_SELL_TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3367) * GW2_SELL_TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.3457) * GW2_SELL_TAX_RATE
-        + orichalcum_data_sell_copper * (250.0 * 0.041) * GW2_SELL_TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0249) * GW2_SELL_TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * GW2_SELL_TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0162) * GW2_SELL_TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.8761) * GW2_SELL_TAX_RATE
-        + lucent_mote_copper * (250.0 * 0.2387) * GW2_SELL_TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.001) * GW2_SELL_TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0004) * GW2_SELL_TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0006) * GW2_SELL_TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0009) * GW2_SELL_TAX_RATE
-        + charm_of_skilldata_sell_copper * (250.0 * 0.0009) * GW2_SELL_TAX_RATE
+        mithril_copper * (250.0 * 0.4879) * TAX_RATE
+        + elder_wood_copper * (250.0 * 0.3175) * TAX_RATE
+        + silk_scrap_data_sell_copper * (250.0 * 0.3367) * TAX_RATE
+        + thick_leather_data_sell_copper * (250.0 * 0.3457) * TAX_RATE
+        + orichalcum_data_sell_copper * (250.0 * 0.041) * TAX_RATE
+        + ancient_wood_data_sell_copper * (250.0 * 0.0249) * TAX_RATE
+        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * TAX_RATE
+        + hardened_data_sell_copper * (250.0 * 0.0162) * TAX_RATE
+        + ecto_sellcopper * (250.0 * 0.8761) * TAX_RATE
+        + lucent_mote_copper * (250.0 * 0.2387) * TAX_RATE
+        + symbol_of_control_sell_copper * (250.0 * 0.001) * TAX_RATE
+        + symbol_of_enh_data_sell_copper * (250.0 * 0.0003) * TAX_RATE
+        + symbol_of_pain_data_sell_copper * (250.0 * 0.0004) * TAX_RATE
+        + charm_of_brilliance_sell_copper * (250.0 * 0.0006) * TAX_RATE
+        + charm_of_potence_sell_copper * (250.0 * 0.0009) * TAX_RATE
+        + charm_of_skilldata_sell_copper * (250.0 * 0.0009) * TAX_RATE
     )
 
     salvage_costs = 250 * 60  # Silver Fed
@@ -338,7 +336,7 @@ def get_rare_weapon_craft() -> JSONResponse:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
     ecto_sell_after_taxes_copper = (
-        fetched_data[ECTOPLASM_ID]["sell_copper"] * GW2_SELL_TAX_RATE
+        fetched_data[ECTOPLASM_ID]["sell_copper"] * TAX_RATE
     )
     mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
     mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
@@ -507,10 +505,8 @@ def get_scholar_rune() -> JSONResponse:
         + charm_data * 2.0
     )
 
-    profit = scholar_rune_sell_copper * GW2_SELL_TAX_RATE - crafting_cost_copper
-    profit2 = (
-        scholar_rune_sell_copper * GW2_SELL_TAX_RATE - crafting_cost2_copper
-    )
+    profit = scholar_rune_sell_copper * TAX_RATE - crafting_cost_copper
+    profit2 = scholar_rune_sell_copper * TAX_RATE - crafting_cost2_copper
 
     cheapest_crafting_cost = min(crafting_cost_copper, crafting_cost2_copper)
     highest_profit = max(profit, profit2)
@@ -563,7 +559,7 @@ def get_dragonhunter_rune() -> JSONResponse:
         + thorns_buy * 10.0
     )
 
-    profit = rune_sell_copper * GW2_SELL_TAX_RATE - crafting_cost_copper
+    profit = rune_sell_copper * TAX_RATE - crafting_cost_copper
 
     data = {
         **get_sub_dict("guardian_crafting_cost", guardian_rune_cost),
@@ -611,14 +607,8 @@ def get_relic_of_fireworks() -> JSONResponse:
         + charm_price_copper * 3.0
     )
 
-    profit = (
-        relic_of_fireworks_sell_copper * GW2_SELL_TAX_RATE
-        - crafting_cost_copper
-    )
-    profit2 = (
-        relic_of_fireworks_sell_copper * GW2_SELL_TAX_RATE
-        - crafting_cost2_copper
-    )
+    profit = relic_of_fireworks_sell_copper * TAX_RATE - crafting_cost_copper
+    profit2 = relic_of_fireworks_sell_copper * TAX_RATE - crafting_cost2_copper
 
     cheapest_crafting_cost_copper = min(
         crafting_cost_copper, crafting_cost2_copper
@@ -683,22 +673,22 @@ def get_common_gear_salvage() -> JSONResponse:
     charm_of_skill_data_sell_copper = charm_of_skill_data["sell_copper"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4291) * GW2_SELL_TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3884) * GW2_SELL_TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3059) * GW2_SELL_TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.2509) * GW2_SELL_TAX_RATE
-        + orichalcum_data_sell_copper * (250.0 * 0.0394) * GW2_SELL_TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0305) * GW2_SELL_TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.0153) * GW2_SELL_TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0143) * GW2_SELL_TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.0095) * GW2_SELL_TAX_RATE
-        + lucent_mote_copper * (250.0 * 0.1083) * GW2_SELL_TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.0002) * GW2_SELL_TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.0006) * GW2_SELL_TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0005) * GW2_SELL_TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * GW2_SELL_TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
-        + charm_of_skill_data_sell_copper * (250.0 * 0.0003) * GW2_SELL_TAX_RATE
+        mithril_copper * (250.0 * 0.4291) * TAX_RATE
+        + elder_wood_copper * (250.0 * 0.3884) * TAX_RATE
+        + silk_scrap_data_sell_copper * (250.0 * 0.3059) * TAX_RATE
+        + thick_leather_data_sell_copper * (250.0 * 0.25) * TAX_RATE  # lowered
+        + orichalcum_data_sell_copper * (250.0 * 0.0394) * TAX_RATE
+        + ancient_wood_data_sell_copper * (250.0 * 0.0305) * TAX_RATE
+        + gossamer_scrap_data_sell_copper * (250.0 * 0.0153) * TAX_RATE
+        + hardened_data_sell_copper * (250.0 * 0.0143) * TAX_RATE
+        + ecto_sellcopper * (250.0 * 0.0091) * TAX_RATE  # lowered
+        + lucent_mote_copper * (250.0 * 0.1083) * TAX_RATE
+        + symbol_of_control_sell_copper * (250.0 * 0.0002) * TAX_RATE
+        + symbol_of_enh_data_sell_copper * (250.0 * 0.0006) * TAX_RATE
+        + symbol_of_pain_data_sell_copper * (250.0 * 0.0005) * TAX_RATE
+        + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * TAX_RATE
+        + charm_of_potence_sell_copper * (250.0 * 0.0003) * TAX_RATE
+        + charm_of_skill_data_sell_copper * (250.0 * 0.0003) * TAX_RATE
     )
 
     salvage_costs = (
@@ -766,22 +756,22 @@ def get_gear_salvage() -> JSONResponse:
     charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4299) * GW2_SELL_TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3564) * GW2_SELL_TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3521) * GW2_SELL_TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.2673) * GW2_SELL_TAX_RATE
-        + orichalcum_data_sell_copper * (250.0 * 0.0387) * GW2_SELL_TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0287) * GW2_SELL_TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * GW2_SELL_TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0169) * GW2_SELL_TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.0296) * GW2_SELL_TAX_RATE
-        + lucent_mote_copper * (250.0 * 0.98) * GW2_SELL_TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.0018) * GW2_SELL_TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.001) * GW2_SELL_TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0006) * GW2_SELL_TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0042) * GW2_SELL_TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0029) * GW2_SELL_TAX_RATE
-        + charm_of_skilldata_sell_copper * (250.0 * 0.0028) * GW2_SELL_TAX_RATE
+        mithril_copper * (250.0 * 0.4299) * TAX_RATE
+        + elder_wood_copper * (250.0 * 0.3564) * TAX_RATE
+        + silk_scrap_data_sell_copper * (250.0 * 0.3521) * TAX_RATE
+        + thick_leather_data_sell_copper * (250.0 * 0.2673) * TAX_RATE
+        + orichalcum_data_sell_copper * (250.0 * 0.0387) * TAX_RATE
+        + ancient_wood_data_sell_copper * (250.0 * 0.0287) * TAX_RATE
+        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * TAX_RATE
+        + hardened_data_sell_copper * (250.0 * 0.0169) * TAX_RATE
+        + ecto_sellcopper * (250.0 * 0.0296) * TAX_RATE
+        + lucent_mote_copper * (250.0 * 0.98) * TAX_RATE
+        + symbol_of_control_sell_copper * (250.0 * 0.0018) * TAX_RATE
+        + symbol_of_enh_data_sell_copper * (250.0 * 0.001) * TAX_RATE
+        + symbol_of_pain_data_sell_copper * (250.0 * 0.0006) * TAX_RATE
+        + charm_of_brilliance_sell_copper * (250.0 * 0.0042) * TAX_RATE
+        + charm_of_potence_sell_copper * (250.0 * 0.0029) * TAX_RATE
+        + charm_of_skilldata_sell_copper * (250.0 * 0.0028) * TAX_RATE
     )
 
     salvage_costs = 30.0 * 245 + 60 * 5
