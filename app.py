@@ -137,8 +137,8 @@ def fetch_tp_prices(
         flip_g, flip_s, flip_c = copper_to_gsc(flip_profit)
 
         fetched_data[item_id] = {
-            "buy_copper": buy_price,
-            "sell_copper": sell_price,
+            "buy": buy_price,
+            "sell": sell_price,
             "buy_g": buy_g,
             "buy_s": buy_s,
             "buy_c": buy_c,
@@ -188,7 +188,7 @@ def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
     lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
     mithril_data = fetched_data[MIRTHIL_ID]
     elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_data = fetched_data[THICK_LEATHER_ID]
+    thick_leather_ = fetched_data[THICK_LEATHER_ID]
     gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
     silk_scrap_data = fetched_data[SILK_SCRAP_ID]
     hardened_data = fetched_data[HARDENED_LEATHER_ID]
@@ -207,7 +207,7 @@ def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
         lucent_mote_data,
         mithril_data,
         elder_wood_data,
-        thick_leather_data,
+        thick_leather_,
         gossamer_scrap_data,
         silk_scrap_data,
         hardened_data,
@@ -249,7 +249,7 @@ def get_rare_gear_salvage() -> JSONResponse:
         lucent_mote_data,
         mithril_data,
         elder_wood_data,
-        thick_leather_data,
+        thick_leather_,
         gossamer_scrap_data,
         silk_scrap_data,
         hardened_data,
@@ -263,55 +263,53 @@ def get_rare_gear_salvage() -> JSONResponse:
         charm_of_skill_data,
     ) = data_tpl
 
-    buy_stack_copper = gear_data["buy_copper"] * 250.0
-    lucent_mote_copper = lucent_mote_data["sell_copper"]
-    mithril_copper = mithril_data["sell_copper"]
-    elder_wood_copper = elder_wood_data["sell_copper"]
-    ecto_sellcopper = ecto_data["sell_copper"]
-    thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+    stack_buy = gear_data["buy"] * 250.0
+    lucent_mote_sell = lucent_mote_data["sell"]
+    mithril_sell = mithril_data["sell"]
+    elder_wood_sell = elder_wood_data["sell"]
+    ecto_sell = ecto_data["sell"]
+    thick_leather__sell = thick_leather_["sell"]
 
-    gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
-    silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
-    hardened_data_sell_copper = hardened_data["sell_copper"]
-    ancient_wood_data_sell_copper = ancient_wood_data["sell_copper"]
-    symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
-    symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
-    orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
-    symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
-    charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
-    charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
-    charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
+    gossamer_scrap_sell = gossamer_scrap_data["sell"]
+    silk_scrap_sell = silk_scrap_data["sell"]
+    hardened_sell = hardened_data["sell"]
+    ancient_wood_sell = ancient_wood_data["sell"]
+    symbol_of_enh_sell = symbol_of_enh_data["sell"]
+    symbol_of_pain_sell = symbol_of_pain_data["sell"]
+    orichalcum_sell = orichalcum_data["sell"]
+    symbol_of_control_sell = symbol_of_control_data["sell"]
+    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
+    charm_of_potence_sell = charm_of_potence_data["sell"]
+    charm_of_skilldata_sell = charm_of_skill_data["sell"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4879) * TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3175) * TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3367) * TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.3457) * TAX_RATE
-        + orichalcum_data_sell_copper * (250.0 * 0.041) * TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0249) * TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0162) * TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.8761) * TAX_RATE
-        + lucent_mote_copper * (250.0 * 0.2387) * TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.001) * TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.0003) * TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0004) * TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0006) * TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0009) * TAX_RATE
-        + charm_of_skilldata_sell_copper * (250.0 * 0.0009) * TAX_RATE
+        mithril_sell * (250.0 * 0.4879) * TAX_RATE
+        + elder_wood_sell * (250.0 * 0.3175) * TAX_RATE
+        + silk_scrap_sell * (250.0 * 0.3367) * TAX_RATE
+        + thick_leather__sell * (250.0 * 0.3457) * TAX_RATE
+        + orichalcum_sell * (250.0 * 0.041) * TAX_RATE
+        + ancient_wood_sell * (250.0 * 0.0249) * TAX_RATE
+        + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
+        + hardened_sell * (250.0 * 0.0162) * TAX_RATE
+        + ecto_sell * (250.0 * 0.8761) * TAX_RATE
+        + lucent_mote_sell * (250.0 * 0.2387) * TAX_RATE
+        + symbol_of_control_sell * (250.0 * 0.001) * TAX_RATE
+        + symbol_of_enh_sell * (250.0 * 0.0003) * TAX_RATE
+        + symbol_of_pain_sell * (250.0 * 0.0004) * TAX_RATE
+        + charm_of_brilliance_sell * (250.0 * 0.0006) * TAX_RATE
+        + charm_of_potence_sell * (250.0 * 0.0009) * TAX_RATE
+        + charm_of_skilldata_sell * (250.0 * 0.0009) * TAX_RATE
     )
 
     salvage_costs = 250 * 60  # Silver Fed
 
-    profit_stack_copper = (
-        mats_value_after_taxes - buy_stack_copper - salvage_costs
-    )
+    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("stack_buy", stack_buy),
         **get_sub_dict("salvage_costs", salvage_costs),
         **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack_copper),
+        **get_sub_dict("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -337,19 +335,17 @@ def get_rare_weapon_craft() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_sell_after_taxes_copper = (
-        fetched_data[ECTOPLASM_ID]["sell_copper"] * TAX_RATE
-    )
-    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
-    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
-    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
-    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
-    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy_copper"]
-    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
-    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy_copper"]
-    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
-    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy_copper"]
-    potent_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy_copper"]
+    ecto_sell_after_taxes = fetched_data[ECTOPLASM_ID]["sell"] * TAX_RATE
+    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy"]
+    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy"]
+    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy"]
+    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy"]
+    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy"]
+    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy"]
+    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy"]
+    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy"]
+    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy"]
+    potent_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
 
     lowest_t5_mat = min(
         large_claw_buy,
@@ -379,17 +375,17 @@ def get_rare_weapon_craft() -> JSONResponse:
     crafting_cost_with_cheap_materials = (
         crafting_cost_inscr + crafting_cost_backing + crafting_cost_boss
     )
-    rare_gear_craft_profit_copper = (
-        ecto_sell_after_taxes_copper * 0.9
+    rare_gear_craft_profit = (
+        ecto_sell_after_taxes * 0.9
     ) - crafting_cost_with_cheap_materials
 
     data = {
         **get_sub_dict("crafting_cost", crafting_cost_with_cheap_materials),
         **get_sub_dict(
             "ecto_sell_after_taxes",
-            ecto_sell_after_taxes_copper,
+            ecto_sell_after_taxes,
         ),
-        **get_sub_dict("profit", rare_gear_craft_profit_copper),
+        **get_sub_dict("profit", rare_gear_craft_profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -411,12 +407,12 @@ def get_t5_mats_buy() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy_copper"]
-    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy_copper"]
-    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy_copper"]
-    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
-    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy_copper"]
-    venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy_copper"]
+    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy"]
+    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy"]
+    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy"]
+    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy"]
+    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy"]
+    venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
 
     data = {
         **get_sub_dict("large_claw_buy", large_claw_buy),
@@ -449,12 +445,12 @@ def get_mats_crafting_compare() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy_copper"]
-    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy_copper"]
-    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy_copper"]
-    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy_copper"]
-    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy"]
+    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy"]
+    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy"]
+    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy"]
+    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
+    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
 
     lucent_mote_to_crystal = lucent_mote_buy * 10.0
 
@@ -492,35 +488,35 @@ def get_scholar_rune() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_data = fetched_data[ECTOPLASM_ID]["buy_copper"]
-    totem_data = fetched_data[ELABORATE_TOTEM_ID]["buy_copper"]
-    lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
-    charm_data = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy_copper"]
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
-    scholar_rune_sell_copper = fetched_data[SCHOLAR_RUNE_ID]["sell_copper"]
+    ecto_data = fetched_data[ECTOPLASM_ID]["buy"]
+    totem_data = fetched_data[ELABORATE_TOTEM_ID]["buy"]
+    lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    charm_data = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy"]
+    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]["buy"]
+    scholar_rune_sell = fetched_data[SCHOLAR_RUNE_ID]["sell"]
 
-    crafting_cost_copper = (
+    crafting_cost = (
         ecto_data * 5.0
         + totem_data * 5.0
         + lucent_crystal_data * 8.0
         + charm_data * 2.0
     )
-    crafting_cost2_copper = (
+    crafting_cost2 = (
         ecto_data * 5.0
         + totem_data * 5.0
         + lucent_mote_data * 80.0
         + charm_data * 2.0
     )
 
-    profit = scholar_rune_sell_copper * TAX_RATE - crafting_cost_copper
-    profit2 = scholar_rune_sell_copper * TAX_RATE - crafting_cost2_copper
+    profit = scholar_rune_sell * TAX_RATE - crafting_cost
+    profit2 = scholar_rune_sell * TAX_RATE - crafting_cost2
 
-    cheapest_crafting_cost = min(crafting_cost_copper, crafting_cost2_copper)
+    cheapest_crafting_cost = min(crafting_cost, crafting_cost2)
     highest_profit = max(profit, profit2)
 
     data = {
         **get_sub_dict("crafting_cost", cheapest_crafting_cost),
-        **get_sub_dict("sell", scholar_rune_sell_copper),
+        **get_sub_dict("sell", scholar_rune_sell),
         **get_sub_dict("profit", highest_profit),
     }
 
@@ -545,13 +541,13 @@ def get_dragonhunter_rune() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    rune_sell_copper = fetched_data[DRAGONHUNTER_RUNE_ID]["sell_copper"]
-    evergreen_loadstone_buy = fetched_data[EVERGREEN_LOADSTONE_ID]["buy_copper"]
-    charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell_copper"]
-    thorns_buy = fetched_data[BARBED_THORN_ID]["buy_copper"]
-    charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy_copper"]
-    ecto_buy = fetched_data[ECTOPLASM_ID]["buy_copper"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy_copper"]
+    rune_sell = fetched_data[DRAGONHUNTER_RUNE_ID]["sell"]
+    evergreen_loadstone_buy = fetched_data[EVERGREEN_LOADSTONE_ID]["buy"]
+    charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+    thorns_buy = fetched_data[BARBED_THORN_ID]["buy"]
+    charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
+    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
+    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
 
     guardian_rune_cost = (
         charged_loadstone_sell
@@ -560,18 +556,18 @@ def get_dragonhunter_rune() -> JSONResponse:
         + lucent_crystal_buy * 12.0
     )
 
-    crafting_cost_copper = (
+    crafting_cost = (
         guardian_rune_cost * 1.0
         + evergreen_loadstone_buy * 1.0
         + thorns_buy * 10.0
     )
 
-    profit = rune_sell_copper * TAX_RATE - crafting_cost_copper
+    profit = rune_sell * TAX_RATE - crafting_cost
 
     data = {
         **get_sub_dict("guardian_crafting_cost", guardian_rune_cost),
-        **get_sub_dict("crafting_cost", crafting_cost_copper),
-        **get_sub_dict("sell", rune_sell_copper),
+        **get_sub_dict("crafting_cost", crafting_cost),
+        **get_sub_dict("sell", rune_sell),
         **get_sub_dict("profit", profit),
     }
 
@@ -593,42 +589,37 @@ def get_relic_of_fireworks() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_price_copper = fetched_data[ECTOPLASM_ID]["buy_copper"]
-    lucent_crystal_price_copper = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID][
-        "buy_copper"
-    ]
-    charm_price_copper = fetched_data[CHARM_OF_SKILL_ID]["buy_copper"]
-    lucent_mote_price_copper = fetched_data[LUCENT_MOTE_ID]["buy_copper"]
-    relic_of_fireworks_sell_copper = fetched_data[RELIC_OF_FIREWORKS_ID][
-        "sell_copper"
-    ]
+    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
+    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    charm_buy = fetched_data[CHARM_OF_SKILL_ID]["buy"]
+    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
+    relic_of_fireworks_sell = fetched_data[RELIC_OF_FIREWORKS_ID]["sell"]
+    relic_of_fireworks_buy = fetched_data[RELIC_OF_FIREWORKS_ID]["buy"]
 
-    crafting_cost_copper = (
-        ecto_price_copper * 15.0
-        + lucent_crystal_price_copper * 48.0
-        + charm_price_copper * 3.0
+    crafting_cost = (
+        ecto_buy * 15.0 + lucent_crystal_buy * 48.0 + charm_buy * 3.0
     )
-    crafting_cost2_copper = (
-        ecto_price_copper * 15.0
-        + lucent_mote_price_copper * 480.0
-        + charm_price_copper * 3.0
-    )
+    crafting_cost2 = ecto_buy * 15.0 + lucent_mote_buy * 480.0 + charm_buy * 3.0
 
-    profit = relic_of_fireworks_sell_copper * TAX_RATE - crafting_cost_copper
-    profit2 = relic_of_fireworks_sell_copper * TAX_RATE - crafting_cost2_copper
+    profit = relic_of_fireworks_sell * TAX_RATE - crafting_cost
+    profit2 = relic_of_fireworks_sell * TAX_RATE - crafting_cost2
 
-    cheapest_crafting_cost_copper = min(
-        crafting_cost_copper,
-        crafting_cost2_copper,
+    cheapest_crafting_cost = min(
+        crafting_cost,
+        crafting_cost2,
     )
     highest_profit = max(profit, profit2)
+    relic_of_fireworks_flip = (
+        relic_of_fireworks_sell * TAX_RATE
+    ) - relic_of_fireworks_buy
 
     data = {
         **get_sub_dict(
             "crafting_cost",
-            cheapest_crafting_cost_copper,
+            cheapest_crafting_cost,
         ),
-        **get_sub_dict("sell", relic_of_fireworks_sell_copper),
+        **get_sub_dict("sell", relic_of_fireworks_sell),
+        **get_sub_dict("flip", relic_of_fireworks_flip),
         **get_sub_dict("profit", highest_profit),
     }
 
@@ -647,7 +638,7 @@ def get_common_gear_salvage() -> JSONResponse:
         lucent_mote_data,
         mithril_data,
         elder_wood_data,
-        thick_leather_data,
+        thick_leather_,
         gossamer_scrap_data,
         silk_scrap_data,
         hardened_data,
@@ -661,42 +652,42 @@ def get_common_gear_salvage() -> JSONResponse:
         charm_of_skill_data,
     ) = data_tpl
 
-    buy_stack_copper = gear_data["buy_copper"] * 250.0
-    lucent_mote_copper = lucent_mote_data["sell_copper"]
-    mithril_copper = mithril_data["sell_copper"]
-    elder_wood_copper = elder_wood_data["sell_copper"]
-    ecto_sellcopper = ecto_data["sell_copper"]
-    thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+    stack_buy = gear_data["buy"] * 250.0
+    lucent_mote_sell = lucent_mote_data["sell"]
+    mithril_sell = mithril_data["sell"]
+    elder_wood_sell = elder_wood_data["sell"]
+    ecto_sell = ecto_data["sell"]
+    thick_leather__sell = thick_leather_["sell"]
 
-    gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
-    silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
-    hardened_data_sell_copper = hardened_data["sell_copper"]
-    ancient_wood_data_sell_copper = ancient_wood_data["sell_copper"]
-    symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
-    symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
-    orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
-    symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
-    charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
-    charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
-    charm_of_skill_data_sell_copper = charm_of_skill_data["sell_copper"]
+    gossamer_scrap_sell = gossamer_scrap_data["sell"]
+    silk_scrap_sell = silk_scrap_data["sell"]
+    hardened_sell = hardened_data["sell"]
+    ancient_wood_sell = ancient_wood_data["sell"]
+    symbol_of_enh_sell = symbol_of_enh_data["sell"]
+    symbol_of_pain_sell = symbol_of_pain_data["sell"]
+    orichalcum_sell = orichalcum_data["sell"]
+    symbol_of_control_sell = symbol_of_control_data["sell"]
+    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
+    charm_of_potence_sell = charm_of_potence_data["sell"]
+    charm_of_skill_sell = charm_of_skill_data["sell"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4291) * TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3884) * TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3059) * TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.25) * TAX_RATE  # lowered
-        + orichalcum_data_sell_copper * (250.0 * 0.0394) * TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0305) * TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.0153) * TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0143) * TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.0091) * TAX_RATE  # lowered
-        + lucent_mote_copper * (250.0 * 0.1083) * TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.0002) * TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.0006) * TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0005) * TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0004) * TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0003) * TAX_RATE
-        + charm_of_skill_data_sell_copper * (250.0 * 0.0003) * TAX_RATE
+        mithril_sell * (250.0 * 0.4291) * TAX_RATE
+        + elder_wood_sell * (250.0 * 0.3884) * TAX_RATE
+        + silk_scrap_sell * (250.0 * 0.3059) * TAX_RATE
+        + thick_leather__sell * (250.0 * 0.25) * TAX_RATE  # lowered
+        + orichalcum_sell * (250.0 * 0.0394) * TAX_RATE
+        + ancient_wood_sell * (250.0 * 0.0305) * TAX_RATE
+        + gossamer_scrap_sell * (250.0 * 0.0153) * TAX_RATE
+        + hardened_sell * (250.0 * 0.0143) * TAX_RATE
+        + ecto_sell * (250.0 * 0.0091) * TAX_RATE  # lowered
+        + lucent_mote_sell * (250.0 * 0.1083) * TAX_RATE
+        + symbol_of_control_sell * (250.0 * 0.0002) * TAX_RATE
+        + symbol_of_enh_sell * (250.0 * 0.0006) * TAX_RATE
+        + symbol_of_pain_sell * (250.0 * 0.0005) * TAX_RATE
+        + charm_of_brilliance_sell * (250.0 * 0.0004) * TAX_RATE
+        + charm_of_potence_sell * (250.0 * 0.0003) * TAX_RATE
+        + charm_of_skill_sell * (250.0 * 0.0003) * TAX_RATE
     )
 
     salvage_costs = (
@@ -705,15 +696,13 @@ def get_common_gear_salvage() -> JSONResponse:
         + 60 * 2  # Silver Fed
     )
 
-    profit_stack_copper = (
-        mats_value_after_taxes - buy_stack_copper - salvage_costs
-    )
+    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("stack_buy", stack_buy),
         **get_sub_dict("salvage_costs", salvage_costs),
         **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack_copper),
+        **get_sub_dict("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -730,7 +719,7 @@ def get_gear_salvage() -> JSONResponse:
         lucent_mote_data,
         mithril_data,
         elder_wood_data,
-        thick_leather_data,
+        thick_leather_,
         gossamer_scrap_data,
         silk_scrap_data,
         hardened_data,
@@ -744,55 +733,53 @@ def get_gear_salvage() -> JSONResponse:
         charm_of_skill_data,
     ) = data_tpl
 
-    buy_stack_copper = gear_data["buy_copper"] * 250.0
-    lucent_mote_copper = lucent_mote_data["sell_copper"]
-    mithril_copper = mithril_data["sell_copper"]
-    elder_wood_copper = elder_wood_data["sell_copper"]
-    ecto_sellcopper = ecto_data["sell_copper"]
-    thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+    stack_buy = gear_data["buy"] * 250.0
+    lucent_mote_sell = lucent_mote_data["sell"]
+    mithril_sell = mithril_data["sell"]
+    elder_wood_sell = elder_wood_data["sell"]
+    ecto_sell = ecto_data["sell"]
+    thick_leather__sell = thick_leather_["sell"]
 
-    gossamer_scrap_data_sell_copper = gossamer_scrap_data["sell_copper"]
-    silk_scrap_data_sell_copper = silk_scrap_data["sell_copper"]
-    hardened_data_sell_copper = hardened_data["sell_copper"]
-    ancient_wood_data_sell_copper = ancient_wood_data["sell_copper"]
-    symbol_of_enh_data_sell_copper = symbol_of_enh_data["sell_copper"]
-    symbol_of_pain_data_sell_copper = symbol_of_pain_data["sell_copper"]
-    orichalcum_data_sell_copper = orichalcum_data["sell_copper"]
-    symbol_of_control_sell_copper = symbol_of_control_data["sell_copper"]
-    charm_of_brilliance_sell_copper = charm_of_brilliance_data["sell_copper"]
-    charm_of_potence_sell_copper = charm_of_potence_data["sell_copper"]
-    charm_of_skilldata_sell_copper = charm_of_skill_data["sell_copper"]
+    gossamer_scrap_sell = gossamer_scrap_data["sell"]
+    silk_scrap_sell = silk_scrap_data["sell"]
+    hardened_sell = hardened_data["sell"]
+    ancient_wood_sell = ancient_wood_data["sell"]
+    symbol_of_enh_sell = symbol_of_enh_data["sell"]
+    symbol_of_pain_sell = symbol_of_pain_data["sell"]
+    orichalcum_sell = orichalcum_data["sell"]
+    symbol_of_control_sell = symbol_of_control_data["sell"]
+    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
+    charm_of_potence_sell = charm_of_potence_data["sell"]
+    charm_of_skilldata_sell = charm_of_skill_data["sell"]
 
     mats_value_after_taxes = (
-        mithril_copper * (250.0 * 0.4299) * TAX_RATE
-        + elder_wood_copper * (250.0 * 0.3564) * TAX_RATE
-        + silk_scrap_data_sell_copper * (250.0 * 0.3521) * TAX_RATE
-        + thick_leather_data_sell_copper * (250.0 * 0.2673) * TAX_RATE
-        + orichalcum_data_sell_copper * (250.0 * 0.0387) * TAX_RATE
-        + ancient_wood_data_sell_copper * (250.0 * 0.0287) * TAX_RATE
-        + gossamer_scrap_data_sell_copper * (250.0 * 0.018) * TAX_RATE
-        + hardened_data_sell_copper * (250.0 * 0.0169) * TAX_RATE
-        + ecto_sellcopper * (250.0 * 0.0296) * TAX_RATE
-        + lucent_mote_copper * (250.0 * 0.98) * TAX_RATE
-        + symbol_of_control_sell_copper * (250.0 * 0.0018) * TAX_RATE
-        + symbol_of_enh_data_sell_copper * (250.0 * 0.001) * TAX_RATE
-        + symbol_of_pain_data_sell_copper * (250.0 * 0.0006) * TAX_RATE
-        + charm_of_brilliance_sell_copper * (250.0 * 0.0042) * TAX_RATE
-        + charm_of_potence_sell_copper * (250.0 * 0.0029) * TAX_RATE
-        + charm_of_skilldata_sell_copper * (250.0 * 0.0028) * TAX_RATE
+        mithril_sell * (250.0 * 0.4299) * TAX_RATE
+        + elder_wood_sell * (250.0 * 0.3564) * TAX_RATE
+        + silk_scrap_sell * (250.0 * 0.3521) * TAX_RATE
+        + thick_leather__sell * (250.0 * 0.2673) * TAX_RATE
+        + orichalcum_sell * (250.0 * 0.0387) * TAX_RATE
+        + ancient_wood_sell * (250.0 * 0.0287) * TAX_RATE
+        + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
+        + hardened_sell * (250.0 * 0.0169) * TAX_RATE
+        + ecto_sell * (250.0 * 0.0296) * TAX_RATE
+        + lucent_mote_sell * (250.0 * 0.98) * TAX_RATE
+        + symbol_of_control_sell * (250.0 * 0.0018) * TAX_RATE
+        + symbol_of_enh_sell * (250.0 * 0.001) * TAX_RATE
+        + symbol_of_pain_sell * (250.0 * 0.0006) * TAX_RATE
+        + charm_of_brilliance_sell * (250.0 * 0.0042) * TAX_RATE
+        + charm_of_potence_sell * (250.0 * 0.0029) * TAX_RATE
+        + charm_of_skilldata_sell * (250.0 * 0.0028) * TAX_RATE
     )
 
     salvage_costs = 30.0 * 245 + 60 * 5
 
-    profit_stack_copper = (
-        mats_value_after_taxes - buy_stack_copper - salvage_costs
-    )
+    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", buy_stack_copper),
+        **get_sub_dict("stack_buy", stack_buy),
         **get_sub_dict("salvage_costs", salvage_costs),
         **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack_copper),
+        **get_sub_dict("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -866,20 +853,20 @@ def get_t5_mats_sell() -> JSONResponse:
     lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
     mithril_data = fetched_data[MIRTHIL_ID]
     elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_data = fetched_data[THICK_LEATHER_ID]
+    thick_leather_ = fetched_data[THICK_LEATHER_ID]
 
-    lucent_mote_copper = lucent_mote_data["sell_copper"]
-    mithril_copper = mithril_data["sell_copper"]
-    elder_wood_copper = elder_wood_data["sell_copper"]
-    thick_leather_data_sell_copper = thick_leather_data["sell_copper"]
+    lucent_mote_sell = lucent_mote_data["sell"]
+    mithril_sell = mithril_data["sell"]
+    elder_wood_sell = elder_wood_data["sell"]
+    thick_leather__sell = thick_leather_["sell"]
 
     data = {
-        **get_sub_dict("lucent_mote_sell", lucent_mote_copper * 250.0),
-        **get_sub_dict("mithril_sell", mithril_copper * 250.0),
-        **get_sub_dict("elder_wood_sell", elder_wood_copper * 250.0),
+        **get_sub_dict("lucent_mote_sell", lucent_mote_sell * 250.0),
+        **get_sub_dict("mithril_sell", mithril_sell * 250.0),
+        **get_sub_dict("elder_wood_sell", elder_wood_sell * 250.0),
         **get_sub_dict(
             "thick_leather_sell",
-            thick_leather_data_sell_copper * 250.0,
+            thick_leather__sell * 250.0,
         ),
     }
     return JSONResponse(content=jsonable_encoder(data))

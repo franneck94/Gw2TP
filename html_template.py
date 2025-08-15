@@ -181,6 +181,7 @@ DRAGONHUNTER_RUNE_TABLE = f"""
 FIREWORKS_NAMES = [
     "crafting_cost",
     "sell",
+    "flip",
     "profit",
 ]
 FIREWORKS_TABLE = f"""
@@ -432,5 +433,3 @@ HTML_PAGE = f"""
 </body>
 </html>
 """
-with open("test.html", "w") as f:
-    f.write(HTML_PAGE)
