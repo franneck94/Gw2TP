@@ -45,6 +45,7 @@ from items import MITHRIL_ORE_ID
 from items import ORICHALCUM_ID
 from items import PILE_OF_LUCENT_CRYSTAL_ID
 from items import POTENT_BLOOD_ID
+from items import POTENT_VENOM_SAC
 from items import RARE_UNID_GEAR_ID
 from items import RELIC_OF_FIREWORKS_ID
 from items import SCHOLAR_RUNE_ID
@@ -330,6 +331,7 @@ def get_rare_weapon_craft() -> JSONResponse:
                 LARGE_BONE_ID,
                 INTRICATE_TOTEM_ID,
                 LARGE_FANG_ID,
+                POTENT_VENOM_SAC,
             ],
         )
     except Exception as e:
@@ -347,6 +349,7 @@ def get_rare_weapon_craft() -> JSONResponse:
     large_bone_buy = fetched_data[LARGE_BONE_ID]["buy_copper"]
     intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
     large_fang_buy = fetched_data[LARGE_FANG_ID]["buy_copper"]
+    potent_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy_copper"]
 
     lowest_t5_mat = min(
         large_claw_buy,
@@ -354,6 +357,7 @@ def get_rare_weapon_craft() -> JSONResponse:
         large_bone_buy,
         intricate_totem_buy,
         large_fang_buy,
+        potent_sac_buy,
     )
 
     crafting_cost_ingot = (
@@ -401,6 +405,7 @@ def get_t5_mats_buy() -> JSONResponse:
                 LARGE_BONE_ID,
                 INTRICATE_TOTEM_ID,
                 LARGE_FANG_ID,
+                POTENT_VENOM_SAC,
             ],
         )
     except Exception as e:
@@ -411,6 +416,7 @@ def get_t5_mats_buy() -> JSONResponse:
     large_bone_buy = fetched_data[LARGE_BONE_ID]["buy_copper"]
     intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy_copper"]
     large_fang_buy = fetched_data[LARGE_FANG_ID]["buy_copper"]
+    venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy_copper"]
 
     data = {
         **get_sub_dict("large_claw_buy", large_claw_buy),
@@ -421,6 +427,7 @@ def get_t5_mats_buy() -> JSONResponse:
             intricate_totem_buy,
         ),
         **get_sub_dict("large_fang_buy", large_fang_buy),
+        **get_sub_dict("venom_sac_buy", venom_sac_buy),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -611,7 +618,8 @@ def get_relic_of_fireworks() -> JSONResponse:
     profit2 = relic_of_fireworks_sell_copper * TAX_RATE - crafting_cost2_copper
 
     cheapest_crafting_cost_copper = min(
-        crafting_cost_copper, crafting_cost2_copper
+        crafting_cost_copper,
+        crafting_cost2_copper,
     )
     highest_profit = max(profit, profit2)
 

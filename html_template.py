@@ -1,7 +1,11 @@
 # ruff: noqa: E501
+from pathlib import Path
+
 from items import ECTOPLASM_ID
 from items import RARE_UNID_GEAR_ID
 
+
+CWD = Path.cwd()
 
 TABLE_HEADER = """
 <tr>
@@ -25,6 +29,19 @@ def get_price_row_html(
     <td id="{item_id}_s##{name}">-</td>
     <td id="{item_id}_c##{name}">-</td>
 </tr>"""
+
+
+def get_price_rows_html(
+    price_names: list[str],
+    category_name: str,
+) -> str:
+    rows_str = ""
+    for price_name in price_names:
+        rows_str += get_price_row_html(
+            price_name,
+            category_name,
+        )
+    return rows_str
 
 
 def get_flip_table_html(item_id: int) -> str:
@@ -54,135 +71,140 @@ def get_flip_table_html(item_id: int) -> str:
 ECTO_TABLE = get_flip_table_html(ECTOPLASM_ID)
 RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_GEAR_ID)
 
+RARE_GEAR_NAMES = [
+    "stack_buy",
+    "salvage_costs",
+    "mats_value_after_taxes",
+    "profit_stack",
+]
 RARE_GEAR_SALVAGE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("stack_buy", "rare_gear_salvage")}
-    {get_price_row_html("salvage_costs", "rare_gear_salvage")}
-    {get_price_row_html("mats_value_after_taxes", "rare_gear_salvage")}
-    {get_price_row_html("profit_stack", "rare_gear_salvage")}
+    {get_price_rows_html(RARE_GEAR_NAMES, "rare_gear_salvage")}
 </table>
 """
 
+GEAR_SALVAGE_NAMES = [
+    "stack_buy",
+    "salvage_costs",
+    "mats_value_after_taxes",
+    "profit_stack",
+]
 GEAR_SALVAGE_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("stack_buy", "gear_salvage")}
-    {get_price_row_html("salvage_costs", "gear_salvage")}
-    {get_price_row_html("mats_value_after_taxes", "gear_salvage")}
-    {get_price_row_html("profit_stack", "gear_salvage")}
+    {get_price_rows_html(GEAR_SALVAGE_NAMES, "gear_salvage")}
 </table>
 """
 
+T5_MATS_SELL_NAMES = [
+    "lucent_mote_sell",
+    "mithril_sell",
+    "elder_wood_sell",
+    "thick_leather_sell",
+]
 T5_MATS_SELL_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("lucent_mote_sell", "t5_mats_sell")}
-    {get_price_row_html("mithril_sell", "t5_mats_sell")}
-    {get_price_row_html("elder_wood_sell", "t5_mats_sell")}
-    {get_price_row_html("thick_leather_sell", "t5_mats_sell")}
+    {get_price_rows_html(T5_MATS_SELL_NAMES, "t5_mats_sell")}
 </table>
 """
 
+T5_MATS_BUY_NAMES = [
+    "large_claw_buy",
+    "potent_blood_buy",
+    "large_bone_buy",
+    "intricate_totem_buy",
+    "large_fang_buy",
+    "venom_sac_buy",
+]
 T5_MATS_BUY_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("large_claw_buy", "t5_mats_buy")}
-    {get_price_row_html("potent_blood_buy", "t5_mats_buy")}
-    {get_price_row_html("large_bone_buy", "t5_mats_buy")}
-    {get_price_row_html("intricate_totem_buy", "t5_mats_buy")}
-    {get_price_row_html("large_fang_buy", "t5_mats_buy")}
+    {get_price_rows_html(T5_MATS_BUY_NAMES, "t5_mats_buy")}
 </table>
 """
 
+MATS_CRAFT_COMPARE_NAMES = [
+    "mithril_ore_to_ingot",
+    "mithril_ingot_buy",
+    "elder_wood_log_to_plank",
+    "elder_wood_plank_buy",
+    "lucent_mote_to_crystal",
+    "lucent_crystal_buy",
+]
 MATS_CRAFT_COMPARE_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("mithril_ore_to_ingot", "mats_crafting_compare")}
-    {get_price_row_html("mithril_ingot_buy", "mats_crafting_compare")}
-    {get_price_row_html("elder_wood_log_to_plank", "mats_crafting_compare")}
-    {get_price_row_html("elder_wood_plank_buy", "mats_crafting_compare")}
-    {get_price_row_html("lucent_mote_to_crystal", "mats_crafting_compare")}
-    {get_price_row_html("lucent_crystal_buy", "mats_crafting_compare")}
+    {get_price_rows_html(MATS_CRAFT_COMPARE_NAMES, "mats_crafting_compare")}
 </table>
 """
 
+COMMON_GEAR_NAMES = [
+    "stack_buy",
+    "salvage_costs",
+    "mats_value_after_taxes",
+    "profit_stack",
+]
 COMMON_GEAR_SALVAGE_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("stack_buy", "common_gear_salvage")}
-    {get_price_row_html("salvage_costs", "common_gear_salvage")}
-    {get_price_row_html("mats_value_after_taxes", "common_gear_salvage")}
-    {get_price_row_html("profit_stack", "common_gear_salvage")}
+    {get_price_rows_html(COMMON_GEAR_NAMES, "common_gear_salvage")}
 </table>
 """
 
+SCHOLAR_RUNE_NAMES = [
+    "crafting_cost",
+    "sell",
+    "profit",
+]
 SCHOLAR_RUNE_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("crafting_cost", "scholar_rune")}
-    {get_price_row_html("sell", "scholar_rune")}
-    {get_price_row_html("profit", "scholar_rune")}
+    {get_price_rows_html(SCHOLAR_RUNE_NAMES, "scholar_rune")}
 </table>
 """
 
+DRAGONHUNTER_RUNE_NAMES = [
+    "guardian_crafting_cost",
+    "crafting_cost",
+    "sell",
+    "profit",
+]
 DRAGONHUNTER_RUNE_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("guardian_crafting_cost", "dragonhunter_rune")}
-    {get_price_row_html("crafting_cost", "dragonhunter_rune")}
-    {get_price_row_html("sell", "dragonhunter_rune")}
-    {get_price_row_html("profit", "dragonhunter_rune")}
+    {get_price_rows_html(DRAGONHUNTER_RUNE_NAMES, "dragonhunter_rune")}
 </table>
 """
 
+FIREWORKS_NAMES = [
+    "crafting_cost",
+    "sell",
+    "profit",
+]
 FIREWORKS_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("crafting_cost", "relic_of_fireworks")}
-    {get_price_row_html("sell", "relic_of_fireworks")}
-    {get_price_row_html("profit", "relic_of_fireworks")}
+    {get_price_rows_html(FIREWORKS_NAMES, "relic_of_fireworks")}
 </table>
 """
 
+RARE_WEAPON_CRAFT_NAMES = [
+    "crafting_cost",
+    "ecto_sell_after_taxes",
+    "profit",
+]
 RARE_WEAPON_CRAFT_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_row_html("crafting_cost", "rare_weapon_craft")}
-    {get_price_row_html("ecto_sell_after_taxes", "rare_weapon_craft")}
-    {get_price_row_html("profit", "rare_weapon_craft")}
+    {get_price_rows_html(RARE_WEAPON_CRAFT_NAMES, "rare_weapon_craft")}
 </table>
 """
 
-STYLE = """
-<style>
-    body { background-color: #121212; color: #e0e0e0; font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; width: 400px; margin-top: 20px; }
-    th, td { border: 1px solid #444; padding: 8px; text-align: center; }
-    th { background-color: #1f1f1f; color: #fff; }
-    button { padding: 8px 12px; font-size: 14px; cursor: pointer; background-color: #333; color: #fff; border: 1px solid #555; }
-    button:hover { background-color: #444; }
-    #fetch-popup {
-        display: none;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 80px;
-        background: #222;
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 6px;
-        text-align: center;
-        width: fit-content;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        z-index: 100;
-    }
-    #fetch-popup.show {
-        display: block;
-        opacity: 1;
-    }
-</style>
-"""
+with (CWD / "style.css").open() as f:
+    CSS_CONTENT = f.read()
+STYLE = f"<style>{CSS_CONTENT}</style>"
 
 
 PROFIT_CALCULATION_HTML = """
@@ -290,8 +312,10 @@ def get_mats_crafting_compare() -> str:
     return get_all_fetch_price_html("mats_crafting_compare")
 
 
-SCRIPT = f"""
-<script>
+with (CWD / "scripts.js").open() as f:
+    SCRIPT_FUNCTIONS = f.read()
+
+FETCH_PRICES = f"""
 async function _fetchPrices() {{
     await Promise.all([
         (async () => {{ {get_fetch_price_html(RARE_UNID_GEAR_ID)} }})(),
@@ -308,67 +332,13 @@ async function _fetchPrices() {{
         (async () => {{ {get_common_gear_salvage_html()} }})(),
     ]);
 }}
+"""
 
-function showFetchPopup() {{
-    const popup = document.getElementById('fetch-popup');
-    popup.classList.add('show');
-    setTimeout(() => {{
-        popup.classList.remove('show');
-    }}, 1000);
-    console.log("Prices fetched and updated.");
-}}
-
-async function fetchPrices() {{
-    await _fetchPrices();
-    showFetchPopup();
-}}
-
-window.addEventListener('DOMContentLoaded', fetchPrices);
-
-function calculateManualProfit() {{
-    const buyG = parseInt(document.getElementById('manual-buy-g').value) || 0;
-    const buyS = parseInt(document.getElementById('manual-buy-s').value) || 0;
-    const buyC = parseInt(document.getElementById('manual-buy-c').value) || 0;
-    const sellG = parseInt(document.getElementById('manual-sell-g').value) || 0;
-    const sellS = parseInt(document.getElementById('manual-sell-s').value) || 0;
-    const sellC = parseInt(document.getElementById('manual-sell-c').value) || 0;
-
-    console.log(`Calculating profit: Buy - ${{buyG}}g ${{buyS}}s ${{buyC}}c, Sell - ${{sellG}}g ${{sellS}}s ${{sellC}}c`);
-
-    // Convert to copper
-    const buyTotal = buyG * 10000 + buyS * 100 + buyC;
-    const sellTotal = sellG * 10000 + sellS * 100 + sellC;
-
-    // GW2 TP takes 15% fee from sell price
-    const sellAfterTax = Math.floor(sellTotal * 0.85);
-
-    const profit = sellAfterTax - buyTotal;
-    console.log(`Profit calculated: ${{profit}} copper`);
-
-    let profitG, profitS, profitC;
-    if (profit < 0) {{
-        profitG = Math.floor((-1 * profit) / 10000);
-        profitS = Math.floor(((-1 * profit) % 10000) / 100);
-        profitC = (-1 * profit) % 100;
-    }} else {{
-        profitG = Math.floor(profit / 10000);
-        profitS = Math.floor((profit % 10000) / 100);
-        profitC = profit % 100;
-    }}
-
-    let resultText;
-    let color;
-    if (profit >= 0) {{
-        resultText = `Profit: ${{profitG}}g ${{profitS}}s ${{profitC}}c`;
-        color = "#FFD700"; // gold-ish
-    }} else {{
-        resultText = `Loss: ${{Math.abs(profitG)}}g ${{Math.abs(profitS)}}s ${{Math.abs(profitC)}}c`;
-        color = "#f44336"; // red
-    }}
-    const resultElem = document.getElementById('manual-profit-result');
-    resultElem.innerText = resultText;
-    resultElem.style.color = color;
-}}
+SCRIPT = f"""
+<script>
+    {FETCH_PRICES}
+    {SCRIPT_FUNCTIONS}
+    window.addEventListener('DOMContentLoaded', fetchPrices);
 </script>
 """
 
@@ -462,3 +432,5 @@ HTML_PAGE = f"""
 </body>
 </html>
 """
+with open("test.html", "w") as f:
+    f.write(HTML_PAGE)
