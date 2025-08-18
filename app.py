@@ -106,6 +106,12 @@ def gsc_to_copper(
     return gold * 10000 + silver * 100 + copper
 
 
+def gsc_dict_to_copper(
+    dct: int,
+) -> int:
+    return dct["profit_g"] * 10000 + dct["profit_s"] * 100 + dct["profit_c"]
+
+
 def get_sub_dict(item_name: str, copper_price: int) -> Dict[str, Any]:
     g, s, c = copper_to_gsc(copper_price)
     return {
@@ -523,6 +529,45 @@ def get_scholar_rune() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+@fastapi_app.get("/guardian_rune")
+def get_guardian_rune() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                GUARD_RUNE,
+                PILE_OF_LUCENT_CRYSTAL_ID,
+                CHARGED_LOADSTONE_ID,
+                CHARM_OF_POTENCE_ID,
+                ECTOPLASM_ID,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    rune_sell = fetched_data[GUARD_RUNE]["sell"]
+    charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+    charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
+    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
+    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+
+    crafting_cost = (
+        charged_loadstone_sell
+        + charm_buy
+        + ecto_buy * 5.0
+        + lucent_crystal_buy * 12.0
+    )
+
+    profit = rune_sell * TAX_RATE - crafting_cost
+
+    data = {
+        **get_sub_dict("crafting_cost", crafting_cost),
+        **get_sub_dict("sell", rune_sell),
+        **get_sub_dict("profit", profit),
+    }
+
+    return JSONResponse(content=jsonable_encoder(data))
+
+
 @fastapi_app.get("/dragonhunter_rune")
 def get_dragonhunter_rune() -> JSONResponse:
     try:
@@ -565,7 +610,6 @@ def get_dragonhunter_rune() -> JSONResponse:
     profit = rune_sell * TAX_RATE - crafting_cost
 
     data = {
-        **get_sub_dict("guardian_crafting_cost", guardian_rune_cost),
         **get_sub_dict("crafting_cost", crafting_cost),
         **get_sub_dict("sell", rune_sell),
         **get_sub_dict("profit", profit),
@@ -787,8 +831,12 @@ def get_gear_salvage() -> JSONResponse:
 @fastapi_app.get("/profits")
 def get_profits() -> JSONResponse:
     try:
-        dragonhunter_response = httpx.Client().get(
+        guardian_response = httpx.Client().get(
             f"{api_base}dragonhunter_rune",
+        )
+        guardian_data = guardian_response.json()
+        dragonhunter_response = httpx.Client().get(
+            f"{api_base}guardian_rune",
         )
         dragonhunter_data = dragonhunter_response.json()
         scholar_response = httpx.Client().get(
@@ -806,28 +854,14 @@ def get_profits() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    dragonhunter_rune_profit = (
-        dragonhunter_data["profit_g"] * 10_000
-        + dragonhunter_data["profit_s"] * 100
-        + dragonhunter_data["profit_c"]
-    )
-    scholar_rune_profit = (
-        scholar_data["profit_g"] * 10_000
-        + scholar_data["profit_s"] * 100
-        + scholar_data["profit_c"]
-    )
-    fireworks_relic_profit = (
-        fireworks_data["profit_g"] * 10_000
-        + fireworks_data["profit_s"] * 100
-        + fireworks_data["profit_c"]
-    )
-    rare_weapon_craft_profit = (
-        rare_weapon_data["profit_g"] * 10_000
-        + rare_weapon_data["profit_s"] * 100
-        + rare_weapon_data["profit_c"]
-    )
+    guardian_rune_profit = gsc_dict_to_copper(guardian_data)
+    dragonhunter_rune_profit = gsc_dict_to_copper(dragonhunter_data)
+    scholar_rune_profit = gsc_dict_to_copper(scholar_data)
+    fireworks_relic_profit = gsc_dict_to_copper(fireworks_data)
+    rare_weapon_craft_profit = gsc_dict_to_copper(rare_weapon_data)
 
     data = {
+        **get_sub_dict("guardian_rune_profit", guardian_rune_profit),
         **get_sub_dict("dragonhunter_rune", dragonhunter_rune_profit),
         **get_sub_dict("scholar_rune", scholar_rune_profit),
         **get_sub_dict("fireworks_relic", fireworks_relic_profit),

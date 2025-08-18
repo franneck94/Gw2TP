@@ -165,8 +165,19 @@ SCHOLAR_RUNE_TABLE = f"""
 </table>
 """
 
+GUARDIAN_RUNE_NAMES = [
+    "crafting_cost",
+    "sell",
+    "profit",
+]
+GUARDIAN_RUNE_TABLE = f"""
+<table>
+    {TABLE_HEADER}
+    {get_price_rows_html(GUARDIAN_RUNE_NAMES, "guardian_rune")}
+</table>
+"""
+
 DRAGONHUNTER_RUNE_NAMES = [
-    "guardian_crafting_cost",
     "crafting_cost",
     "sell",
     "profit",
@@ -285,6 +296,10 @@ def get_scholar_rune_html() -> str:
     return get_all_fetch_price_html("scholar_rune")
 
 
+def get_guardian_rune_html() -> str:
+    return get_all_fetch_price_html("guardian_rune")
+
+
 def get_dragonhunter_rune_html() -> str:
     return get_all_fetch_price_html("dragonhunter_rune")
 
@@ -323,6 +338,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_fetch_price_html(ECTOPLASM_ID)} }})(),
         (async () => {{ {get_rare_gear_salvage_html()} }})(),
         (async () => {{ {get_rare_salvage_html()} }})(),
+        (async () => {{ {get_guardian_rune_html()} }})(),
         (async () => {{ {get_scholar_rune_html()} }})(),
         (async () => {{ {get_dragonhunter_rune_html()} }})(),
         (async () => {{ {get_fireworks_html()} }})(),
@@ -414,6 +430,13 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {SCHOLAR_RUNE_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Guardian" target="_blank" style="color: inherit; text-decoration: none;">
+                    Guardian Runes
+                </a>
+            </h3>
+            {GUARDIAN_RUNE_TABLE}
 
             <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">

@@ -8,18 +8,25 @@ import discord
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
 COMMANDS_LIST = [
+    # runes
+    "scholar_rune",
+    "dragonhunter_rune",
+    "guardian_rune",
+    # relics
+    "relic_of_fireworks",
+    # rare / ecto
     "rare_weapon_craft",
     "rare_gear_salvage",
+    "ecto",
+    # gear
     "gear_salvage",
     "common_gear_salvage",
-    "relic_of_fireworks",
-    "scholar_rune",
-    "get_price",
+    # t5
     "t5_mats_buy",
     "t5_mats_sell",
-    "dragonhunter_rune",
-    "ecto",
+    # general
     "profits",
+    "get_price",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -102,6 +109,9 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} dragonhunter_rune"):
         title = "Dragonhunter Rune"
         api_url = api_base + "dragonhunter_rune"
+    elif message.content.startswith(f"{COMMAND_PREFIX} guardian_rune"):
+        title = "Guardian Rune"
+        api_url = api_base + "guardian_rune"
     elif message.content.startswith(f"{COMMAND_PREFIX} rare_weapon_craft"):
         title = "Rare Weapon Craft"
         api_url = api_base + "rare_weapon_craft"
