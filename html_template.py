@@ -20,11 +20,20 @@ TABLE_HEADER = """
 def get_price_row_html(
     item_id: str,
     name: str,
+    /,
+    clipboard_copy: bool = False,
 ) -> str:
     words = [word.capitalize() for word in item_id.split("_")]
+    row_content = " ".join(words)
+    if clipboard_copy:
+        first_col = f"""
+    <td onclick="navigator.clipboard.writeText('{row_content}')" style="cursor: pointer;" title="Click to copy">{row_content}</td>
+"""
+    else:
+        first_col = f"<td>{row_content}</td>"
     return f"""
 <tr>
-    <td>{" ".join(words)}</td>
+    {first_col}
     <td id="{item_id}_g##{name}">-</td>
     <td id="{item_id}_s##{name}">-</td>
     <td id="{item_id}_c##{name}">-</td>
@@ -34,12 +43,15 @@ def get_price_row_html(
 def get_price_rows_html(
     price_names: list[str],
     category_name: str,
+    /,
+    clipboard_copy: bool = False,
 ) -> str:
     rows_str = ""
     for price_name in price_names:
         rows_str += get_price_row_html(
             price_name,
             category_name,
+            clipboard_copy=clipboard_copy,
         )
     return rows_str
 
@@ -98,30 +110,30 @@ GEAR_SALVAGE_TABLE = f"""
 """
 
 T5_MATS_SELL_NAMES = [
-    "lucent_mote_sell",
-    "mithril_sell",
-    "elder_wood_sell",
-    "thick_leather_sell",
+    "lucent_mote",
+    "mithril_ore",
+    "elder_wood_log",
+    "thick_leather",
 ]
 T5_MATS_SELL_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_rows_html(T5_MATS_SELL_NAMES, "t5_mats_sell")}
+    {get_price_rows_html(T5_MATS_SELL_NAMES, "t5_mats_sell", clipboard_copy=True)}
 </table>
 """
 
 T5_MATS_BUY_NAMES = [
-    "large_claw_buy",
-    "potent_blood_buy",
-    "large_bone_buy",
-    "intricate_totem_buy",
-    "large_fang_buy",
-    "venom_sac_buy",
+    "large_claw",
+    "potent_blood",
+    "large_bone",
+    "intricate_totem",
+    "large_fang",
+    "potent_venom",
 ]
 T5_MATS_BUY_TABLE = f"""
 <table>
     {TABLE_HEADER}
-    {get_price_rows_html(T5_MATS_BUY_NAMES, "t5_mats_buy")}
+    {get_price_rows_html(T5_MATS_BUY_NAMES, "t5_mats_buy", clipboard_copy=True)}
 </table>
 """
 

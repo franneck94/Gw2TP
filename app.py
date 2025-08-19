@@ -418,15 +418,12 @@ def get_t5_mats_buy() -> JSONResponse:
     venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
 
     data = {
-        **get_sub_dct("large_claw_buy", large_claw_buy),
-        **get_sub_dct("potent_blood_buy", potent_blood_buy),
-        **get_sub_dct("large_bone_buy", large_bone_buy),
-        **get_sub_dct(
-            "intricate_totem_buy",
-            intricate_totem_buy,
-        ),
-        **get_sub_dct("large_fang_buy", large_fang_buy),
-        **get_sub_dct("venom_sac_buy", venom_sac_buy),
+        **get_sub_dct("large_claw", large_claw_buy),
+        **get_sub_dct("potent_blood", potent_blood_buy),
+        **get_sub_dct("large_bone", large_bone_buy),
+        **get_sub_dct("intricate_totem", intricate_totem_buy),
+        **get_sub_dct("large_fang", large_fang_buy),
+        **get_sub_dct("potent_venom", venom_sac_buy),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -458,15 +455,9 @@ def get_mats_crafting_compare() -> JSONResponse:
     lucent_mote_to_crystal = lucent_mote_buy * 10.0
 
     data = {
-        **get_sub_dct(
-            "mithril_ore_to_ingot",
-            mithril_ore_buy * 2.0,
-        ),
+        **get_sub_dct("mithril_ore_to_ingot", mithril_ore_buy * 2.0),
         **get_sub_dct("mithril_ingot_buy", mithril_ingot_buy),
-        **get_sub_dct(
-            "elder_wood_log_to_plank",
-            elder_wood_log_buy * 3.0,
-        ),
+        **get_sub_dct("elder_wood_log_to_plank", elder_wood_log_buy * 3.0),
         **get_sub_dct("elder_wood_plank_buy", elder_wood_plank_buy),
         **get_sub_dct("lucent_mote_to_crystal", lucent_mote_to_crystal),
         **get_sub_dct("lucent_crystal_buy", lucent_crystal_buy),
@@ -889,13 +880,10 @@ def get_t5_mats_sell() -> JSONResponse:
     thick_leather_sell = thick_leather_["sell"]
 
     data = {
-        **get_sub_dct("lucent_mote_sell", lucent_mote_sell * 250.0),
-        **get_sub_dct("mithril_sell", mithril_sell * 250.0),
-        **get_sub_dct("elder_wood_sell", elder_wood_sell * 250.0),
-        **get_sub_dct(
-            "thick_leather_sell",
-            thick_leather_sell * 250.0,
-        ),
+        **get_sub_dct("lucent_mote", lucent_mote_sell * 250.0),
+        **get_sub_dct("mithril_ore", mithril_sell * 250.0),
+        **get_sub_dct("elder_wood_log", elder_wood_sell * 250.0),
+        **get_sub_dct("thick_leather", thick_leather_sell * 250.0),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
