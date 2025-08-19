@@ -112,7 +112,7 @@ def gsc_dict_to_copper(
     return dct["profit_g"] * 10000 + dct["profit_s"] * 100 + dct["profit_c"]
 
 
-def get_sub_dict(item_name: str, copper_price: int) -> Dict[str, Any]:
+def get_sub_dct(item_name: str, copper_price: int) -> Dict[str, Any]:
     g, s, c = copper_to_gsc(copper_price)
     return {
         f"{item_name}_g": g,
@@ -154,9 +154,9 @@ def fetch_tp_prices(
             "flip_g": flip_g,
             "flip_s": flip_s,
             "flip_c": flip_c,
-            "sell_after_taxes_g": int(sell_price * TAX_RATE // 10000),
-            "sell_after_taxes_s": int((sell_price * TAX_RATE % 10000) // 100),
-            "sell_after_taxes_c": int(sell_price * TAX_RATE % 100),
+            "sell_after_tax_g": int(sell_price * TAX_RATE // 10000),
+            "sell_after_tax_s": int((sell_price * TAX_RATE % 10000) // 100),
+            "sell_after_tax_c": int(sell_price * TAX_RATE % 100),
         }
     return fetched_data
 
@@ -274,7 +274,7 @@ def get_rare_gear_salvage() -> JSONResponse:
     mithril_sell = mithril_data["sell"]
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
-    thick_leather__sell = thick_leather_["sell"]
+    thick_leather_sell = thick_leather_["sell"]
 
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
@@ -288,16 +288,16 @@ def get_rare_gear_salvage() -> JSONResponse:
     charm_of_potence_sell = charm_of_potence_data["sell"]
     charm_of_skilldata_sell = charm_of_skill_data["sell"]
 
-    mats_value_after_taxes = (
+    mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4879) * TAX_RATE
         + elder_wood_sell * (250.0 * 0.3175) * TAX_RATE
         + silk_scrap_sell * (250.0 * 0.3367) * TAX_RATE
-        + thick_leather__sell * (250.0 * 0.3457) * TAX_RATE
+        + thick_leather_sell * (250.0 * 0.3457) * TAX_RATE
         + orichalcum_sell * (250.0 * 0.041) * TAX_RATE
         + ancient_wood_sell * (250.0 * 0.0249) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
         + hardened_sell * (250.0 * 0.0162) * TAX_RATE
-        + ecto_sell * (250.0 * 0.8761) * TAX_RATE
+        + ecto_sell * (250.0 * 0.871) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.2387) * TAX_RATE
         + symbol_of_control_sell * (250.0 * 0.001) * TAX_RATE
         + symbol_of_enh_sell * (250.0 * 0.0003) * TAX_RATE
@@ -309,13 +309,13 @@ def get_rare_gear_salvage() -> JSONResponse:
 
     salvage_costs = 250 * 60  # Silver Fed
 
-    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
+    profit_stack = mats_value_after_tax - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", stack_buy),
-        **get_sub_dict("salvage_costs", salvage_costs),
-        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack),
+        **get_sub_dct("stack_buy", stack_buy),
+        **get_sub_dct("salvage_costs", salvage_costs),
+        **get_sub_dct("mats_value_after_tax", mats_value_after_tax),
+        **get_sub_dct("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -341,7 +341,7 @@ def get_rare_weapon_craft() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_sell_after_taxes = fetched_data[ECTOPLASM_ID]["sell"] * TAX_RATE
+    ecto_sell_after_tax = fetched_data[ECTOPLASM_ID]["sell"] * TAX_RATE
     mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy"]
     mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy"]
     elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy"]
@@ -382,16 +382,13 @@ def get_rare_weapon_craft() -> JSONResponse:
         crafting_cost_inscr + crafting_cost_backing + crafting_cost_boss
     )
     rare_gear_craft_profit = (
-        ecto_sell_after_taxes * 0.9
+        ecto_sell_after_tax * 0.9
     ) - crafting_cost_with_cheap_materials
 
     data = {
-        **get_sub_dict("crafting_cost", crafting_cost_with_cheap_materials),
-        **get_sub_dict(
-            "ecto_sell_after_taxes",
-            ecto_sell_after_taxes,
-        ),
-        **get_sub_dict("profit", rare_gear_craft_profit),
+        **get_sub_dct("crafting_cost", crafting_cost_with_cheap_materials),
+        **get_sub_dct("ecto_sell_after_tax", ecto_sell_after_tax),
+        **get_sub_dct("profit", rare_gear_craft_profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -421,15 +418,15 @@ def get_t5_mats_buy() -> JSONResponse:
     venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
 
     data = {
-        **get_sub_dict("large_claw_buy", large_claw_buy),
-        **get_sub_dict("potent_blood_buy", potent_blood_buy),
-        **get_sub_dict("large_bone_buy", large_bone_buy),
-        **get_sub_dict(
+        **get_sub_dct("large_claw_buy", large_claw_buy),
+        **get_sub_dct("potent_blood_buy", potent_blood_buy),
+        **get_sub_dct("large_bone_buy", large_bone_buy),
+        **get_sub_dct(
             "intricate_totem_buy",
             intricate_totem_buy,
         ),
-        **get_sub_dict("large_fang_buy", large_fang_buy),
-        **get_sub_dict("venom_sac_buy", venom_sac_buy),
+        **get_sub_dct("large_fang_buy", large_fang_buy),
+        **get_sub_dct("venom_sac_buy", venom_sac_buy),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -461,18 +458,18 @@ def get_mats_crafting_compare() -> JSONResponse:
     lucent_mote_to_crystal = lucent_mote_buy * 10.0
 
     data = {
-        **get_sub_dict(
+        **get_sub_dct(
             "mithril_ore_to_ingot",
             mithril_ore_buy * 2.0,
         ),
-        **get_sub_dict("mithril_ingot_buy", mithril_ingot_buy),
-        **get_sub_dict(
+        **get_sub_dct("mithril_ingot_buy", mithril_ingot_buy),
+        **get_sub_dct(
             "elder_wood_log_to_plank",
             elder_wood_log_buy * 3.0,
         ),
-        **get_sub_dict("elder_wood_plank_buy", elder_wood_plank_buy),
-        **get_sub_dict("lucent_mote_to_crystal", lucent_mote_to_crystal),
-        **get_sub_dict("lucent_crystal_buy", lucent_crystal_buy),
+        **get_sub_dct("elder_wood_plank_buy", elder_wood_plank_buy),
+        **get_sub_dct("lucent_mote_to_crystal", lucent_mote_to_crystal),
+        **get_sub_dct("lucent_crystal_buy", lucent_crystal_buy),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -517,13 +514,13 @@ def get_scholar_rune() -> JSONResponse:
     profit = scholar_rune_sell * TAX_RATE - crafting_cost
     profit2 = scholar_rune_sell * TAX_RATE - crafting_cost2
 
-    cheapest_crafting_cost = min(crafting_cost, crafting_cost2)
+    cheap_crafting_cost = min(crafting_cost, crafting_cost2)
     highest_profit = max(profit, profit2)
 
     data = {
-        **get_sub_dict("crafting_cost", cheapest_crafting_cost),
-        **get_sub_dict("sell", scholar_rune_sell),
-        **get_sub_dict("profit", highest_profit),
+        **get_sub_dct("crafting_cost", cheap_crafting_cost),
+        **get_sub_dct("sell", scholar_rune_sell),
+        **get_sub_dct("profit", highest_profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -560,9 +557,9 @@ def get_guardian_rune() -> JSONResponse:
     profit = rune_sell * TAX_RATE - crafting_cost
 
     data = {
-        **get_sub_dict("crafting_cost", crafting_cost),
-        **get_sub_dict("sell", rune_sell),
-        **get_sub_dict("profit", profit),
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", rune_sell),
+        **get_sub_dct("profit", profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -610,9 +607,9 @@ def get_dragonhunter_rune() -> JSONResponse:
     profit = rune_sell * TAX_RATE - crafting_cost
 
     data = {
-        **get_sub_dict("crafting_cost", crafting_cost),
-        **get_sub_dict("sell", rune_sell),
-        **get_sub_dict("profit", profit),
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", rune_sell),
+        **get_sub_dct("profit", profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -648,7 +645,7 @@ def get_relic_of_fireworks() -> JSONResponse:
     profit = relic_of_fireworks_sell * TAX_RATE - crafting_cost
     profit2 = relic_of_fireworks_sell * TAX_RATE - crafting_cost2
 
-    cheapest_crafting_cost = min(
+    cheap_crafting_cost = min(
         crafting_cost,
         crafting_cost2,
     )
@@ -658,13 +655,10 @@ def get_relic_of_fireworks() -> JSONResponse:
     ) - relic_of_fireworks_buy
 
     data = {
-        **get_sub_dict(
-            "crafting_cost",
-            cheapest_crafting_cost,
-        ),
-        **get_sub_dict("sell", relic_of_fireworks_sell),
-        **get_sub_dict("flip", relic_of_fireworks_flip),
-        **get_sub_dict("profit", highest_profit),
+        **get_sub_dct("crafting_cost", cheap_crafting_cost),
+        **get_sub_dct("sell", relic_of_fireworks_sell),
+        **get_sub_dct("flip", relic_of_fireworks_flip),
+        **get_sub_dct("profit", highest_profit),
     }
 
     return JSONResponse(content=jsonable_encoder(data))
@@ -701,7 +695,7 @@ def get_common_gear_salvage() -> JSONResponse:
     mithril_sell = mithril_data["sell"]
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
-    thick_leather__sell = thick_leather_["sell"]
+    thick_leather_sell = thick_leather_["sell"]
 
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
@@ -715,16 +709,16 @@ def get_common_gear_salvage() -> JSONResponse:
     charm_of_potence_sell = charm_of_potence_data["sell"]
     charm_of_skill_sell = charm_of_skill_data["sell"]
 
-    mats_value_after_taxes = (
+    mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4291) * TAX_RATE
         + elder_wood_sell * (250.0 * 0.3884) * TAX_RATE
         + silk_scrap_sell * (250.0 * 0.3059) * TAX_RATE
-        + thick_leather__sell * (250.0 * 0.25) * TAX_RATE  # lowered
+        + thick_leather_sell * (250.0 * 0.25) * TAX_RATE  # lowered
         + orichalcum_sell * (250.0 * 0.0394) * TAX_RATE
         + ancient_wood_sell * (250.0 * 0.0305) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.0153) * TAX_RATE
         + hardened_sell * (250.0 * 0.0143) * TAX_RATE
-        + ecto_sell * (250.0 * 0.0091) * TAX_RATE  # lowered
+        + ecto_sell * (250.0 * 0.0090) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.1083) * TAX_RATE
         + symbol_of_control_sell * (250.0 * 0.0002) * TAX_RATE
         + symbol_of_enh_sell * (250.0 * 0.0006) * TAX_RATE
@@ -740,13 +734,13 @@ def get_common_gear_salvage() -> JSONResponse:
         + 60 * 2  # Silver Fed
     )
 
-    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
+    profit_stack = mats_value_after_tax - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", stack_buy),
-        **get_sub_dict("salvage_costs", salvage_costs),
-        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack),
+        **get_sub_dct("stack_buy", stack_buy),
+        **get_sub_dct("salvage_costs", salvage_costs),
+        **get_sub_dct("mats_value_after_tax", mats_value_after_tax),
+        **get_sub_dct("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -782,7 +776,7 @@ def get_gear_salvage() -> JSONResponse:
     mithril_sell = mithril_data["sell"]
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
-    thick_leather__sell = thick_leather_["sell"]
+    thick_leather_sell = thick_leather_["sell"]
 
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
@@ -796,16 +790,16 @@ def get_gear_salvage() -> JSONResponse:
     charm_of_potence_sell = charm_of_potence_data["sell"]
     charm_of_skilldata_sell = charm_of_skill_data["sell"]
 
-    mats_value_after_taxes = (
+    mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4299) * TAX_RATE
         + elder_wood_sell * (250.0 * 0.3564) * TAX_RATE
         + silk_scrap_sell * (250.0 * 0.3521) * TAX_RATE
-        + thick_leather__sell * (250.0 * 0.2673) * TAX_RATE
+        + thick_leather_sell * (250.0 * 0.2673) * TAX_RATE
         + orichalcum_sell * (250.0 * 0.0387) * TAX_RATE
         + ancient_wood_sell * (250.0 * 0.0287) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
         + hardened_sell * (250.0 * 0.0169) * TAX_RATE
-        + ecto_sell * (250.0 * 0.0296) * TAX_RATE
+        + ecto_sell * (250.0 * 0.0291) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.98) * TAX_RATE
         + symbol_of_control_sell * (250.0 * 0.0018) * TAX_RATE
         + symbol_of_enh_sell * (250.0 * 0.001) * TAX_RATE
@@ -817,13 +811,13 @@ def get_gear_salvage() -> JSONResponse:
 
     salvage_costs = 30.0 * 245 + 60 * 5
 
-    profit_stack = mats_value_after_taxes - stack_buy - salvage_costs
+    profit_stack = mats_value_after_tax - stack_buy - salvage_costs
 
     data = {
-        **get_sub_dict("stack_buy", stack_buy),
-        **get_sub_dict("salvage_costs", salvage_costs),
-        **get_sub_dict("mats_value_after_taxes", mats_value_after_taxes),
-        **get_sub_dict("profit_stack", profit_stack),
+        **get_sub_dct("stack_buy", stack_buy),
+        **get_sub_dct("salvage_costs", salvage_costs),
+        **get_sub_dct("mats_value_after_tax", mats_value_after_tax),
+        **get_sub_dct("profit_stack", profit_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -861,11 +855,11 @@ def get_profits() -> JSONResponse:
     rare_weapon_craft_profit = gsc_dict_to_copper(rare_weapon_data)
 
     data = {
-        **get_sub_dict("guardian_rune_profit", guardian_rune_profit),
-        **get_sub_dict("dragonhunter_rune", dragonhunter_rune_profit),
-        **get_sub_dict("scholar_rune", scholar_rune_profit),
-        **get_sub_dict("fireworks_relic", fireworks_relic_profit),
-        **get_sub_dict("rare_weapon_craft", rare_weapon_craft_profit),
+        **get_sub_dct("guardian_rune_profit", guardian_rune_profit),
+        **get_sub_dct("dragonhunter_rune", dragonhunter_rune_profit),
+        **get_sub_dct("scholar_rune", scholar_rune_profit),
+        **get_sub_dct("fireworks_relic", fireworks_relic_profit),
+        **get_sub_dct("rare_weapon_craft", rare_weapon_craft_profit),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
@@ -892,15 +886,15 @@ def get_t5_mats_sell() -> JSONResponse:
     lucent_mote_sell = lucent_mote_data["sell"]
     mithril_sell = mithril_data["sell"]
     elder_wood_sell = elder_wood_data["sell"]
-    thick_leather__sell = thick_leather_["sell"]
+    thick_leather_sell = thick_leather_["sell"]
 
     data = {
-        **get_sub_dict("lucent_mote_sell", lucent_mote_sell * 250.0),
-        **get_sub_dict("mithril_sell", mithril_sell * 250.0),
-        **get_sub_dict("elder_wood_sell", elder_wood_sell * 250.0),
-        **get_sub_dict(
+        **get_sub_dct("lucent_mote_sell", lucent_mote_sell * 250.0),
+        **get_sub_dct("mithril_sell", mithril_sell * 250.0),
+        **get_sub_dct("elder_wood_sell", elder_wood_sell * 250.0),
+        **get_sub_dct(
             "thick_leather_sell",
-            thick_leather__sell * 250.0,
+            thick_leather_sell * 250.0,
         ),
     }
     return JSONResponse(content=jsonable_encoder(data))

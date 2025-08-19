@@ -74,7 +74,7 @@ RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_GEAR_ID)
 RARE_GEAR_NAMES = [
     "stack_buy",
     "salvage_costs",
-    "mats_value_after_taxes",
+    "mats_value_after_tax",
     "profit_stack",
 ]
 RARE_GEAR_SALVAGE = f"""
@@ -87,7 +87,7 @@ RARE_GEAR_SALVAGE = f"""
 GEAR_SALVAGE_NAMES = [
     "stack_buy",
     "salvage_costs",
-    "mats_value_after_taxes",
+    "mats_value_after_tax",
     "profit_stack",
 ]
 GEAR_SALVAGE_TABLE = f"""
@@ -143,7 +143,7 @@ MATS_CRAFT_COMPARE_TABLE = f"""
 COMMON_GEAR_NAMES = [
     "stack_buy",
     "salvage_costs",
-    "mats_value_after_taxes",
+    "mats_value_after_tax",
     "profit_stack",
 ]
 COMMON_GEAR_SALVAGE_TABLE = f"""
@@ -204,7 +204,7 @@ FIREWORKS_TABLE = f"""
 
 RARE_WEAPON_CRAFT_NAMES = [
     "crafting_cost",
-    "ecto_sell_after_taxes",
+    "ecto_sell_after_tax",
     "profit",
 ]
 RARE_WEAPON_CRAFT_TABLE = f"""
