@@ -709,7 +709,7 @@ def get_common_gear_salvage() -> JSONResponse:
         + ancient_wood_sell * (250.0 * 0.0305) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.0153) * TAX_RATE
         + hardened_sell * (250.0 * 0.0143) * TAX_RATE
-        + ecto_sell * (250.0 * 0.008) * TAX_RATE  # lowered
+        + ecto_sell * (250.0 * 0.007) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.1075) * TAX_RATE  # lowered
         + symbol_of_control_sell * (250.0 * 0.0002) * TAX_RATE
         + symbol_of_enh_sell * (250.0 * 0.0006) * TAX_RATE
