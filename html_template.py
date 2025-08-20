@@ -21,7 +21,7 @@ def get_price_row_html(
     item_id: str,
     name: str,
     /,
-    clipboard_copy: bool = False,
+    clipboard_copy: bool = False,  # noqa: FBT001, FBT002
 ) -> str:
     words = [word.capitalize() for word in item_id.split("_")]
     row_content = " ".join(words)
@@ -44,7 +44,7 @@ def get_price_rows_html(
     price_names: list[str],
     category_name: str,
     /,
-    clipboard_copy: bool = False,
+    clipboard_copy: bool = False,  # noqa: FBT001, FBT002
 ) -> str:
     rows_str = ""
     for price_name in price_names:
