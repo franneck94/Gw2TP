@@ -86,8 +86,8 @@ def copper_to_gsc(
         negative = True
         copper = abs(copper)
 
-    gold = int(copper // 10000)
-    silver = int((copper % 10000) // 100)
+    gold = int(copper // 10_000)
+    silver = int((copper % 10_000) // 100)
     copper_rest = int(copper % 100)
 
     if negative:
@@ -103,13 +103,13 @@ def gsc_to_copper(
     silver: int,
     copper: int,
 ) -> int:
-    return gold * 10000 + silver * 100 + copper
+    return gold * 10_000 + silver * 100 + copper
 
 
 def gsc_dict_to_copper(
     dct: int,
 ) -> int:
-    return dct["profit_g"] * 10000 + dct["profit_s"] * 100 + dct["profit_c"]
+    return dct["profit_g"] * 10_000 + dct["profit_s"] * 100 + dct["profit_c"]
 
 
 def get_sub_dct(item_name: str, copper_price: int) -> Dict[str, Any]:
@@ -154,8 +154,8 @@ def fetch_tp_prices(
             "flip_g": flip_g,
             "flip_s": flip_s,
             "flip_c": flip_c,
-            "sell_after_tax_g": int(sell_price * TAX_RATE // 10000),
-            "sell_after_tax_s": int((sell_price * TAX_RATE % 10000) // 100),
+            "sell_after_tax_g": int(sell_price * TAX_RATE // 10_000),
+            "sell_after_tax_s": int((sell_price * TAX_RATE % 10_000) // 100),
             "sell_after_tax_c": int(sell_price * TAX_RATE % 100),
         }
     return fetched_data
@@ -270,12 +270,12 @@ def get_rare_gear_salvage() -> JSONResponse:
     ) = data_tpl
 
     stack_buy = gear_data["buy"] * 250.0
+
     lucent_mote_sell = lucent_mote_data["sell"]
     mithril_sell = mithril_data["sell"]
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
     thick_leather_sell = thick_leather_["sell"]
-
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
     hardened_sell = hardened_data["sell"]
@@ -297,7 +297,7 @@ def get_rare_gear_salvage() -> JSONResponse:
         + ancient_wood_sell * (250.0 * 0.0249) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
         + hardened_sell * (250.0 * 0.0162) * TAX_RATE
-        + ecto_sell * (250.0 * 0.871) * TAX_RATE  # lowered
+        + ecto_sell * (250.0 * 0.87) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.2387) * TAX_RATE
         + symbol_of_control_sell * (250.0 * 0.001) * TAX_RATE
         + symbol_of_enh_sell * (250.0 * 0.0003) * TAX_RATE
@@ -382,8 +382,8 @@ def get_rare_weapon_craft() -> JSONResponse:
         crafting_cost_inscr + crafting_cost_backing + crafting_cost_boss
     )
     rare_gear_craft_profit = (
-        ecto_sell_after_tax * 0.9
-    ) - crafting_cost_with_cheap_materials
+        ecto_sell_after_tax * 0.9 - crafting_cost_with_cheap_materials
+    )
 
     data = {
         **get_sub_dct("crafting_cost", crafting_cost_with_cheap_materials),
@@ -482,24 +482,25 @@ def get_scholar_rune() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_data = fetched_data[ECTOPLASM_ID]["buy"]
-    totem_data = fetched_data[ELABORATE_TOTEM_ID]["buy"]
-    lucent_crystal_data = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
-    charm_data = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy"]
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]["buy"]
+    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
+    totem_buy = fetched_data[ELABORATE_TOTEM_ID]["buy"]
+    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    charm_buy = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy"]
+    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
+
     scholar_rune_sell = fetched_data[SCHOLAR_RUNE_ID]["sell"]
 
     crafting_cost = (
-        ecto_data * 5.0
-        + totem_data * 5.0
-        + lucent_crystal_data * 8.0
-        + charm_data * 2.0
+        ecto_buy * 5.0
+        + totem_buy * 5.0
+        + lucent_crystal_buy * 8.0
+        + charm_buy * 2.0
     )
     crafting_cost2 = (
-        ecto_data * 5.0
-        + totem_data * 5.0
-        + lucent_mote_data * 80.0
-        + charm_data * 2.0
+        ecto_buy * 5.0
+        + totem_buy * 5.0
+        + lucent_mote_buy * 80.0
+        + charm_buy * 2.0
     )
 
     profit = scholar_rune_sell * TAX_RATE - crafting_cost
@@ -534,6 +535,7 @@ def get_guardian_rune() -> JSONResponse:
 
     rune_sell = fetched_data[GUARD_RUNE]["sell"]
     charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+
     charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
     ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
     lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
@@ -575,8 +577,9 @@ def get_dragonhunter_rune() -> JSONResponse:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
     rune_sell = fetched_data[DRAGONHUNTER_RUNE_ID]["sell"]
-    evergreen_loadstone_buy = fetched_data[EVERGREEN_LOADSTONE_ID]["buy"]
     charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+
+    evergreen_loadstone_buy = fetched_data[EVERGREEN_LOADSTONE_ID]["buy"]
     thorns_buy = fetched_data[BARBED_THORN_ID]["buy"]
     charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
     ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
