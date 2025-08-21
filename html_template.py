@@ -1,8 +1,7 @@
 # ruff: noqa: E501
 from pathlib import Path
 
-from items import ECTOPLASM_ID
-from items import RARE_UNID_GEAR_ID
+from items import ItemIDs
 
 
 CWD = Path.cwd()
@@ -80,8 +79,8 @@ def get_flip_table_html(item_id: int) -> str:
     </table>"""
 
 
-ECTO_TABLE = get_flip_table_html(ECTOPLASM_ID)
-RARE_GEAR_TABLE = get_flip_table_html(RARE_UNID_GEAR_ID)
+ECTO_TABLE = get_flip_table_html(ItemIDs.ECTOPLASM)
+RARE_GEAR_TABLE = get_flip_table_html(ItemIDs.RARE_UNID_GEAR)
 
 RARE_GEAR_NAMES = [
     "stack_buy",
@@ -346,8 +345,8 @@ with (CWD / "scripts.js").open() as f:
 FETCH_PRICES = f"""
 async function _fetchPrices() {{
     await Promise.all([
-        (async () => {{ {get_fetch_price_html(RARE_UNID_GEAR_ID)} }})(),
-        (async () => {{ {get_fetch_price_html(ECTOPLASM_ID)} }})(),
+        (async () => {{ {get_fetch_price_html(ItemIDs.RARE_UNID_GEAR)} }})(),
+        (async () => {{ {get_fetch_price_html(ItemIDs.ECTOPLASM)} }})(),
         (async () => {{ {get_rare_gear_salvage_html()} }})(),
         (async () => {{ {get_rare_salvage_html()} }})(),
         (async () => {{ {get_guardian_rune_html()} }})(),

@@ -17,44 +17,7 @@ from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
 from html_template import HTML_PAGE
-from items import ANCIENT_WOOD_ID
-from items import BARBED_THORN_ID
-from items import CHARGED_LOADSTONE_ID
-from items import CHARM_OF_BRILLIANCE_ID
-from items import CHARM_OF_POTENCE_ID
-from items import CHARM_OF_SKILL_ID
-from items import COMMON_GEAR_ID
-from items import DRAGONHUNTER_RUNE_ID
-from items import ECTOPLASM_ID
-from items import ELABORATE_TOTEM_ID
-from items import ELDER_WOOD_ID
-from items import ELDER_WOOD_LOG_ID
-from items import ELDER_WOOD_PLANK_ID
-from items import EVERGREEN_LOADSTONE_ID
-from items import GOSSAMER_SCRAP_ID
-from items import GUARD_RUNE
-from items import HARDENED_LEATHER_ID
-from items import INTRICATE_TOTEM_ID
-from items import LARGE_BONE_ID
-from items import LARGE_CLAW_ID
-from items import LARGE_FANG_ID
-from items import LUCENT_MOTE_ID
-from items import MIRTHIL_ID
-from items import MITHRIL_INGOT_ID
-from items import MITHRIL_ORE_ID
-from items import ORICHALCUM_ID
-from items import PILE_OF_LUCENT_CRYSTAL_ID
-from items import POTENT_BLOOD_ID
-from items import POTENT_VENOM_SAC
-from items import RARE_UNID_GEAR_ID
-from items import RELIC_OF_FIREWORKS_ID
-from items import SCHOLAR_RUNE_ID
-from items import SILK_SCRAP_ID
-from items import SYMBOL_OF_CONTROL_ID
-from items import SYMBOL_OF_ENH_ID
-from items import SYMBOL_OF_PAIN_ID
-from items import THICK_LEATHER_ID
-from items import UNID_GEAR_ID
+from items import ItemIDs
 
 
 GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
@@ -166,23 +129,23 @@ def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
         fetched_data = fetch_tp_prices(
             [
                 gear_id,
-                ECTOPLASM_ID,
-                LUCENT_MOTE_ID,
-                MIRTHIL_ID,
-                ELDER_WOOD_ID,
-                THICK_LEATHER_ID,
-                GOSSAMER_SCRAP_ID,
-                SILK_SCRAP_ID,
-                HARDENED_LEATHER_ID,
-                ANCIENT_WOOD_ID,
-                SYMBOL_OF_ENH_ID,
-                SYMBOL_OF_PAIN_ID,
-                ORICHALCUM_ID,
-                SYMBOL_OF_CONTROL_ID,
-                CHARM_OF_BRILLIANCE_ID,
-                CHARM_OF_POTENCE_ID,
-                CHARM_OF_SKILL_ID,
-                COMMON_GEAR_ID,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.MIRTHIL,
+                ItemIDs.ELDER_WOOD,
+                ItemIDs.THICK_LEATHER,
+                ItemIDs.GOSSAMER_SCRAP,
+                ItemIDs.SILK_SCRAP,
+                ItemIDs.HARDENED_LEATHER,
+                ItemIDs.ANCIENT_WOOD,
+                ItemIDs.SYMBOL_OF_ENH,
+                ItemIDs.SYMBOL_OF_PAIN,
+                ItemIDs.ORICHALCUM,
+                ItemIDs.SYMBOL_OF_CONTROL,
+                ItemIDs.CHARM_OF_BRILLIANCE,
+                ItemIDs.CHARM_OF_POTENCE,
+                ItemIDs.CHARM_OF_SKILL,
+                ItemIDs.COMMON_GEAR,
             ],
         )
     except Exception:
@@ -190,22 +153,22 @@ def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
 
     gear_data = fetched_data[gear_id]
 
-    ecto_data = fetched_data[ECTOPLASM_ID]
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
-    mithril_data = fetched_data[MIRTHIL_ID]
-    elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_ = fetched_data[THICK_LEATHER_ID]
-    gossamer_scrap_data = fetched_data[GOSSAMER_SCRAP_ID]
-    silk_scrap_data = fetched_data[SILK_SCRAP_ID]
-    hardened_data = fetched_data[HARDENED_LEATHER_ID]
-    ancient_wood_data = fetched_data[ANCIENT_WOOD_ID]
-    symbol_of_enh_data = fetched_data[SYMBOL_OF_ENH_ID]
-    symbol_of_pain_data = fetched_data[SYMBOL_OF_PAIN_ID]
-    orichalcum_data = fetched_data[ORICHALCUM_ID]
-    symbol_of_control_data = fetched_data[SYMBOL_OF_CONTROL_ID]
-    charm_of_brilliance_data = fetched_data[CHARM_OF_BRILLIANCE_ID]
-    charm_of_potence_data = fetched_data[CHARM_OF_POTENCE_ID]
-    charm_of_skill_data = fetched_data[CHARM_OF_SKILL_ID]
+    ecto_data = fetched_data[ItemIDs.ECTOPLASM]
+    lucent_mote_data = fetched_data[ItemIDs.LUCENT_MOTE]
+    mithril_data = fetched_data[ItemIDs.MIRTHIL]
+    elder_wood_data = fetched_data[ItemIDs.ELDER_WOOD]
+    thick_leather_ = fetched_data[ItemIDs.THICK_LEATHER]
+    gossamer_scrap_data = fetched_data[ItemIDs.GOSSAMER_SCRAP]
+    silk_scrap_data = fetched_data[ItemIDs.SILK_SCRAP]
+    hardened_data = fetched_data[ItemIDs.HARDENED_LEATHER]
+    ancient_wood_data = fetched_data[ItemIDs.ANCIENT_WOOD]
+    symbol_of_enh_data = fetched_data[ItemIDs.SYMBOL_OF_ENH]
+    symbol_of_pain_data = fetched_data[ItemIDs.SYMBOL_OF_PAIN]
+    orichalcum_data = fetched_data[ItemIDs.ORICHALCUM]
+    symbol_of_control_data = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]
+    charm_of_brilliance_data = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]
+    charm_of_potence_data = fetched_data[ItemIDs.CHARM_OF_POTENCE]
+    charm_of_skill_data = fetched_data[ItemIDs.CHARM_OF_SKILL]
 
     return (
         ecto_data,
@@ -245,7 +208,7 @@ async def get_price(item_id: int) -> JSONResponse:
 
 @fastapi_app.get("/rare_gear_salvage")
 def get_rare_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=RARE_UNID_GEAR_ID)
+    data_tpl = get_unid_gear_data(gear_id=ItemIDs.RARE_UNID_GEAR)
     if data_tpl is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
@@ -325,33 +288,33 @@ def get_rare_weapon_craft() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                ECTOPLASM_ID,
-                MITHRIL_INGOT_ID,
-                MITHRIL_ORE_ID,
-                ELDER_WOOD_PLANK_ID,
-                ELDER_WOOD_LOG_ID,
-                LARGE_CLAW_ID,
-                POTENT_BLOOD_ID,
-                LARGE_BONE_ID,
-                INTRICATE_TOTEM_ID,
-                LARGE_FANG_ID,
-                POTENT_VENOM_SAC,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.MITHRIL_INGOT,
+                ItemIDs.MITHRIL_ORE,
+                ItemIDs.ELDER_WOOD_PLANK,
+                ItemIDs.ELDER_WOOD_LOG,
+                ItemIDs.LARGE_CLAW,
+                ItemIDs.POTENT_BLOOD,
+                ItemIDs.LARGE_BONE,
+                ItemIDs.INTRICATE_TOTEM,
+                ItemIDs.LARGE_FANG,
+                ItemIDs.POTENT_VENOM_SAC,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_sell_after_tax = fetched_data[ECTOPLASM_ID]["sell"] * TAX_RATE
-    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy"]
-    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy"]
-    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy"]
-    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy"]
-    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy"]
-    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy"]
-    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy"]
-    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy"]
-    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy"]
-    potent_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
+    ecto_sell_after_tax = fetched_data[ItemIDs.ECTOPLASM]["sell"] * TAX_RATE
+    mithril_ore_buy = fetched_data[ItemIDs.MITHRIL_ORE]["buy"]
+    mithril_ingot_buy = fetched_data[ItemIDs.MITHRIL_INGOT]["buy"]
+    elder_wood_log_buy = fetched_data[ItemIDs.ELDER_WOOD_LOG]["buy"]
+    elder_wood_plank_buy = fetched_data[ItemIDs.ELDER_WOOD_PLANK]["buy"]
+    large_claw_buy = fetched_data[ItemIDs.LARGE_CLAW]["buy"]
+    potent_blood_buy = fetched_data[ItemIDs.POTENT_BLOOD]["buy"]
+    large_bone_buy = fetched_data[ItemIDs.LARGE_BONE]["buy"]
+    intricate_totem_buy = fetched_data[ItemIDs.INTRICATE_TOTEM]["buy"]
+    large_fang_buy = fetched_data[ItemIDs.LARGE_FANG]["buy"]
+    potent_sac_buy = fetched_data[ItemIDs.POTENT_VENOM_SAC]["buy"]
 
     lowest_t5_mat = min(
         large_claw_buy,
@@ -399,23 +362,23 @@ def get_t5_mats_buy() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                LARGE_CLAW_ID,
-                POTENT_BLOOD_ID,
-                LARGE_BONE_ID,
-                INTRICATE_TOTEM_ID,
-                LARGE_FANG_ID,
-                POTENT_VENOM_SAC,
+                ItemIDs.LARGE_CLAW,
+                ItemIDs.POTENT_BLOOD,
+                ItemIDs.LARGE_BONE,
+                ItemIDs.INTRICATE_TOTEM,
+                ItemIDs.LARGE_FANG,
+                ItemIDs.POTENT_VENOM_SAC,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    large_claw_buy = fetched_data[LARGE_CLAW_ID]["buy"]
-    potent_blood_buy = fetched_data[POTENT_BLOOD_ID]["buy"]
-    large_bone_buy = fetched_data[LARGE_BONE_ID]["buy"]
-    intricate_totem_buy = fetched_data[INTRICATE_TOTEM_ID]["buy"]
-    large_fang_buy = fetched_data[LARGE_FANG_ID]["buy"]
-    venom_sac_buy = fetched_data[POTENT_VENOM_SAC]["buy"]
+    large_claw_buy = fetched_data[ItemIDs.LARGE_CLAW]["buy"]
+    potent_blood_buy = fetched_data[ItemIDs.POTENT_BLOOD]["buy"]
+    large_bone_buy = fetched_data[ItemIDs.LARGE_BONE]["buy"]
+    intricate_totem_buy = fetched_data[ItemIDs.INTRICATE_TOTEM]["buy"]
+    large_fang_buy = fetched_data[ItemIDs.LARGE_FANG]["buy"]
+    venom_sac_buy = fetched_data[ItemIDs.POTENT_VENOM_SAC]["buy"]
 
     data = {
         **get_sub_dct("large_claw", large_claw_buy),
@@ -434,23 +397,23 @@ def get_mats_crafting_compare() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                MITHRIL_INGOT_ID,
-                MITHRIL_ORE_ID,
-                ELDER_WOOD_PLANK_ID,
-                ELDER_WOOD_LOG_ID,
-                LUCENT_MOTE_ID,
-                PILE_OF_LUCENT_CRYSTAL_ID,
+                ItemIDs.MITHRIL_INGOT,
+                ItemIDs.MITHRIL_ORE,
+                ItemIDs.ELDER_WOOD_PLANK,
+                ItemIDs.ELDER_WOOD_LOG,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    mithril_ore_buy = fetched_data[MITHRIL_ORE_ID]["buy"]
-    mithril_ingot_buy = fetched_data[MITHRIL_INGOT_ID]["buy"]
-    elder_wood_log_buy = fetched_data[ELDER_WOOD_LOG_ID]["buy"]
-    elder_wood_plank_buy = fetched_data[ELDER_WOOD_PLANK_ID]["buy"]
-    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    mithril_ore_buy = fetched_data[ItemIDs.MITHRIL_ORE]["buy"]
+    mithril_ingot_buy = fetched_data[ItemIDs.MITHRIL_INGOT]["buy"]
+    elder_wood_log_buy = fetched_data[ItemIDs.ELDER_WOOD_LOG]["buy"]
+    elder_wood_plank_buy = fetched_data[ItemIDs.ELDER_WOOD_PLANK]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     lucent_mote_to_crystal = lucent_mote_buy * 10.0
 
@@ -471,24 +434,24 @@ def get_scholar_rune() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                ECTOPLASM_ID,
-                ELABORATE_TOTEM_ID,
-                PILE_OF_LUCENT_CRYSTAL_ID,
-                CHARM_OF_BRILLIANCE_ID,
-                LUCENT_MOTE_ID,
-                SCHOLAR_RUNE_ID,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.ELABORATE_TOTEM,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.CHARM_OF_BRILLIANCE,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SCHOLAR_RUNE,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
-    totem_buy = fetched_data[ELABORATE_TOTEM_ID]["buy"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
-    charm_buy = fetched_data[CHARM_OF_BRILLIANCE_ID]["buy"]
-    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    totem_buy = fetched_data[ItemIDs.ELABORATE_TOTEM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
 
-    scholar_rune_sell = fetched_data[SCHOLAR_RUNE_ID]["sell"]
+    scholar_rune_sell = fetched_data[ItemIDs.SCHOLAR_RUNE]["sell"]
 
     crafting_cost = (
         ecto_buy * 5.0
@@ -523,22 +486,22 @@ def get_guardian_rune() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                GUARD_RUNE,
-                PILE_OF_LUCENT_CRYSTAL_ID,
-                CHARGED_LOADSTONE_ID,
-                CHARM_OF_POTENCE_ID,
-                ECTOPLASM_ID,
+                ItemIDs.GUARD_RUNE,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.CHARGED_LOADSTONE,
+                ItemIDs.CHARM_OF_POTENCE,
+                ItemIDs.ECTOPLASM,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    rune_sell = fetched_data[GUARD_RUNE]["sell"]
-    charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+    rune_sell = fetched_data[ItemIDs.GUARD_RUNE]["sell"]
+    charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
 
-    charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
-    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     crafting_cost = (
         charged_loadstone_sell
@@ -563,27 +526,27 @@ def get_dragonhunter_rune() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                GUARD_RUNE,
-                DRAGONHUNTER_RUNE_ID,
-                EVERGREEN_LOADSTONE_ID,
-                BARBED_THORN_ID,
-                PILE_OF_LUCENT_CRYSTAL_ID,
-                CHARGED_LOADSTONE_ID,
-                CHARM_OF_POTENCE_ID,
-                ECTOPLASM_ID,
+                ItemIDs.GUARD_RUNE,
+                ItemIDs.DRAGONHUNTER_RUNE,
+                ItemIDs.EVERGREEN_LOADSTONE,
+                ItemIDs.BARBED_THORN,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.CHARGED_LOADSTONE,
+                ItemIDs.CHARM_OF_POTENCE,
+                ItemIDs.ECTOPLASM,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    rune_sell = fetched_data[DRAGONHUNTER_RUNE_ID]["sell"]
-    charged_loadstone_sell = fetched_data[CHARGED_LOADSTONE_ID]["sell"]
+    rune_sell = fetched_data[ItemIDs.DRAGONHUNTER_RUNE]["sell"]
+    charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
 
-    evergreen_loadstone_buy = fetched_data[EVERGREEN_LOADSTONE_ID]["buy"]
-    thorns_buy = fetched_data[BARBED_THORN_ID]["buy"]
-    charm_buy = fetched_data[CHARM_OF_POTENCE_ID]["buy"]
-    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
+    evergreen_loadstone_buy = fetched_data[ItemIDs.EVERGREEN_LOADSTONE]["buy"]
+    thorns_buy = fetched_data[ItemIDs.BARBED_THORN]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     guardian_rune_cost = (
         charged_loadstone_sell
@@ -614,22 +577,22 @@ def get_relic_of_fireworks() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                ECTOPLASM_ID,
-                PILE_OF_LUCENT_CRYSTAL_ID,
-                CHARM_OF_SKILL_ID,
-                LUCENT_MOTE_ID,
-                RELIC_OF_FIREWORKS_ID,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.CHARM_OF_SKILL,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.RELIC_OF_FIREWORKS,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    ecto_buy = fetched_data[ECTOPLASM_ID]["buy"]
-    lucent_crystal_buy = fetched_data[PILE_OF_LUCENT_CRYSTAL_ID]["buy"]
-    charm_buy = fetched_data[CHARM_OF_SKILL_ID]["buy"]
-    lucent_mote_buy = fetched_data[LUCENT_MOTE_ID]["buy"]
-    relic_of_fireworks_sell = fetched_data[RELIC_OF_FIREWORKS_ID]["sell"]
-    relic_of_fireworks_buy = fetched_data[RELIC_OF_FIREWORKS_ID]["buy"]
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_SKILL]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    relic_of_fireworks_sell = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["sell"]
+    relic_of_fireworks_buy = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["buy"]
 
     crafting_cost = (
         ecto_buy * 15.0 + lucent_crystal_buy * 48.0 + charm_buy * 3.0
@@ -660,7 +623,7 @@ def get_relic_of_fireworks() -> JSONResponse:
 
 @fastapi_app.get("/common_gear_salvage")
 def get_common_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=COMMON_GEAR_ID)
+    data_tpl = get_unid_gear_data(gear_id=ItemIDs.COMMON_GEAR)
     if data_tpl is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
@@ -741,7 +704,7 @@ def get_common_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/gear_salvage")
 def get_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=UNID_GEAR_ID)
+    data_tpl = get_unid_gear_data(gear_id=ItemIDs.UNID_GEAR)
     if data_tpl is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
@@ -863,19 +826,19 @@ def get_t5_mats_sell() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                LUCENT_MOTE_ID,
-                MIRTHIL_ID,
-                ELDER_WOOD_ID,
-                THICK_LEATHER_ID,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.MIRTHIL,
+                ItemIDs.ELDER_WOOD,
+                ItemIDs.THICK_LEATHER,
             ],
         )
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    lucent_mote_data = fetched_data[LUCENT_MOTE_ID]
-    mithril_data = fetched_data[MIRTHIL_ID]
-    elder_wood_data = fetched_data[ELDER_WOOD_ID]
-    thick_leather_ = fetched_data[THICK_LEATHER_ID]
+    lucent_mote_data = fetched_data[ItemIDs.LUCENT_MOTE]
+    mithril_data = fetched_data[ItemIDs.MIRTHIL]
+    elder_wood_data = fetched_data[ItemIDs.ELDER_WOOD]
+    thick_leather_ = fetched_data[ItemIDs.THICK_LEATHER]
 
     lucent_mote_sell = lucent_mote_data["sell"]
     mithril_sell = mithril_data["sell"]
