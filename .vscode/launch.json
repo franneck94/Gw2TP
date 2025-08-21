@@ -1,23 +1,45 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flask + FastAPI Server",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "console": "integratedTerminal",
+      "args": [
+        "app:app",
+        "--reload"
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "Discord Bot",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/discord_app.py",
+      "console": "integratedTerminal",
+      "args": [],
+      "justMyCode": true
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/schaf.JANPC/OneDrive/_Coding/Gw2TP",
+      "program": "c:/Users/schaf.JANPC/OneDrive/_Coding/Gw2TP/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
         {
-            "name": "Flask + FastAPI Server",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "uvicorn",
-            "console": "integratedTerminal",
-            "args": ["app:app", "--reload"],
-            "justMyCode": true
-        },
-        {
-            "name": "Discord Bot",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/discord_app.py",
-            "console": "integratedTerminal",
-            "args": [],
-            "justMyCode": true
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ]
+    }
+  ]
 }

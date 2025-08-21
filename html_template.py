@@ -16,6 +16,23 @@ TABLE_HEADER = """
 """
 
 
+def get_table_header_html(hidden_name: str = "") -> str:
+    if hidden_name:
+        style = 'style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);"'
+        onclick = f'onclick="navigator.clipboard.writeText(\'{hidden_name}\')" title="Click to copy"'
+        first_row = f"<th {style} {onclick}>{hidden_name}</th>"
+    else:
+        first_row = "<th></th>"
+    return f"""
+<tr>
+    {first_row}
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+"""
+
+
 def get_price_row_html(
     item_id: str,
     name: str,
@@ -57,7 +74,7 @@ def get_price_rows_html(
 
 def get_flip_table_html(item_id: int) -> str:
     return f"""<table>
-        {TABLE_HEADER}
+        {get_table_header_html()}
         <tr>
             <td>Buy Order</td>
             <td id="{item_id}_buy_g">-</td>
@@ -90,7 +107,7 @@ RARE_GEAR_NAMES = [
 ]
 RARE_GEAR_SALVAGE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Rare Gear")}
     {get_price_rows_html(RARE_GEAR_NAMES, "rare_gear_salvage")}
 </table>
 """
@@ -103,7 +120,7 @@ GEAR_SALVAGE_NAMES = [
 ]
 GEAR_SALVAGE_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Unidentified Gear")}
     {get_price_rows_html(GEAR_SALVAGE_NAMES, "gear_salvage")}
 </table>
 """
@@ -116,7 +133,7 @@ T5_MATS_SELL_NAMES = [
 ]
 T5_MATS_SELL_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html()}
     {get_price_rows_html(T5_MATS_SELL_NAMES, "t5_mats_sell", clipboard_copy=True)}
 </table>
 """
@@ -159,8 +176,21 @@ COMMON_GEAR_NAMES = [
 ]
 COMMON_GEAR_SALVAGE_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Common Gear")}
     {get_price_rows_html(COMMON_GEAR_NAMES, "common_gear_salvage")}
+</table>
+"""
+
+LOADSTONE_NAMES = [
+    "onyx",
+    "charged",
+    "corrupted",
+    "destroyer",
+]
+LOADSTONE_TABLE = f"""
+<table>
+    {TABLE_HEADER}
+    {get_price_rows_html(LOADSTONE_NAMES, "loadstone_forge", clipboard_copy=True)}
 </table>
 """
 
@@ -171,7 +201,7 @@ SCHOLAR_RUNE_NAMES = [
 ]
 SCHOLAR_RUNE_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Scholar Rune")}
     {get_price_rows_html(SCHOLAR_RUNE_NAMES, "scholar_rune")}
 </table>
 """
@@ -183,7 +213,7 @@ GUARDIAN_RUNE_NAMES = [
 ]
 GUARDIAN_RUNE_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Guardian Rune")}
     {get_price_rows_html(GUARDIAN_RUNE_NAMES, "guardian_rune")}
 </table>
 """
@@ -195,7 +225,7 @@ DRAGONHUNTER_RUNE_NAMES = [
 ]
 DRAGONHUNTER_RUNE_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Dragonhunter Rune")}
     {get_price_rows_html(DRAGONHUNTER_RUNE_NAMES, "dragonhunter_rune")}
 </table>
 """
@@ -208,7 +238,7 @@ FIREWORKS_NAMES = [
 ]
 FIREWORKS_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html(hidden_name="Relic of Fireworks")}
     {get_price_rows_html(FIREWORKS_NAMES, "relic_of_fireworks")}
 </table>
 """
@@ -220,8 +250,20 @@ RARE_WEAPON_CRAFT_NAMES = [
 ]
 RARE_WEAPON_CRAFT_TABLE = f"""
 <table>
-    {TABLE_HEADER}
+    {get_table_header_html()}
     {get_price_rows_html(RARE_WEAPON_CRAFT_NAMES, "rare_weapon_craft")}
+</table>
+"""
+
+FORGE_ENH_NAMES = [
+    "cost",
+    "profit_per_try",
+    "profit_per_shard",
+]
+FORGE_ENH_TABLE = f"""
+<table>
+    {get_table_header_html(hidden_name="Symbol of Enhancement")}
+    {get_price_rows_html(FORGE_ENH_NAMES, "smybol_enh_forge")}
 </table>
 """
 
@@ -327,6 +369,10 @@ def get_common_gear_salvage_html() -> str:
     return get_all_fetch_price_html("common_gear_salvage")
 
 
+def get_forge_enh_html() -> str:
+    return get_all_fetch_price_html("smybol_enh_forge")
+
+
 def get_t5_mats_sell() -> str:
     return get_all_fetch_price_html("t5_mats_sell")
 
@@ -337,6 +383,10 @@ def get_t5_mats_buy() -> str:
 
 def get_mats_crafting_compare() -> str:
     return get_all_fetch_price_html("mats_crafting_compare")
+
+
+def get_loadstone_forge() -> str:
+    return get_all_fetch_price_html("loadstone_forge")
 
 
 with (CWD / "scripts.js").open() as f:
@@ -358,6 +408,8 @@ async function _fetchPrices() {{
         (async () => {{ {get_t5_mats_buy()} }})(),
         (async () => {{ {get_mats_crafting_compare()} }})(),
         (async () => {{ {get_common_gear_salvage_html()} }})(),
+        (async () => {{ {get_forge_enh_html()} }})(),
+        (async () => {{ {get_loadstone_forge()} }})(),
     ]);
 }}
 """
@@ -413,6 +465,9 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {COMMON_GEAR_SALVAGE_TABLE}
+
+            <h3 style="text-align: center;">Forge Loadstones</h3>
+            {LOADSTONE_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">Ectoplasm</h3>
@@ -426,6 +481,9 @@ HTML_PAGE = f"""
 
             <h3 style="text-align: center;">T5 Mats Sell Order</h3>
             {T5_MATS_SELL_TABLE}
+
+            <h3 style="text-align: center;">Forge Symbol of Enhancement</h3>
+            {FORGE_ENH_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">

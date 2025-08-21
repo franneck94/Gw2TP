@@ -854,6 +854,83 @@ def get_t5_mats_sell() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+@fastapi_app.get("/smybol_enh_forge")
+def get_smybol_enh_forge() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SYMBOL_OF_ENH,
+                ItemIDs.SYMBOL_OF_PAIN,
+                ItemIDs.SYMBOL_OF_CONTROL,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    enh_buy = fetched_data[ItemIDs.SYMBOL_OF_ENH]["buy"]
+    enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
+    pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
+    control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
+
+    cost = enh_buy * 3.0
+    reward = enh_sell * 0.2 + pain_sell * 0.4 + control_sell * 0.4
+    profit = (reward * TAX_RATE) - cost
+
+    data = {
+        **get_sub_dct("cost", cost),
+        **get_sub_dct("profit_per_try", profit),
+        **get_sub_dct("profit_per_shard", profit * 10.0),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/loadstone_forge")
+def get_loadstone_forge() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.ONYX_LOADSTONE,
+                ItemIDs.CHARGED_LOADSTONE,
+                ItemIDs.CORRUPTED_LOADSTONE,
+                ItemIDs.DESTROYER_LOADSTONE,
+                ItemIDs.CRYSTALINE_DUST,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    onyx_sell = fetched_data[ItemIDs.ONYX_LOADSTONE]["buy"]
+    charged_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
+    corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LOADSTONE]["sell"]
+    destroyer_sell = fetched_data[ItemIDs.DESTROYER_LOADSTONE]["sell"]
+    dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
+    elonian_cost = 2_500
+
+    onyx_core_cost = 100
+    onyx_cost = onyx_core_cost * 2 + dust_buy + elonian_cost
+    onyx_profit = (onyx_sell * 0.85) - onyx_cost
+
+    charged_core_cost = 100
+    charged_cost = charged_core_cost * 2 + dust_buy + elonian_cost
+    charged_profit = (charged_sell * 0.85) - charged_cost
+
+    corrupted_core_cost = 100
+    corrupted_cost = corrupted_core_cost * 2 + dust_buy + elonian_cost
+    corrupted_profit = (corrupted_sell * 0.85) - corrupted_cost
+
+    destroyer_core_cost = 100
+    destroyer_cost = destroyer_core_cost * 2 + dust_buy + elonian_cost
+    destroyer_profit = (destroyer_sell * 0.85) - destroyer_cost
+
+    data = {
+        **get_sub_dct("onyx", onyx_profit),
+        **get_sub_dct("charged", charged_profit),
+        **get_sub_dct("corrupted", corrupted_profit),
+        **get_sub_dct("destroyer", destroyer_profit),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
 app = Starlette(
     routes=[
         Mount("/api", app=fastapi_app),

@@ -27,6 +27,9 @@ COMMANDS_LIST = [
     # general
     "profits",
     "get_price",
+    # forge
+    "smybol_enh_forge",
+    "loadstone_forge",
 ]
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
@@ -127,6 +130,12 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_sell"):
         title = "T5 Mats Sell Orders"
         api_url = api_base + "t5_mats_sell"
+    elif message.content.startswith(f"{COMMAND_PREFIX} smybol_enh_forge"):
+        title = "Symbol Of Enhancement Forge"
+        api_url = api_base + "smybol_enh_forge"
+    elif message.content.startswith(f"{COMMAND_PREFIX} loadstone_forge"):
+        title = "Loadstone Forge"
+        api_url = api_base + "loadstone_forge"
     elif message.content.startswith(f"{COMMAND_PREFIX} ecto"):
         title = "Ecto Price Check"
         api_url = api_base + "price?item_id=19721"
