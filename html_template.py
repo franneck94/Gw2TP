@@ -466,7 +466,7 @@ HTML_PAGE = f"""
             </h3>
             {COMMON_GEAR_SALVAGE_TABLE}
 
-            <h3 style="text-align: center;">Forge Loadstones</h3>
+            <h3 style="text-align: center;">Forge Loadstones Profit</h3>
             {LOADSTONE_TABLE}
         </div>
         <div style="flex: 1;">

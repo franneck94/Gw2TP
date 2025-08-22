@@ -50,3 +50,8 @@ class ItemIDs:
     CORRUPTED_LOADSTONE: int = 24340
     DESTROYER_LOADSTONE: int = 24325
     ONYX_LOADSTONE: int = 24310
+    # Cores
+    ONYX_CORE: int = 24309
+    DESTROYER_CORE: int = 24324
+    CORRUPTED_CORE: int = 24339
+    CHARGED_CORE: int = 24304

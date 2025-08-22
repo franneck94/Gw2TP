@@ -894,6 +894,10 @@ def get_loadstone_forge() -> JSONResponse:
                 ItemIDs.CORRUPTED_LOADSTONE,
                 ItemIDs.DESTROYER_LOADSTONE,
                 ItemIDs.CRYSTALINE_DUST,
+                ItemIDs.ONYX_CORE,
+                ItemIDs.DESTROYER_CORE,
+                ItemIDs.CORRUPTED_CORE,
+                ItemIDs.CHARGED_CORE,
             ],
         )
     except Exception as e:
@@ -903,22 +907,24 @@ def get_loadstone_forge() -> JSONResponse:
     charged_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
     corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LOADSTONE]["sell"]
     destroyer_sell = fetched_data[ItemIDs.DESTROYER_LOADSTONE]["sell"]
+
     dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
+    onyx_core_cost = fetched_data[ItemIDs.ONYX_CORE]["buy"]
+    charged_core_cost = fetched_data[ItemIDs.CHARGED_CORE]["buy"]
+    corrupted_core_cost = fetched_data[ItemIDs.CORRUPTED_CORE]["buy"]
+    destroyer_core_cost = fetched_data[ItemIDs.DESTROYER_CORE]["buy"]
+
     elonian_cost = 2_500
 
-    onyx_core_cost = 100
     onyx_cost = onyx_core_cost * 2 + dust_buy + elonian_cost
     onyx_profit = (onyx_sell * 0.85) - onyx_cost
 
-    charged_core_cost = 100
     charged_cost = charged_core_cost * 2 + dust_buy + elonian_cost
     charged_profit = (charged_sell * 0.85) - charged_cost
 
-    corrupted_core_cost = 100
     corrupted_cost = corrupted_core_cost * 2 + dust_buy + elonian_cost
     corrupted_profit = (corrupted_sell * 0.85) - corrupted_cost
 
-    destroyer_core_cost = 100
     destroyer_cost = destroyer_core_cost * 2 + dust_buy + elonian_cost
     destroyer_profit = (destroyer_sell * 0.85) - destroyer_cost
 
