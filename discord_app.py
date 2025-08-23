@@ -108,6 +108,12 @@ async def on_message(
     elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_fireworks"):
         title = "Relic of Fireworks"
         api_url = api_base + "relic_of_fireworks"
+    elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_thief"):
+        title = "Relic of Thief"
+        api_url = api_base + "relic_of_thief"
+    elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_aristocracy"):
+        title = "Relic of Aristocracy"
+        api_url = api_base + "relic_of_aristocracy"
     elif message.content.startswith(f"{COMMAND_PREFIX} scholar_rune"):
         title = "Scholar Rune"
         api_url = api_base + "scholar_rune"
