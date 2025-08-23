@@ -10,6 +10,7 @@ class ItemIDs:
     SILK_SCRAP: int = 19748
     HARDENED_LEATHER: int = 19732
     ANCIENT_WOOD: int = 19725
+    CURED_HARDENED_LEATHER_SQUARE: int = 19737
     ORICHALCUM: int = 19701
     ECTOPLASM: int = 19721
     ELABORATE_TOTEM: int = 24300
@@ -37,6 +38,8 @@ class ItemIDs:
     DRAGONHUNTER_RUNE: int = 74978
     # Relics
     RELIC_OF_FIREWORKS: int = 100947
+    RELIC_OF_ARISTOCRACY: int = 100849
+    RELIC_OF_THIEF: int = 100916
     # Charms
     SYMBOL_OF_ENH: int = 89141
     SYMBOL_OF_PAIN: int = 89182

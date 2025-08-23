@@ -14,6 +14,8 @@ COMMANDS_LIST = [
     "guardian_rune",
     # relics
     "relic_of_fireworks",
+    "relic_of_aristocracy",
+    "relic_of_thief",
     # rare / ecto
     "rare_weapon_craft",
     "rare_gear_salvage",

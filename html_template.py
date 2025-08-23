@@ -240,6 +240,31 @@ FIREWORKS_TABLE = f"""
 <table>
     {get_table_header_html(hidden_name="Relic of Fireworks")}
     {get_price_rows_html(FIREWORKS_NAMES, "relic_of_fireworks")}
+</table>"""
+
+THIEF_TABLE = [
+    "crafting_cost",
+    "sell",
+    "flip",
+    "profit",
+]
+THIEF_TABLE = f"""
+<table>
+    {get_table_header_html(hidden_name="Relic of Thief")}
+    {get_price_rows_html(THIEF_TABLE, "relic_of_thief")}
+</table>
+"""
+
+ARISTOCRACY_TABLE = [
+    "crafting_cost",
+    "sell",
+    "flip",
+    "profit",
+]
+ARISTOCRACY_TABLE = f"""
+<table>
+    {get_table_header_html(hidden_name="Relic of Aristocracy")}
+    {get_price_rows_html(ARISTOCRACY_TABLE, "relic_of_aristocracy")}
 </table>
 """
 
@@ -337,58 +362,6 @@ for (const [key, value] of Object.entries(data)) {{
 """
 
 
-def get_rare_gear_salvage_html() -> str:
-    return get_all_fetch_price_html("rare_gear_salvage")
-
-
-def get_rare_salvage_html() -> str:
-    return get_all_fetch_price_html("gear_salvage")
-
-
-def get_scholar_rune_html() -> str:
-    return get_all_fetch_price_html("scholar_rune")
-
-
-def get_guardian_rune_html() -> str:
-    return get_all_fetch_price_html("guardian_rune")
-
-
-def get_dragonhunter_rune_html() -> str:
-    return get_all_fetch_price_html("dragonhunter_rune")
-
-
-def get_fireworks_html() -> str:
-    return get_all_fetch_price_html("relic_of_fireworks")
-
-
-def get_rare_weapon_craft_html() -> str:
-    return get_all_fetch_price_html("rare_weapon_craft")
-
-
-def get_common_gear_salvage_html() -> str:
-    return get_all_fetch_price_html("common_gear_salvage")
-
-
-def get_forge_enh_html() -> str:
-    return get_all_fetch_price_html("smybol_enh_forge")
-
-
-def get_t5_mats_sell() -> str:
-    return get_all_fetch_price_html("t5_mats_sell")
-
-
-def get_t5_mats_buy() -> str:
-    return get_all_fetch_price_html("t5_mats_buy")
-
-
-def get_mats_crafting_compare() -> str:
-    return get_all_fetch_price_html("mats_crafting_compare")
-
-
-def get_loadstone_forge() -> str:
-    return get_all_fetch_price_html("loadstone_forge")
-
-
 with (CWD / "scripts.js").open() as f:
     SCRIPT_FUNCTIONS = f.read()
 
@@ -397,19 +370,21 @@ async function _fetchPrices() {{
     await Promise.all([
         (async () => {{ {get_fetch_price_html(ItemIDs.RARE_UNID_GEAR)} }})(),
         (async () => {{ {get_fetch_price_html(ItemIDs.ECTOPLASM)} }})(),
-        (async () => {{ {get_rare_gear_salvage_html()} }})(),
-        (async () => {{ {get_rare_salvage_html()} }})(),
-        (async () => {{ {get_guardian_rune_html()} }})(),
-        (async () => {{ {get_scholar_rune_html()} }})(),
-        (async () => {{ {get_dragonhunter_rune_html()} }})(),
-        (async () => {{ {get_fireworks_html()} }})(),
-        (async () => {{ {get_rare_weapon_craft_html()} }})(),
-        (async () => {{ {get_t5_mats_sell()} }})(),
-        (async () => {{ {get_t5_mats_buy()} }})(),
-        (async () => {{ {get_mats_crafting_compare()} }})(),
-        (async () => {{ {get_common_gear_salvage_html()} }})(),
-        (async () => {{ {get_forge_enh_html()} }})(),
-        (async () => {{ {get_loadstone_forge()} }})(),
+        (async () => {{ {get_all_fetch_price_html("rare_gear_salvage")} }})(),
+        (async () => {{ {get_all_fetch_price_html("gear_salvage")} }})(),
+        (async () => {{ {get_all_fetch_price_html("guardian_rune")} }})(),
+        (async () => {{ {get_all_fetch_price_html("scholar_rune")} }})(),
+        (async () => {{ {get_all_fetch_price_html("dragonhunter_rune")} }})(),
+        (async () => {{ {get_all_fetch_price_html("relic_of_fireworks")} }})(),
+        (async () => {{ {get_all_fetch_price_html("relic_of_thief")} }})(),
+        (async () => {{ {get_all_fetch_price_html("relic_of_aristocracy")} }})(),
+        (async () => {{ {get_all_fetch_price_html("rare_weapon_craft")} }})(),
+        (async () => {{ {get_all_fetch_price_html("t5_mats_sell")} }})(),
+        (async () => {{ {get_all_fetch_price_html("t5_mats_buy")} }})(),
+        (async () => {{ {get_all_fetch_price_html("mats_crafting_compare")} }})(),
+        (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
+        (async () => {{ {get_all_fetch_price_html("smybol_enh_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
     ]);
 }}
 """
@@ -473,6 +448,13 @@ HTML_PAGE = f"""
             <h3 style="text-align: center;">Ectoplasm</h3>
             {ECTO_TABLE}
 
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rare Weapon Craft
+                </a>
+            </h3>
+            {RARE_WEAPON_CRAFT_TABLE}
+
             <h3 style="text-align: center;">Mats Crafting Compare</h3>
             {MATS_CRAFT_COMPARE_TABLE}
 
@@ -486,13 +468,6 @@ HTML_PAGE = f"""
             {FORGE_ENH_TABLE}
         </div>
         <div style="flex: 1;">
-            <h3 style="text-align: center;">
-                <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
-                    Rare Weapon Craft
-                </a>
-            </h3>
-            {RARE_WEAPON_CRAFT_TABLE}
-
             <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Scholar" target="_blank" style="color: inherit; text-decoration: none;">
                     Scholar Runes
@@ -514,12 +489,14 @@ HTML_PAGE = f"""
             </h3>
             {DRAGONHUNTER_RUNE_TABLE}
 
-            <h3 style="text-align: center;">
-                <a href="https://wiki.guildwars2.com/wiki/Relic_of_Fireworks" target="_blank" style="color: inherit; text-decoration: none;">
-                    Relic of Fireworks
-                </a>
-            </h3>
+            <h3 style="text-align: center;">Fireworks Relic</h3>
             {FIREWORKS_TABLE}
+
+            <h3 style="text-align: center;">Thief Relic</h3>
+            {THIEF_TABLE}
+
+            <h3 style="text-align: center;">Aristocracy Relic</h3>
+            {ARISTOCRACY_TABLE}
         </div>
     </div>
 </body>

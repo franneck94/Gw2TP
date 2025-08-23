@@ -572,6 +572,16 @@ def get_dragonhunter_rune() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+def _get_relic_profits(
+    crafting_cost_base: float,
+    lucent_mote_buy: float,
+    lucent_crystal_buy: float,
+) -> tuple[float, float]:
+    crafting_cost = crafting_cost_base + lucent_crystal_buy * 48.0
+    crafting_cost2 = crafting_cost_base + lucent_mote_buy * 480.0
+    return crafting_cost, crafting_cost2
+
+
 @fastapi_app.get("/relic_of_fireworks")
 def get_relic_of_fireworks() -> JSONResponse:
     try:
@@ -591,29 +601,134 @@ def get_relic_of_fireworks() -> JSONResponse:
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_SKILL]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
-    relic_of_fireworks_sell = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["sell"]
-    relic_of_fireworks_buy = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["buy"]
+    relic_sell = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["sell"]
+    relic_buy = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["buy"]
 
-    crafting_cost = (
-        ecto_buy * 15.0 + lucent_crystal_buy * 48.0 + charm_buy * 3.0
+    crafting_cost_base = ecto_buy * 15.0 + charm_buy * 3.0
+    crafting_cost, crafting_cost2 = _get_relic_profits(
+        crafting_cost_base,
+        lucent_mote_buy,
+        lucent_crystal_buy,
     )
-    crafting_cost2 = ecto_buy * 15.0 + lucent_mote_buy * 480.0 + charm_buy * 3.0
 
-    profit = relic_of_fireworks_sell * TAX_RATE - crafting_cost
-    profit2 = relic_of_fireworks_sell * TAX_RATE - crafting_cost2
+    profit = relic_sell * TAX_RATE - crafting_cost
+    profit2 = relic_sell * TAX_RATE - crafting_cost2
 
     cheap_crafting_cost = min(
         crafting_cost,
         crafting_cost2,
     )
     highest_profit = max(profit, profit2)
-    relic_of_fireworks_flip = (
-        relic_of_fireworks_sell * TAX_RATE
-    ) - relic_of_fireworks_buy
+    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
 
     data = {
         **get_sub_dct("crafting_cost", cheap_crafting_cost),
-        **get_sub_dct("sell", relic_of_fireworks_sell),
+        **get_sub_dct("sell", relic_sell),
+        **get_sub_dct("flip", relic_of_fireworks_flip),
+        **get_sub_dct("profit", highest_profit),
+    }
+
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/relic_of_thief")
+def get_relic_of_thief() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.ECTOPLASM,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.CHARM_OF_SKILL,
+                ItemIDs.CURED_HARDENED_LEATHER_SQUARE,
+                ItemIDs.RELIC_OF_THIEF,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_SKILL]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    leather_buy = fetched_data[ItemIDs.CURED_HARDENED_LEATHER_SQUARE]["buy"]
+
+    relic_sell = fetched_data[ItemIDs.RELIC_OF_THIEF]["sell"]
+    relic_buy = fetched_data[ItemIDs.RELIC_OF_THIEF]["buy"]
+
+    crafting_cost_base = ecto_buy * 15.0 + charm_buy * 3.0 + leather_buy * 5.0
+    crafting_cost, crafting_cost2 = _get_relic_profits(
+        crafting_cost_base,
+        lucent_mote_buy,
+        lucent_crystal_buy,
+    )
+
+    profit = relic_sell * TAX_RATE - crafting_cost
+    profit2 = relic_sell * TAX_RATE - crafting_cost2
+
+    cheap_crafting_cost = min(
+        crafting_cost,
+        crafting_cost2,
+    )
+    highest_profit = max(profit, profit2)
+    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
+
+    data = {
+        **get_sub_dct("crafting_cost", cheap_crafting_cost),
+        **get_sub_dct("sell", relic_sell),
+        **get_sub_dct("flip", relic_of_fireworks_flip),
+        **get_sub_dct("profit", highest_profit),
+    }
+
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/relic_of_aristocracy")
+def get_relic_of_aristocracy() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.ECTOPLASM,
+                ItemIDs.PILE_OF_LUCENT_CRYSTAL,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.CHARM_OF_BRILLIANCE,
+                ItemIDs.RELIC_OF_ARISTOCRACY,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
+    charm_buy = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    bottle_elonian_wine_buy = 2504.0
+
+    relic_sell = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["sell"]
+    relic_buy = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["buy"]
+
+    crafting_cost_base = (
+        ecto_buy * 15.0 + charm_buy * 3.0 + bottle_elonian_wine_buy * 3.0
+    )
+    crafting_cost, crafting_cost2 = _get_relic_profits(
+        crafting_cost_base,
+        lucent_mote_buy,
+        lucent_crystal_buy,
+    )
+
+    profit = relic_sell * TAX_RATE - crafting_cost
+    profit2 = relic_sell * TAX_RATE - crafting_cost2
+
+    cheap_crafting_cost = min(
+        crafting_cost,
+        crafting_cost2,
+    )
+    highest_profit = max(profit, profit2)
+    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
+
+    data = {
+        **get_sub_dct("crafting_cost", cheap_crafting_cost),
+        **get_sub_dct("sell", relic_sell),
         **get_sub_dct("flip", relic_of_fireworks_flip),
         **get_sub_dct("profit", highest_profit),
     }
