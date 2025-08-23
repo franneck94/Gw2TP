@@ -7,7 +7,7 @@ import discord
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX = "/gw2tp"
-COMMANDS_LIST = [
+COMMANDS_LIST = {
     # runes
     "scholar_rune",
     "dragonhunter_rune",
@@ -32,7 +32,7 @@ COMMANDS_LIST = [
     # forge
     "smybol_enh_forge",
     "loadstone_forge",
-]
+}
 COMMANDS = [f"{COMMAND_PREFIX} {cmd}" for cmd in COMMANDS_LIST]
 
 
@@ -99,63 +99,26 @@ async def on_message(
         await message.channel.send(embed=embed)
         return
 
-    if message.content.startswith(f"{COMMAND_PREFIX} gear_salvage"):
-        title = "Gear Salvage"
-        api_url = api_base + "gear_salvage"
-    elif message.content.startswith(f"{COMMAND_PREFIX} profits"):
-        title = "Profits Overview"
-        api_url = api_base + "profits"
-    elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_fireworks"):
-        title = "Relic of Fireworks"
-        api_url = api_base + "relic_of_fireworks"
-    elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_thief"):
-        title = "Relic of Thief"
-        api_url = api_base + "relic_of_thief"
-    elif message.content.startswith(f"{COMMAND_PREFIX} relic_of_aristocracy"):
-        title = "Relic of Aristocracy"
-        api_url = api_base + "relic_of_aristocracy"
-    elif message.content.startswith(f"{COMMAND_PREFIX} scholar_rune"):
-        title = "Scholar Rune"
-        api_url = api_base + "scholar_rune"
-    elif message.content.startswith(f"{COMMAND_PREFIX} dragonhunter_rune"):
-        title = "Dragonhunter Rune"
-        api_url = api_base + "dragonhunter_rune"
-    elif message.content.startswith(f"{COMMAND_PREFIX} guardian_rune"):
-        title = "Guardian Rune"
-        api_url = api_base + "guardian_rune"
-    elif message.content.startswith(f"{COMMAND_PREFIX} rare_weapon_craft"):
-        title = "Rare Weapon Craft"
-        api_url = api_base + "rare_weapon_craft"
-    elif message.content.startswith(f"{COMMAND_PREFIX} rare_gear_salvage"):
-        title = "Rare Gear Salvage"
-        api_url = api_base + "rare_gear_salvage"
-    elif message.content.startswith(f"{COMMAND_PREFIX} common_gear_salvage"):
-        title = "Common Gear Salvage"
-        api_url = api_base + "common_gear_salvage"
-    elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_buy"):
-        title = "T5 Mats Buy Orders"
-        api_url = api_base + "t5_mats_buy"
-    elif message.content.startswith(f"{COMMAND_PREFIX} t5_mats_sell"):
-        title = "T5 Mats Sell Orders"
-        api_url = api_base + "t5_mats_sell"
-    elif message.content.startswith(f"{COMMAND_PREFIX} smybol_enh_forge"):
-        title = "Symbol Of Enhancement Forge"
-        api_url = api_base + "smybol_enh_forge"
-    elif message.content.startswith(f"{COMMAND_PREFIX} loadstone_forge"):
-        title = "Loadstone Forge"
-        api_url = api_base + "loadstone_forge"
-    elif message.content.startswith(f"{COMMAND_PREFIX} ecto"):
+    command = message.content
+    base_command = command.split()[0] if len(command.split()) > 0 else ""
+    sub_command = command.split()[1] if len(command.split()) > 1 else ""
+
+    if command.startswith(f"{COMMAND_PREFIX} ecto"):
         title = "Ecto Price Check"
         api_url = api_base + "price?item_id=19721"
-    elif message.content.startswith(f"{COMMAND_PREFIX} get_price"):
+    elif command.startswith(f"{COMMAND_PREFIX} get_price"):
         item_id = (
-            message.content.split()[2]
-            if len(message.content.split()) > 1
+            command.split()[2]
+            if len(command.split()) > 1
             else ""
         )
         title = f"Price for Item ID: {item_id}"
         api_url = api_base + f"price?item_id={item_id}"
-    elif message.content.startswith(COMMAND_PREFIX):
+    elif base_command == COMMAND_PREFIX and sub_command and COMMANDS_LIST:
+        if command.startswith(f"{COMMAND_PREFIX} {sub_command}"):
+            title = " ".join([w.upper() for w in sub_command.split("_")])
+            api_url = api_base + sub_command
+    elif command.startswith(COMMAND_PREFIX):
         await message.channel.send(
             "Unknown command. Use `/gw2tp help` for a list of commands.",
         )
