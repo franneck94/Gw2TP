@@ -768,7 +768,6 @@ def get_common_gear_salvage() -> JSONResponse:
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
     thick_leather_sell = thick_leather_["sell"]
-
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
     hardened_sell = hardened_data["sell"]
@@ -849,7 +848,6 @@ def get_gear_salvage() -> JSONResponse:
     elder_wood_sell = elder_wood_data["sell"]
     ecto_sell = ecto_data["sell"]
     thick_leather_sell = thick_leather_["sell"]
-
     gossamer_scrap_sell = gossamer_scrap_data["sell"]
     silk_scrap_sell = silk_scrap_data["sell"]
     hardened_sell = hardened_data["sell"]
@@ -870,7 +868,7 @@ def get_gear_salvage() -> JSONResponse:
         + orichalcum_sell * (250.0 * 0.0387) * TAX_RATE
         + ancient_wood_sell * (250.0 * 0.0287) * TAX_RATE
         + gossamer_scrap_sell * (250.0 * 0.018) * TAX_RATE
-        + hardened_sell * (250.0 * 0.0169) * TAX_RATE
+        + hardened_sell * (250.0 * 0.0164) * TAX_RATE  # lowered
         + ecto_sell * (250.0 * 0.0291) * TAX_RATE  # lowered
         + lucent_mote_sell * (250.0 * 0.98) * TAX_RATE
         + symbol_of_control_sell * (250.0 * 0.0018) * TAX_RATE

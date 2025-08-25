@@ -489,13 +489,25 @@ HTML_PAGE = f"""
             </h3>
             {DRAGONHUNTER_RUNE_TABLE}
 
-            <h3 style="text-align: center;">Fireworks Relic</h3>
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
+                    Fireworks Relic
+                </a>
+            </h3>
             {FIREWORKS_TABLE}
 
-            <h3 style="text-align: center;">Thief Relic</h3>
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Thief" target="_blank" style="color: inherit; text-decoration: none;">
+                    Thief Relic
+                </a>
+            </h3>
             {THIEF_TABLE}
 
-            <h3 style="text-align: center;">Aristocracy Relic</h3>
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Aristocracy" target="_blank" style="color: inherit; text-decoration: none;">
+                    Aristocracy Relic
+                </a>
+            </h3>
             {ARISTOCRACY_TABLE}
         </div>
     </div>
