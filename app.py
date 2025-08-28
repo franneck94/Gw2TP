@@ -777,11 +777,11 @@ def get_profits() -> JSONResponse:
             response = httpx.Client().get(
                 f"{api_base}{craft}",
             )
-            data = response.json()
-            profit = gsc_dict_to_copper(data)
+            data_ = response.json()
+            profit = gsc_dict_to_copper(data_)
             data[craft] = get_sub_dct(f"{craft}_profit", profit)
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        pass
     return JSONResponse(content=jsonable_encoder(data))
 
 
