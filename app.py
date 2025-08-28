@@ -410,7 +410,6 @@ def get_guardian_rune() -> JSONResponse:
 
     rune_sell = fetched_data[ItemIDs.GUARD_RUNE]["sell"]
     charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
-
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
@@ -453,7 +452,6 @@ def get_dragonhunter_rune() -> JSONResponse:
 
     rune_sell = fetched_data[ItemIDs.DRAGONHUNTER_RUNE]["sell"]
     charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
-
     evergreen_loadstone_buy = fetched_data[ItemIDs.EVERGREEN_LOADSTONE]["buy"]
     thorns_buy = fetched_data[ItemIDs.BARBED_THORN]["buy"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
@@ -564,7 +562,6 @@ def get_relic_of_thief() -> JSONResponse:
     charm_buy = fetched_data[ItemIDs.CHARM_OF_SKILL]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     leather_buy = fetched_data[ItemIDs.CURED_HARDENED_LEATHER_SQUARE]["buy"]
-
     relic_sell = fetched_data[ItemIDs.RELIC_OF_THIEF]["sell"]
     relic_buy = fetched_data[ItemIDs.RELIC_OF_THIEF]["buy"]
 
@@ -615,7 +612,6 @@ def get_relic_of_aristocracy() -> JSONResponse:
     charm_buy = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     bottle_elonian_wine_buy = 2504.0
-
     relic_sell = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["sell"]
     relic_buy = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["buy"]
 
@@ -803,15 +799,10 @@ def get_t5_mats_sell() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    lucent_mote_data = fetched_data[ItemIDs.LUCENT_MOTE]
-    mithril_data = fetched_data[ItemIDs.MIRTHIL]
-    elder_wood_data = fetched_data[ItemIDs.ELDER_WOOD]
-    thick_leather_ = fetched_data[ItemIDs.THICK_LEATHER]
-
-    lucent_mote_sell = lucent_mote_data["sell"]
-    mithril_sell = mithril_data["sell"]
-    elder_wood_sell = elder_wood_data["sell"]
-    thick_leather_sell = thick_leather_["sell"]
+    lucent_mote_sell = fetched_data[ItemIDs.LUCENT_MOTE]["sell"]
+    mithril_sell = fetched_data[ItemIDs.MIRTHIL]["sell"]
+    elder_wood_sell = fetched_data[ItemIDs.ELDER_WOOD]["sell"]
+    thick_leather_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
 
     data = {
         **get_sub_dct("lucent_mote", lucent_mote_sell * 250.0),
@@ -875,7 +866,6 @@ def get_loadstone_forge() -> JSONResponse:
     charged_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
     corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LOADSTONE]["sell"]
     destroyer_sell = fetched_data[ItemIDs.DESTROYER_LOADSTONE]["sell"]
-
     dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
     onyx_core_cost = fetched_data[ItemIDs.ONYX_CORE]["buy"]
     charged_core_cost = fetched_data[ItemIDs.CHARGED_CORE]["buy"]

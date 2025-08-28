@@ -1,0 +1,991 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GW2 TP King</title>
+    <style>body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+table {
+    border-collapse: collapse;
+    width: 400px;
+    margin-top: 20px;
+}
+th,
+td {
+    border: 1px solid #444;
+    padding: 8px;
+    text-align: center;
+}
+th {
+    background-color: #1f1f1f;
+    color: #fff;
+}
+button {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+button:hover {
+    background-color: #444;
+}
+#fetch-popup {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 80px;
+    background: #222;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-align: center;
+    width: fit-content;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+#fetch-popup.show {
+    display: block;
+    opacity: 1;
+}
+</style>
+    
+<script>
+    
+async function _fetchPrices() {
+    await Promise.all([
+        (async () => { 
+const response = await fetch(/api/price?item_id=83008);
+const data = await response.json();
+if (data.error) {
+    alert(data.error);
+    return;
+}
+
+document.getElementById('83008_buy_g').innerText = data.buy_g;
+document.getElementById('83008_buy_s').innerText = data.buy_s;
+document.getElementById('83008_buy_c').innerText = data.buy_c;
+
+document.getElementById('83008_sell_g').innerText = data.sell_g;
+document.getElementById('83008_sell_s').innerText = data.sell_s;
+document.getElementById('83008_sell_c').innerText = data.sell_c;
+
+document.getElementById('83008_flip_g').innerText = data.flip_g;
+document.getElementById('83008_flip_s').innerText = data.flip_s;
+document.getElementById('83008_flip_c').innerText = data.flip_c;
+ })(),
+        (async () => { 
+const response = await fetch(/api/price?item_id=19721);
+const data = await response.json();
+if (data.error) {
+    alert(data.error);
+    return;
+}
+
+document.getElementById('19721_buy_g').innerText = data.buy_g;
+document.getElementById('19721_buy_s').innerText = data.buy_s;
+document.getElementById('19721_buy_c').innerText = data.buy_c;
+
+document.getElementById('19721_sell_g').innerText = data.sell_g;
+document.getElementById('19721_sell_s').innerText = data.sell_s;
+document.getElementById('19721_sell_c').innerText = data.sell_c;
+
+document.getElementById('19721_flip_g').innerText = data.flip_g;
+document.getElementById('19721_flip_s').innerText = data.flip_s;
+document.getElementById('19721_flip_c').innerText = data.flip_c;
+ })(),
+        (async () => { 
+const response = await fetch(/api/rare_gear_salvage);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + rare_gear_salvage).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/gear_salvage);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + gear_salvage).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/guardian_rune);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + guardian_rune).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/scholar_rune);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + scholar_rune).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/dragonhunter_rune);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + dragonhunter_rune).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/relic_of_fireworks);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + relic_of_fireworks).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/relic_of_thief);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + relic_of_thief).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/relic_of_aristocracy);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + relic_of_aristocracy).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/rare_weapon_craft);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + rare_weapon_craft).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/t5_mats_buy);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + t5_mats_buy).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/mats_crafting_compare);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + mats_crafting_compare).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/common_gear_salvage);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + common_gear_salvage).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/smybol_enh_forge);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + smybol_enh_forge).innerText = value;
+}
+ })(),
+        (async () => { 
+const response = await fetch(/api/loadstone_forge);
+const data = await response.json();
+
+for (const [key, value] of Object.entries(data)) {
+    document.getElementById(key + '##' + loadstone_forge).innerText = value;
+}
+ })(),
+    ]);
+}
+
+    function showFetchPopup() {
+    const popup = document.getElementById("fetch-popup");
+    popup.classList.add("show");
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 1000);
+    console.log("Prices fetched and updated.");
+}
+
+async function fetchPrices() {
+    await _fetchPrices();
+    showFetchPopup();
+}
+
+function calculateManualProfit() {
+    const buyG = parseInt(document.getElementById("manual-buy-g").value) || 0;
+    const buyS = parseInt(document.getElementById("manual-buy-s").value) || 0;
+    const buyC = parseInt(document.getElementById("manual-buy-c").value) || 0;
+    const sellG = parseInt(document.getElementById("manual-sell-g").value) || 0;
+    const sellS = parseInt(document.getElementById("manual-sell-s").value) || 0;
+    const sellC = parseInt(document.getElementById("manual-sell-c").value) || 0;
+
+    console.log(
+        `Calculating profit: Buy - ${buyG}g ${buyS}s ${buyC}c, Sell - ${sellG}g ${sellS}s ${sellC}c`
+    );
+
+    // Convert to copper
+    const buyTotal = buyG * 10000 + buyS * 100 + buyC;
+    const sellTotal = sellG * 10000 + sellS * 100 + sellC;
+
+    // GW2 TP takes 15% fee from sell price
+    const sellAfterTax = Math.floor(sellTotal * 0.85);
+
+    const profit = sellAfterTax - buyTotal;
+    console.log(`Profit calculated: ${profit} copper`);
+
+    let profitG, profitS, profitC;
+    if (profit < 0) {
+        profitG = Math.floor((-1 * profit) / 10000);
+        profitS = Math.floor(((-1 * profit) % 10000) / 100);
+        profitC = (-1 * profit) % 100;
+    } else {
+        profitG = Math.floor(profit / 10000);
+        profitS = Math.floor((profit % 10000) / 100);
+        profitC = profit % 100;
+    }
+
+    let resultText;
+    let color;
+    if (profit >= 0) {
+        resultText = `Profit: ${profitG}g ${profitS}s ${profitC}c`;
+        color = "#FFD700"; // gold-ish
+    } else {
+        resultText = `Loss: ${Math.abs(profitG)}g ${Math.abs(
+            profitS
+        )}s ${Math.abs(profitC)}c`;
+        color = "#f44336"; // red
+    }
+    const resultElem = document.getElementById("manual-profit-result");
+    resultElem.innerText = resultText;
+    resultElem.style.color = color;
+}
+
+    window.addEventListener('DOMContentLoaded', fetchPrices);
+</script>
+
+</head>
+<body>
+    <div id="fetch-popup">Prices updated!</div>
+    <h1 style="text-align: center;">
+            Guild Wars 2 TP King
+    </h1>
+    <div style="display: flex; justify-content: center;">
+        <button onclick="fetchPrices()" style="margin-bottom: 20px;">Refresh Prices</button>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin: 0 auto; max-width: 1400px;">
+        <div style="flex: 1;">
+            
+<h3 style="text-align: center;">Profit Calculator</h3>
+<div style="display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 24px;">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <label for="manual-buy-g">Buy Price:</label>
+        <div style="display: flex; gap: 4px;">
+            <input id="manual-buy-g" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="G" style="width: 40px;">
+            <input id="manual-buy-s" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="S" style="width: 40px;">
+            <input id="manual-buy-c" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="C" style="width: 40px;">
+        </div>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <label for="manual-sell-g">Sell Price:</label>
+        <div style="display: flex; gap: 4px;">
+            <input id="manual-sell-g" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="G" style="width: 40px;">
+            <input id="manual-sell-s" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="S" style="width: 40px;">
+            <input id="manual-sell-c" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="C" style="width: 40px;">
+        </div>
+    </div>
+    <div style="align-self: flex-end;">
+        <button onclick="calculateManualProfit()">Calculate</button>
+    </div>
+</div>
+<div style="text-align: center; margin-bottom: 24px;">
+    <span id="manual-profit-result" style="font-size: 18px;">Profit: 0g 0s 0c</span>
+</div>
+
+
+            <h3 style="text-align: center;">Rare Unid. Gear</h3>
+            <table>
+        
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+        <tr>
+            <td>Buy Order</td>
+            <td id="83008_buy_g">-</td>
+            <td id="83008_buy_s">-</td>
+            <td id="83008_buy_c">-</td>
+        </tr>
+        <tr>
+            <td>Sell Order</td>
+            <td id="83008_sell_g">-</td>
+            <td id="83008_sell_s">-</td>
+            <td id="83008_sell_c">-</td>
+        </tr>
+        <tr>
+            <td>Flip Profit</td>
+            <td id="83008_flip_g">-</td>
+            <td id="83008_flip_s">-</td>
+            <td id="83008_flip_c">-</td>
+        </tr>
+    </table>
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Rare_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rare Gear Ident & Salvaging
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Rare Gear')" title="Click to copy">Rare Gear</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Stack Buy</td>
+    <td id="stack_buy_g##rare_gear_salvage">-</td>
+    <td id="stack_buy_s##rare_gear_salvage">-</td>
+    <td id="stack_buy_c##rare_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Salvage Costs</td>
+    <td id="salvage_costs_g##rare_gear_salvage">-</td>
+    <td id="salvage_costs_s##rare_gear_salvage">-</td>
+    <td id="salvage_costs_c##rare_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Mats Value After Tax</td>
+    <td id="mats_value_after_tax_g##rare_gear_salvage">-</td>
+    <td id="mats_value_after_tax_s##rare_gear_salvage">-</td>
+    <td id="mats_value_after_tax_c##rare_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Profit Stack</td>
+    <td id="profit_stack_g##rare_gear_salvage">-</td>
+    <td id="profit_stack_s##rare_gear_salvage">-</td>
+    <td id="profit_stack_c##rare_gear_salvage">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Green Gear Ident & Salvaging
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Unidentified Gear')" title="Click to copy">Unidentified Gear</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Stack Buy</td>
+    <td id="stack_buy_g##gear_salvage">-</td>
+    <td id="stack_buy_s##gear_salvage">-</td>
+    <td id="stack_buy_c##gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Salvage Costs</td>
+    <td id="salvage_costs_g##gear_salvage">-</td>
+    <td id="salvage_costs_s##gear_salvage">-</td>
+    <td id="salvage_costs_c##gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Mats Value After Tax</td>
+    <td id="mats_value_after_tax_g##gear_salvage">-</td>
+    <td id="mats_value_after_tax_s##gear_salvage">-</td>
+    <td id="mats_value_after_tax_c##gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Profit Stack</td>
+    <td id="profit_stack_g##gear_salvage">-</td>
+    <td id="profit_stack_s##gear_salvage">-</td>
+    <td id="profit_stack_c##gear_salvage">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Piece_of_Common_Unidentified_Gear/Salvage_Rate" target="_blank" style="color: inherit; text-decoration: none;">
+                    Common Gear Ident & Salvaging
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Common Gear')" title="Click to copy">Common Gear</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Stack Buy</td>
+    <td id="stack_buy_g##common_gear_salvage">-</td>
+    <td id="stack_buy_s##common_gear_salvage">-</td>
+    <td id="stack_buy_c##common_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Salvage Costs</td>
+    <td id="salvage_costs_g##common_gear_salvage">-</td>
+    <td id="salvage_costs_s##common_gear_salvage">-</td>
+    <td id="salvage_costs_c##common_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Mats Value After Tax</td>
+    <td id="mats_value_after_tax_g##common_gear_salvage">-</td>
+    <td id="mats_value_after_tax_s##common_gear_salvage">-</td>
+    <td id="mats_value_after_tax_c##common_gear_salvage">-</td>
+</tr>
+<tr>
+    <td>Profit Stack</td>
+    <td id="profit_stack_g##common_gear_salvage">-</td>
+    <td id="profit_stack_s##common_gear_salvage">-</td>
+    <td id="profit_stack_c##common_gear_salvage">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Charged_Lodestone" target="_blank" style="color: inherit; text-decoration: none;">
+                    Forge Loadstones Profit
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Onyx')" style="cursor: pointer;" title="Click to copy">Onyx</td>
+
+    <td id="onyx_g##loadstone_forge">-</td>
+    <td id="onyx_s##loadstone_forge">-</td>
+    <td id="onyx_c##loadstone_forge">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Charged')" style="cursor: pointer;" title="Click to copy">Charged</td>
+
+    <td id="charged_g##loadstone_forge">-</td>
+    <td id="charged_s##loadstone_forge">-</td>
+    <td id="charged_c##loadstone_forge">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Corrupted')" style="cursor: pointer;" title="Click to copy">Corrupted</td>
+
+    <td id="corrupted_g##loadstone_forge">-</td>
+    <td id="corrupted_s##loadstone_forge">-</td>
+    <td id="corrupted_c##loadstone_forge">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Destroyer')" style="cursor: pointer;" title="Click to copy">Destroyer</td>
+
+    <td id="destroyer_g##loadstone_forge">-</td>
+    <td id="destroyer_s##loadstone_forge">-</td>
+    <td id="destroyer_c##loadstone_forge">-</td>
+</tr>
+</table>
+
+        </div>
+        <div style="flex: 1;">
+            <h3 style="text-align: center;">Ectoplasm</h3>
+            <table>
+        
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+        <tr>
+            <td>Buy Order</td>
+            <td id="19721_buy_g">-</td>
+            <td id="19721_buy_s">-</td>
+            <td id="19721_buy_c">-</td>
+        </tr>
+        <tr>
+            <td>Sell Order</td>
+            <td id="19721_sell_g">-</td>
+            <td id="19721_sell_s">-</td>
+            <td id="19721_sell_c">-</td>
+        </tr>
+        <tr>
+            <td>Flip Profit</td>
+            <td id="19721_flip_g">-</td>
+            <td id="19721_flip_s">-</td>
+            <td id="19721_flip_c">-</td>
+        </tr>
+    </table>
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rare Weapon Craft
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##rare_weapon_craft">-</td>
+    <td id="crafting_cost_s##rare_weapon_craft">-</td>
+    <td id="crafting_cost_c##rare_weapon_craft">-</td>
+</tr>
+<tr>
+    <td>Ecto Sell After Tax</td>
+    <td id="ecto_sell_after_tax_g##rare_weapon_craft">-</td>
+    <td id="ecto_sell_after_tax_s##rare_weapon_craft">-</td>
+    <td id="ecto_sell_after_tax_c##rare_weapon_craft">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##rare_weapon_craft">-</td>
+    <td id="profit_s##rare_weapon_craft">-</td>
+    <td id="profit_c##rare_weapon_craft">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">Mats Crafting Compare</h3>
+            
+<table>
+    
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Mithril Ore To Ingot</td>
+    <td id="mithril_ore_to_ingot_g##mats_crafting_compare">-</td>
+    <td id="mithril_ore_to_ingot_s##mats_crafting_compare">-</td>
+    <td id="mithril_ore_to_ingot_c##mats_crafting_compare">-</td>
+</tr>
+<tr>
+    <td>Mithril Ingot Buy</td>
+    <td id="mithril_ingot_buy_g##mats_crafting_compare">-</td>
+    <td id="mithril_ingot_buy_s##mats_crafting_compare">-</td>
+    <td id="mithril_ingot_buy_c##mats_crafting_compare">-</td>
+</tr>
+<tr>
+    <td>Elder Wood Log To Plank</td>
+    <td id="elder_wood_log_to_plank_g##mats_crafting_compare">-</td>
+    <td id="elder_wood_log_to_plank_s##mats_crafting_compare">-</td>
+    <td id="elder_wood_log_to_plank_c##mats_crafting_compare">-</td>
+</tr>
+<tr>
+    <td>Elder Wood Plank Buy</td>
+    <td id="elder_wood_plank_buy_g##mats_crafting_compare">-</td>
+    <td id="elder_wood_plank_buy_s##mats_crafting_compare">-</td>
+    <td id="elder_wood_plank_buy_c##mats_crafting_compare">-</td>
+</tr>
+<tr>
+    <td>Lucent Mote To Crystal</td>
+    <td id="lucent_mote_to_crystal_g##mats_crafting_compare">-</td>
+    <td id="lucent_mote_to_crystal_s##mats_crafting_compare">-</td>
+    <td id="lucent_mote_to_crystal_c##mats_crafting_compare">-</td>
+</tr>
+<tr>
+    <td>Lucent Crystal Buy</td>
+    <td id="lucent_crystal_buy_g##mats_crafting_compare">-</td>
+    <td id="lucent_crystal_buy_s##mats_crafting_compare">-</td>
+    <td id="lucent_crystal_buy_c##mats_crafting_compare">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">T5 Mats Buy Order</h3>
+            
+<table>
+    
+<tr>
+    <th></th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Large Claw')" style="cursor: pointer;" title="Click to copy">Large Claw</td>
+
+    <td id="large_claw_g##t5_mats_buy">-</td>
+    <td id="large_claw_s##t5_mats_buy">-</td>
+    <td id="large_claw_c##t5_mats_buy">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Potent Blood')" style="cursor: pointer;" title="Click to copy">Potent Blood</td>
+
+    <td id="potent_blood_g##t5_mats_buy">-</td>
+    <td id="potent_blood_s##t5_mats_buy">-</td>
+    <td id="potent_blood_c##t5_mats_buy">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Large Bone')" style="cursor: pointer;" title="Click to copy">Large Bone</td>
+
+    <td id="large_bone_g##t5_mats_buy">-</td>
+    <td id="large_bone_s##t5_mats_buy">-</td>
+    <td id="large_bone_c##t5_mats_buy">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Intricate Totem')" style="cursor: pointer;" title="Click to copy">Intricate Totem</td>
+
+    <td id="intricate_totem_g##t5_mats_buy">-</td>
+    <td id="intricate_totem_s##t5_mats_buy">-</td>
+    <td id="intricate_totem_c##t5_mats_buy">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Large Fang')" style="cursor: pointer;" title="Click to copy">Large Fang</td>
+
+    <td id="large_fang_g##t5_mats_buy">-</td>
+    <td id="large_fang_s##t5_mats_buy">-</td>
+    <td id="large_fang_c##t5_mats_buy">-</td>
+</tr>
+<tr>
+    
+    <td onclick="navigator.clipboard.writeText('Potent Venom')" style="cursor: pointer;" title="Click to copy">Potent Venom</td>
+
+    <td id="potent_venom_g##t5_mats_buy">-</td>
+    <td id="potent_venom_s##t5_mats_buy">-</td>
+    <td id="potent_venom_c##t5_mats_buy">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">Forge Symbol of Enhancement</h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Symbol of Enhancement')" title="Click to copy">Symbol of Enhancement</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Cost</td>
+    <td id="cost_g##smybol_enh_forge">-</td>
+    <td id="cost_s##smybol_enh_forge">-</td>
+    <td id="cost_c##smybol_enh_forge">-</td>
+</tr>
+<tr>
+    <td>Profit Per Try</td>
+    <td id="profit_per_try_g##smybol_enh_forge">-</td>
+    <td id="profit_per_try_s##smybol_enh_forge">-</td>
+    <td id="profit_per_try_c##smybol_enh_forge">-</td>
+</tr>
+<tr>
+    <td>Profit Per Shard</td>
+    <td id="profit_per_shard_g##smybol_enh_forge">-</td>
+    <td id="profit_per_shard_s##smybol_enh_forge">-</td>
+    <td id="profit_per_shard_c##smybol_enh_forge">-</td>
+</tr>
+</table>
+
+        </div>
+        <div style="flex: 1;">
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Scholar" target="_blank" style="color: inherit; text-decoration: none;">
+                    Scholar Runes
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Scholar Rune')" title="Click to copy">Scholar Rune</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##scholar_rune">-</td>
+    <td id="crafting_cost_s##scholar_rune">-</td>
+    <td id="crafting_cost_c##scholar_rune">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##scholar_rune">-</td>
+    <td id="sell_s##scholar_rune">-</td>
+    <td id="sell_c##scholar_rune">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##scholar_rune">-</td>
+    <td id="profit_s##scholar_rune">-</td>
+    <td id="profit_c##scholar_rune">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Guardian" target="_blank" style="color: inherit; text-decoration: none;">
+                    Guardian Runes
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Guardian Rune')" title="Click to copy">Guardian Rune</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##guardian_rune">-</td>
+    <td id="crafting_cost_s##guardian_rune">-</td>
+    <td id="crafting_cost_c##guardian_rune">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##guardian_rune">-</td>
+    <td id="sell_s##guardian_rune">-</td>
+    <td id="sell_c##guardian_rune">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##guardian_rune">-</td>
+    <td id="profit_s##guardian_rune">-</td>
+    <td id="profit_c##guardian_rune">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
+                    Dragonhunter Runes
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Dragonhunter Rune')" title="Click to copy">Dragonhunter Rune</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##dragonhunter_rune">-</td>
+    <td id="crafting_cost_s##dragonhunter_rune">-</td>
+    <td id="crafting_cost_c##dragonhunter_rune">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##dragonhunter_rune">-</td>
+    <td id="sell_s##dragonhunter_rune">-</td>
+    <td id="sell_c##dragonhunter_rune">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##dragonhunter_rune">-</td>
+    <td id="profit_s##dragonhunter_rune">-</td>
+    <td id="profit_c##dragonhunter_rune">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
+                    Fireworks Relic
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Relic of Fireworks')" title="Click to copy">Relic of Fireworks</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##relic_of_fireworks">-</td>
+    <td id="crafting_cost_s##relic_of_fireworks">-</td>
+    <td id="crafting_cost_c##relic_of_fireworks">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##relic_of_fireworks">-</td>
+    <td id="sell_s##relic_of_fireworks">-</td>
+    <td id="sell_c##relic_of_fireworks">-</td>
+</tr>
+<tr>
+    <td>Flip</td>
+    <td id="flip_g##relic_of_fireworks">-</td>
+    <td id="flip_s##relic_of_fireworks">-</td>
+    <td id="flip_c##relic_of_fireworks">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##relic_of_fireworks">-</td>
+    <td id="profit_s##relic_of_fireworks">-</td>
+    <td id="profit_c##relic_of_fireworks">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Thief" target="_blank" style="color: inherit; text-decoration: none;">
+                    Thief Relic
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Relic of Thief')" title="Click to copy">Relic of Thief</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##relic_of_thief">-</td>
+    <td id="crafting_cost_s##relic_of_thief">-</td>
+    <td id="crafting_cost_c##relic_of_thief">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##relic_of_thief">-</td>
+    <td id="sell_s##relic_of_thief">-</td>
+    <td id="sell_c##relic_of_thief">-</td>
+</tr>
+<tr>
+    <td>Flip</td>
+    <td id="flip_g##relic_of_thief">-</td>
+    <td id="flip_s##relic_of_thief">-</td>
+    <td id="flip_c##relic_of_thief">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##relic_of_thief">-</td>
+    <td id="profit_s##relic_of_thief">-</td>
+    <td id="profit_c##relic_of_thief">-</td>
+</tr>
+</table>
+
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Aristocracy" target="_blank" style="color: inherit; text-decoration: none;">
+                    Aristocracy Relic
+                </a>
+            </h3>
+            
+<table>
+    
+<tr>
+    <th style="cursor: pointer; color: transparent; text-shadow: 0 0 8px rgba(0,0,0,0.5);" onclick="navigator.clipboard.writeText('Relic of Aristocracy')" title="Click to copy">Relic of Aristocracy</th>
+    <th>Gold</th>
+    <th>Silver</th>
+    <th>Copper</th>
+</tr>
+
+    
+<tr>
+    <td>Crafting Cost</td>
+    <td id="crafting_cost_g##relic_of_aristocracy">-</td>
+    <td id="crafting_cost_s##relic_of_aristocracy">-</td>
+    <td id="crafting_cost_c##relic_of_aristocracy">-</td>
+</tr>
+<tr>
+    <td>Sell</td>
+    <td id="sell_g##relic_of_aristocracy">-</td>
+    <td id="sell_s##relic_of_aristocracy">-</td>
+    <td id="sell_c##relic_of_aristocracy">-</td>
+</tr>
+<tr>
+    <td>Flip</td>
+    <td id="flip_g##relic_of_aristocracy">-</td>
+    <td id="flip_s##relic_of_aristocracy">-</td>
+    <td id="flip_c##relic_of_aristocracy">-</td>
+</tr>
+<tr>
+    <td>Profit</td>
+    <td id="profit_g##relic_of_aristocracy">-</td>
+    <td id="profit_s##relic_of_aristocracy">-</td>
+    <td id="profit_c##relic_of_aristocracy">-</td>
+</tr>
+</table>
+
+        </div>
+    </div>
+</body>
+</html>
