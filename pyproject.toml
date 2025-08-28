@@ -39,7 +39,20 @@ extend-exclude = ["docs", "test", "tests"]
 [tool.ruff.lint]
 select = ["F", "E"]
 extend-select = ["ALL"]
-ignore = ["D", "CPY", "T20", "DOC", "PGH", "UP", "T", "PLR", "TRY", "BLE"]
+ignore = [
+    "D",
+    "CPY",
+    "T20",
+    "DOC",
+    "PGH",
+    "UP",
+    "T",
+    "PLR",
+    "TRY",
+    "BLE",
+    "FBT",
+    "EM",
+]
 fixable = ["ALL"]
 unfixable = []
 preview = true

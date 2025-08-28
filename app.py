@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 from typing import Any
 from typing import Dict
-from typing import Tuple
 
 import httpx
 import uvicorn
@@ -16,66 +15,29 @@ from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
+from constants import API
+from constants import TAX_RATE
+from constants import ItemIDs
+from constants import Kits
+from helper import copper_to_gsc
+from helper import gsc_dict_to_copper
+from helper import is_running_on_railway
 from html_template import HTML_PAGE
-from items import ItemIDs
-
-
-GW2_COMMERCE_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
-GW2BLTC_API_URL: str = "https://www.gw2bltc.com/api/v2/tp/history"
-TAX_RATE: float = 0.85
-
-
-def is_running_on_railway():  # noqa: ANN201
-    return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
 
 
 uses_server = is_running_on_railway()
 port = int(os.environ.get("PORT", "8000"))
-if uses_server:
-    api_base = "https://gw2tp-production.up.railway.app/api/"
-else:
-    api_base = "http://127.0.0.1:8000/api/"
+api_base = API.PRODUCTION_API_URL if uses_server else API.DEV_API_URL
 
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
 port = int(os.environ.get("PORT", "8000"))
 
 
-def copper_to_gsc(
-    copper: int,
-) -> Tuple[int, int, int]:
-    negative = False
-    if copper < 0:
-        negative = True
-        copper = abs(copper)
-
-    gold = int(copper // 10_000)
-    silver = int((copper % 10_000) // 100)
-    copper_rest = int(copper % 100)
-
-    if negative:
-        gold = -gold
-        silver = -silver
-        copper_rest = -copper_rest
-
-    return gold, silver, copper_rest
-
-
-def gsc_to_copper(
-    gold: int,
-    silver: int,
-    copper: int,
-) -> int:
-    return gold * 10_000 + silver * 100 + copper
-
-
-def gsc_dict_to_copper(
-    dct: int,
-) -> int:
-    return dct["profit_g"] * 10_000 + dct["profit_s"] * 100 + dct["profit_c"]
-
-
-def get_sub_dct(item_name: str, copper_price: int) -> Dict[str, Any]:
+def get_sub_dct(
+    item_name: str,
+    copper_price: float,
+) -> Dict[str, Any]:
     g, s, c = copper_to_gsc(copper_price)
     return {
         f"{item_name}_g": g,
@@ -89,18 +51,22 @@ def fetch_tp_prices(
 ) -> dict[int, dict[str, Any]]:
     params = {"ids": ",".join(str(i) for i in item_ids)}
     with httpx.Client() as client:
-        response = client.get(GW2_COMMERCE_URL, params=params, timeout=10.0)
+        response = client.get(
+            API.GW2_COMMERCE_API_URL,
+            params=params,
+            timeout=10.0,
+        )
     response.raise_for_status()
-    data = response.json()
-    if not isinstance(data, list) or len(data) == 0:
-        raise RuntimeError("No items found")  # noqa: EM101
+    data: list[dict[str, Any]] = response.json()
+    if len(data) == 0:
+        raise RuntimeError("No items found")
 
     fetched_data: dict[int, dict[str, Any]] = {}
     for item in data:
         item_id = int(item["id"])
         buy_price = int(item["buys"]["unit_price"])
         sell_price = int(item["sells"]["unit_price"])
-        flip_profit = round(sell_price * TAX_RATE, 6) - buy_price
+        flip_profit = int(round(sell_price * TAX_RATE, 6) - buy_price)
         buy_g, buy_s, buy_c = copper_to_gsc(buy_price)
         sell_g, sell_s, sell_c = copper_to_gsc(sell_price)
         flip_g, flip_s, flip_c = copper_to_gsc(flip_profit)
@@ -124,7 +90,9 @@ def fetch_tp_prices(
     return fetched_data
 
 
-def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
+def get_unid_gear_data(
+    gear_id: int,
+) -> dict[int, dict[str, float]] | None:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -151,44 +119,7 @@ def get_unid_gear_data(gear_id: int) -> tuple[dict, ...] | None:
     except Exception:
         return None
 
-    gear_data = fetched_data[gear_id]
-
-    ecto_data = fetched_data[ItemIDs.ECTOPLASM]
-    lucent_mote_data = fetched_data[ItemIDs.LUCENT_MOTE]
-    mithril_data = fetched_data[ItemIDs.MIRTHIL]
-    elder_wood_data = fetched_data[ItemIDs.ELDER_WOOD]
-    thick_leather_ = fetched_data[ItemIDs.THICK_LEATHER]
-    gossamer_scrap_data = fetched_data[ItemIDs.GOSSAMER_SCRAP]
-    silk_scrap_data = fetched_data[ItemIDs.SILK_SCRAP]
-    hardened_data = fetched_data[ItemIDs.HARDENED_LEATHER]
-    ancient_wood_data = fetched_data[ItemIDs.ANCIENT_WOOD]
-    symbol_of_enh_data = fetched_data[ItemIDs.SYMBOL_OF_ENH]
-    symbol_of_pain_data = fetched_data[ItemIDs.SYMBOL_OF_PAIN]
-    orichalcum_data = fetched_data[ItemIDs.ORICHALCUM]
-    symbol_of_control_data = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]
-    charm_of_brilliance_data = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]
-    charm_of_potence_data = fetched_data[ItemIDs.CHARM_OF_POTENCE]
-    charm_of_skill_data = fetched_data[ItemIDs.CHARM_OF_SKILL]
-
-    return (
-        ecto_data,
-        gear_data,
-        lucent_mote_data,
-        mithril_data,
-        elder_wood_data,
-        thick_leather_,
-        gossamer_scrap_data,
-        silk_scrap_data,
-        hardened_data,
-        ancient_wood_data,
-        symbol_of_enh_data,
-        symbol_of_pain_data,
-        orichalcum_data,
-        symbol_of_control_data,
-        charm_of_brilliance_data,
-        charm_of_potence_data,
-        charm_of_skill_data,
-    )
+    return fetched_data
 
 
 @flask_app.route("/")
@@ -197,7 +128,9 @@ def index() -> str:
 
 
 @fastapi_app.get("/price")
-async def get_price(item_id: int) -> JSONResponse:
+async def get_price(
+    item_id: int,
+) -> JSONResponse:
     try:
         with flask_app.app_context():
             data = fetch_tp_prices([item_id])
@@ -208,48 +141,27 @@ async def get_price(item_id: int) -> JSONResponse:
 
 @fastapi_app.get("/rare_gear_salvage")
 def get_rare_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=ItemIDs.RARE_UNID_GEAR)
-    if data_tpl is None:
+    fetched_data = get_unid_gear_data(gear_id=ItemIDs.RARE_UNID_GEAR)
+    if fetched_data is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
-    (
-        ecto_data,
-        gear_data,
-        lucent_mote_data,
-        mithril_data,
-        elder_wood_data,
-        thick_leather_,
-        gossamer_scrap_data,
-        silk_scrap_data,
-        hardened_data,
-        ancient_wood_data,
-        symbol_of_enh_data,
-        symbol_of_pain_data,
-        orichalcum_data,
-        symbol_of_control_data,
-        charm_of_brilliance_data,
-        charm_of_potence_data,
-        charm_of_skill_data,
-    ) = data_tpl
-
-    stack_buy = gear_data["buy"] * 250.0
-
-    lucent_mote_sell = lucent_mote_data["sell"]
-    mithril_sell = mithril_data["sell"]
-    elder_wood_sell = elder_wood_data["sell"]
-    ecto_sell = ecto_data["sell"]
-    thick_leather_sell = thick_leather_["sell"]
-    gossamer_scrap_sell = gossamer_scrap_data["sell"]
-    silk_scrap_sell = silk_scrap_data["sell"]
-    hardened_sell = hardened_data["sell"]
-    ancient_wood_sell = ancient_wood_data["sell"]
-    symbol_of_enh_sell = symbol_of_enh_data["sell"]
-    symbol_of_pain_sell = symbol_of_pain_data["sell"]
-    orichalcum_sell = orichalcum_data["sell"]
-    symbol_of_control_sell = symbol_of_control_data["sell"]
-    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
-    charm_of_potence_sell = charm_of_potence_data["sell"]
-    charm_of_skilldata_sell = charm_of_skill_data["sell"]
+    stack_buy = fetched_data[ItemIDs.RARE_UNID_GEAR]["buy"] * 250.0
+    ecto_sell = fetched_data[ItemIDs.ECTOPLASM]["sell"]
+    lucent_mote_sell = fetched_data[ItemIDs.LUCENT_MOTE]["sell"]
+    mithril_sell = fetched_data[ItemIDs.MIRTHIL]["sell"]
+    elder_wood_sell = fetched_data[ItemIDs.ELDER_WOOD]["sell"]
+    thick_leather_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
+    gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
+    silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
+    hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
+    symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
+    charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
+    charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
+    charm_of_skill_sell = fetched_data[ItemIDs.CHARM_OF_SKILL]["sell"]
 
     mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4879) * TAX_RATE
@@ -267,10 +179,10 @@ def get_rare_gear_salvage() -> JSONResponse:
         + symbol_of_pain_sell * (250.0 * 0.0004) * TAX_RATE
         + charm_of_brilliance_sell * (250.0 * 0.0006) * TAX_RATE
         + charm_of_potence_sell * (250.0 * 0.0009) * TAX_RATE
-        + charm_of_skilldata_sell * (250.0 * 0.0009) * TAX_RATE
+        + charm_of_skill_sell * (250.0 * 0.0009) * TAX_RATE
     )
 
-    salvage_costs = 250 * 60  # Silver Fed
+    salvage_costs = Kits.SILVER_FED * 250.0
 
     profit_stack = mats_value_after_tax - stack_buy - salvage_costs
 
@@ -738,47 +650,27 @@ def get_relic_of_aristocracy() -> JSONResponse:
 
 @fastapi_app.get("/common_gear_salvage")
 def get_common_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=ItemIDs.COMMON_GEAR)
-    if data_tpl is None:
+    fetched_data = get_unid_gear_data(gear_id=ItemIDs.COMMON_GEAR)
+    if fetched_data is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
-    (
-        ecto_data,
-        gear_data,
-        lucent_mote_data,
-        mithril_data,
-        elder_wood_data,
-        thick_leather_,
-        gossamer_scrap_data,
-        silk_scrap_data,
-        hardened_data,
-        ancient_wood_data,
-        symbol_of_enh_data,
-        symbol_of_pain_data,
-        orichalcum_data,
-        symbol_of_control_data,
-        charm_of_brilliance_data,
-        charm_of_potence_data,
-        charm_of_skill_data,
-    ) = data_tpl
-
-    stack_buy = gear_data["buy"] * 250.0
-    lucent_mote_sell = lucent_mote_data["sell"]
-    mithril_sell = mithril_data["sell"]
-    elder_wood_sell = elder_wood_data["sell"]
-    ecto_sell = ecto_data["sell"]
-    thick_leather_sell = thick_leather_["sell"]
-    gossamer_scrap_sell = gossamer_scrap_data["sell"]
-    silk_scrap_sell = silk_scrap_data["sell"]
-    hardened_sell = hardened_data["sell"]
-    ancient_wood_sell = ancient_wood_data["sell"]
-    symbol_of_enh_sell = symbol_of_enh_data["sell"]
-    symbol_of_pain_sell = symbol_of_pain_data["sell"]
-    orichalcum_sell = orichalcum_data["sell"]
-    symbol_of_control_sell = symbol_of_control_data["sell"]
-    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
-    charm_of_potence_sell = charm_of_potence_data["sell"]
-    charm_of_skill_sell = charm_of_skill_data["sell"]
+    stack_buy = fetched_data[ItemIDs.COMMON_GEAR]["buy"] * 250.0
+    ecto_sell = fetched_data[ItemIDs.ECTOPLASM]["sell"]
+    lucent_mote_sell = fetched_data[ItemIDs.LUCENT_MOTE]["sell"]
+    mithril_sell = fetched_data[ItemIDs.MIRTHIL]["sell"]
+    elder_wood_sell = fetched_data[ItemIDs.ELDER_WOOD]["sell"]
+    thick_leather_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
+    gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
+    silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
+    hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
+    symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
+    charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
+    charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
+    charm_of_skill_sell = fetched_data[ItemIDs.CHARM_OF_SKILL]["sell"]
 
     mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4291) * TAX_RATE
@@ -800,9 +692,9 @@ def get_common_gear_salvage() -> JSONResponse:
     )
 
     salvage_costs = (
-        3.0 * 223  # Copper Fed
-        + 30.0 * 25  # Runecrafter
-        + 60 * 2  # Silver Fed
+        Kits.COPPER_FED * 223.0
+        + Kits.RUNECRAFTER * 25.0
+        + Kits.SILVER_FED * 2.0
     )
 
     profit_stack = mats_value_after_tax - stack_buy - salvage_costs
@@ -818,47 +710,27 @@ def get_common_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/gear_salvage")
 def get_gear_salvage() -> JSONResponse:
-    data_tpl = get_unid_gear_data(gear_id=ItemIDs.UNID_GEAR)
-    if data_tpl is None:
+    fetched_data = get_unid_gear_data(gear_id=ItemIDs.UNID_GEAR)
+    if fetched_data is None:
         return JSONResponse(content=jsonable_encoder({"error"}))
 
-    (
-        ecto_data,
-        gear_data,
-        lucent_mote_data,
-        mithril_data,
-        elder_wood_data,
-        thick_leather_,
-        gossamer_scrap_data,
-        silk_scrap_data,
-        hardened_data,
-        ancient_wood_data,
-        symbol_of_enh_data,
-        symbol_of_pain_data,
-        orichalcum_data,
-        symbol_of_control_data,
-        charm_of_brilliance_data,
-        charm_of_potence_data,
-        charm_of_skill_data,
-    ) = data_tpl
-
-    stack_buy = gear_data["buy"] * 250.0
-    lucent_mote_sell = lucent_mote_data["sell"]
-    mithril_sell = mithril_data["sell"]
-    elder_wood_sell = elder_wood_data["sell"]
-    ecto_sell = ecto_data["sell"]
-    thick_leather_sell = thick_leather_["sell"]
-    gossamer_scrap_sell = gossamer_scrap_data["sell"]
-    silk_scrap_sell = silk_scrap_data["sell"]
-    hardened_sell = hardened_data["sell"]
-    ancient_wood_sell = ancient_wood_data["sell"]
-    symbol_of_enh_sell = symbol_of_enh_data["sell"]
-    symbol_of_pain_sell = symbol_of_pain_data["sell"]
-    orichalcum_sell = orichalcum_data["sell"]
-    symbol_of_control_sell = symbol_of_control_data["sell"]
-    charm_of_brilliance_sell = charm_of_brilliance_data["sell"]
-    charm_of_potence_sell = charm_of_potence_data["sell"]
-    charm_of_skilldata_sell = charm_of_skill_data["sell"]
+    stack_buy = fetched_data[ItemIDs.UNID_GEAR]["buy"] * 250.0
+    ecto_sell = fetched_data[ItemIDs.ECTOPLASM]["sell"]
+    lucent_mote_sell = fetched_data[ItemIDs.LUCENT_MOTE]["sell"]
+    mithril_sell = fetched_data[ItemIDs.MIRTHIL]["sell"]
+    elder_wood_sell = fetched_data[ItemIDs.ELDER_WOOD]["sell"]
+    thick_leather_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
+    gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
+    silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
+    hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
+    symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
+    charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
+    charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
+    charm_of_skill_sell = fetched_data[ItemIDs.CHARM_OF_SKILL]["sell"]
 
     mats_value_after_tax = (
         mithril_sell * (250.0 * 0.4299) * TAX_RATE
@@ -876,10 +748,10 @@ def get_gear_salvage() -> JSONResponse:
         + symbol_of_pain_sell * (250.0 * 0.0006) * TAX_RATE
         + charm_of_brilliance_sell * (250.0 * 0.0042) * TAX_RATE
         + charm_of_potence_sell * (250.0 * 0.0029) * TAX_RATE
-        + charm_of_skilldata_sell * (250.0 * 0.0028) * TAX_RATE
+        + charm_of_skill_sell * (250.0 * 0.0028) * TAX_RATE
     )
 
-    salvage_costs = 30.0 * 245 + 60 * 5
+    salvage_costs = Kits.RUNECRAFTER * 245 + Kits.SILVER_FED * 5
 
     profit_stack = mats_value_after_tax - stack_buy - salvage_costs
 
@@ -894,43 +766,26 @@ def get_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/profits")
 def get_profits() -> JSONResponse:
+    crafts = [
+        "dragonhunter_rune",
+        "guardian_rune",
+        "scholar_rune",
+        "relic_of_fireworks",
+        "relic_of_thief",
+        "relic_of_aristocracy",
+        "rare_weapon_craft",
+    ]
+    data = {}
     try:
-        guardian_response = httpx.Client().get(
-            f"{api_base}dragonhunter_rune",
-        )
-        guardian_data = guardian_response.json()
-        dragonhunter_response = httpx.Client().get(
-            f"{api_base}guardian_rune",
-        )
-        dragonhunter_data = dragonhunter_response.json()
-        scholar_response = httpx.Client().get(
-            f"{api_base}scholar_rune",
-        )
-        scholar_data = scholar_response.json()
-        fireworks_response = httpx.Client().get(
-            f"{api_base}relic_of_fireworks",
-        )
-        fireworks_data = fireworks_response.json()
-        rare_weapon_response = httpx.Client().get(
-            f"{api_base}rare_weapon_craft",
-        )
-        rare_weapon_data = rare_weapon_response.json()
+        for craft in crafts:
+            response = httpx.Client().get(
+                f"{api_base}{craft}",
+            )
+            data = response.json()
+            profit = gsc_dict_to_copper(data)
+            data[craft] = get_sub_dct(f"{craft}_profit", profit)
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
-
-    guardian_rune_profit = gsc_dict_to_copper(guardian_data)
-    dragonhunter_rune_profit = gsc_dict_to_copper(dragonhunter_data)
-    scholar_rune_profit = gsc_dict_to_copper(scholar_data)
-    fireworks_relic_profit = gsc_dict_to_copper(fireworks_data)
-    rare_weapon_craft_profit = gsc_dict_to_copper(rare_weapon_data)
-
-    data = {
-        **get_sub_dct("guardian_rune_profit", guardian_rune_profit),
-        **get_sub_dct("dragonhunter_rune", dragonhunter_rune_profit),
-        **get_sub_dct("scholar_rune", scholar_rune_profit),
-        **get_sub_dct("fireworks_relic", fireworks_relic_profit),
-        **get_sub_dct("rare_weapon_craft", rare_weapon_craft_profit),
-    }
     return JSONResponse(content=jsonable_encoder(data))
 
 
@@ -1057,7 +912,7 @@ app = Starlette(
     ],
 )
 
-if __name__ == "__main__":
+if __name__ == "_main_":
     uvicorn.run(
         "flask_fastapi_shared:app",
         host="0.0.0.0",  # noqa: S104

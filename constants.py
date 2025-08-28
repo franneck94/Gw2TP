@@ -1,3 +1,6 @@
+from typing import Final
+
+
 class ItemIDs:
     # Gear
     RARE_UNID_GEAR: int = 83008
@@ -58,3 +61,45 @@ class ItemIDs:
     DESTROYER_CORE: int = 24324
     CORRUPTED_CORE: int = 24339
     CHARGED_CORE: int = 24304
+
+
+class Kits:
+    COPPER_FED: float = 3.0
+    RUNECRAFTER: float = 30.0
+    SILVER_FED: float = 60.0
+
+
+TAX_RATE: float = 0.85
+
+
+class API:
+    GW2_COMMERCE_API_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
+    PRODUCTION_API_URL: str = "https://gw2tp-production.up.railway.app/api/"
+    DEV_API_URL: str = "http://127.0.0.1:8000/api/"
+    COMMAND_PREFIX: str = "/gw2tp"
+    COMMANDS_LIST: Final[set[str]] = {
+        # runes
+        "scholar_rune",
+        "dragonhunter_rune",
+        "guardian_rune",
+        # relics
+        "relic_of_fireworks",
+        "relic_of_aristocracy",
+        "relic_of_thief",
+        # rare / ecto
+        "rare_weapon_craft",
+        "rare_gear_salvage",
+        "ecto",
+        # gear
+        "gear_salvage",
+        "common_gear_salvage",
+        # t5
+        "t5_mats_buy",
+        "t5_mats_sell",
+        # general
+        "profits",
+        "get_price",
+        # forge
+        "smybol_enh_forge",
+        "loadstone_forge",
+    }
