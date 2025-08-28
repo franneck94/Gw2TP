@@ -61,7 +61,7 @@ button:hover {
 async function _fetchPrices() {
     await Promise.all([
         (async () => { 
-const response = await fetch(/api/price?item_id=83008);
+const response = await fetch("/api/price?item_id=83008");
 const data = await response.json();
 if (data.error) {
     alert(data.error);
@@ -81,7 +81,7 @@ document.getElementById('83008_flip_s').innerText = data.flip_s;
 document.getElementById('83008_flip_c').innerText = data.flip_c;
  })(),
         (async () => { 
-const response = await fetch(/api/price?item_id=19721);
+const response = await fetch("/api/price?item_id=19721");
 const data = await response.json();
 if (data.error) {
     alert(data.error);
@@ -101,115 +101,171 @@ document.getElementById('19721_flip_s').innerText = data.flip_s;
 document.getElementById('19721_flip_c').innerText = data.flip_c;
  })(),
         (async () => { 
-const response = await fetch(/api/rare_gear_salvage);
-const data = await response.json();
+try {
+    const response = await fetch('/api/rare_gear_salvage');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + rare_gear_salvage).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `rare_gear_salvage`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/gear_salvage);
-const data = await response.json();
+try {
+    const response = await fetch('/api/gear_salvage');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + gear_salvage).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `gear_salvage`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/guardian_rune);
-const data = await response.json();
+try {
+    const response = await fetch('/api/guardian_rune');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + guardian_rune).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `guardian_rune`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/scholar_rune);
-const data = await response.json();
+try {
+    const response = await fetch('/api/scholar_rune');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + scholar_rune).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `scholar_rune`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/dragonhunter_rune);
-const data = await response.json();
+try {
+    const response = await fetch('/api/dragonhunter_rune');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + dragonhunter_rune).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `dragonhunter_rune`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/relic_of_fireworks);
-const data = await response.json();
+try {
+    const response = await fetch('/api/relic_of_fireworks');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + relic_of_fireworks).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `relic_of_fireworks`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/relic_of_thief);
-const data = await response.json();
+try {
+    const response = await fetch('/api/relic_of_thief');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + relic_of_thief).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `relic_of_thief`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/relic_of_aristocracy);
-const data = await response.json();
+try {
+    const response = await fetch('/api/relic_of_aristocracy');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + relic_of_aristocracy).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `relic_of_aristocracy`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/rare_weapon_craft);
-const data = await response.json();
+try {
+    const response = await fetch('/api/rare_weapon_craft');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + rare_weapon_craft).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `rare_weapon_craft`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/t5_mats_buy);
-const data = await response.json();
+try {
+    const response = await fetch('/api/t5_mats_buy');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + t5_mats_buy).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `t5_mats_buy`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/mats_crafting_compare);
-const data = await response.json();
+try {
+    const response = await fetch('/api/mats_crafting_compare');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + mats_crafting_compare).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `mats_crafting_compare`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/common_gear_salvage);
-const data = await response.json();
+try {
+    const response = await fetch('/api/common_gear_salvage');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + common_gear_salvage).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `common_gear_salvage`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/smybol_enh_forge);
-const data = await response.json();
+try {
+    const response = await fetch('/api/smybol_enh_forge');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + smybol_enh_forge).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `smybol_enh_forge`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
         (async () => { 
-const response = await fetch(/api/loadstone_forge);
-const data = await response.json();
+try {
+    const response = await fetch('/api/loadstone_forge');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {
-    document.getElementById(key + '##' + loadstone_forge).innerText = value;
+    for (const [key, value] of Object.entries(data)) {
+        document.getElementById(key + '##' + `loadstone_forge`).innerText = value;
+    }
+} catch (error) {
+    console.error('Error fetching prices:', error);
 }
  })(),
     ]);

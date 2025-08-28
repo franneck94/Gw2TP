@@ -15,14 +15,14 @@ from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
-from constants import API
-from constants import TAX_RATE
-from constants import ItemIDs
-from constants import Kits
-from helper import copper_to_gsc
-from helper import gsc_dict_to_copper
-from helper import is_running_on_railway
-from html_template import HTML_PAGE
+from src.constants import API
+from src.constants import TAX_RATE
+from src.constants import ItemIDs
+from src.constants import Kits
+from src.helper import copper_to_gsc
+from src.helper import gsc_dict_to_copper
+from src.helper import is_running_on_railway
+from src.html_template import HTML_PAGE
 
 
 uses_server = is_running_on_railway()

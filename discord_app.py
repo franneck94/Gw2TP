@@ -4,8 +4,8 @@ from typing import Any
 import aiohttp
 import discord
 
-from constants import API
-from helper import is_running_on_railway
+from src.constants import API
+from src.helper import is_running_on_railway
 
 
 TOKEN = os.getenv("DISCORD_TOKEN")

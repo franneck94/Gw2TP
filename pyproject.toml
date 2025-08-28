@@ -52,6 +52,7 @@ ignore = [
     "BLE",
     "FBT",
     "EM",
+    "COM812",
 ]
 fixable = ["ALL"]
 unfixable = []

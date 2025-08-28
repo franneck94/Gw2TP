@@ -1,8 +1,8 @@
 # ruff: noqa: E501
 from pathlib import Path
 
-from constants import ItemIDs
-from helper import is_running_on_railway
+from src.constants import ItemIDs
+from src.helper import is_running_on_railway
 
 
 CWD = Path.cwd()
@@ -316,7 +316,7 @@ PROFIT_CALCULATION_HTML = """
 
 def get_fetch_price_html(item_id: int) -> str:
     return f"""
-const response = await fetch(/api/price?item_id={item_id});
+const response = await fetch("/api/price?item_id={item_id}");
 const data = await response.json();
 if (data.error) {{
     alert(data.error);
@@ -341,11 +341,15 @@ def get_all_fetch_price_html(
     api_endpoint: str,
 ) -> str:
     return f"""
-const response = await fetch(/api/{api_endpoint});
-const data = await response.json();
+try {{
+    const response = await fetch('/api/{api_endpoint}');
+    const data = await response.json();
 
-for (const [key, value] of Object.entries(data)) {{
-    document.getElementById(key + '##' + {api_endpoint}).innerText = value;
+    for (const [key, value] of Object.entries(data)) {{
+        document.getElementById(key + '##' + `{api_endpoint}`).innerText = value;
+    }}
+}} catch (error) {{
+    console.error('Error fetching prices:', error);
 }}
 """
 
