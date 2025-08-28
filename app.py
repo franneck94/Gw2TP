@@ -779,7 +779,7 @@ def get_profits() -> JSONResponse:
             )
             data_ = response.json()
             profit = gsc_dict_to_copper(data_)
-            data[craft] = get_sub_dct(f"{craft}_profit", profit)
+            data = {**data, **get_sub_dct(f"{craft}_profit", profit)}
     except Exception:
         pass
     return JSONResponse(content=jsonable_encoder(data))
