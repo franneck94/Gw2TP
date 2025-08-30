@@ -14,6 +14,7 @@
 #include "nexus/Nexus.h"
 #include "rtapi/RTAPI.hpp"
 
+#include "Render.h"
 #include "Settings.h"
 #include "Shared.h"
 #include "Version.h"
@@ -52,10 +53,10 @@ extern "C" __declspec(dllexport) AddonDefinition *GetAddonDef()
     AddonDef.Signature = -1245535;
     AddonDef.APIVersion = NEXUS_API_VERSION;
     AddonDef.Name = "GW2TP";
-    AddonDef.Version.Major = 0;
-    AddonDef.Version.Minor = 1;
-    AddonDef.Version.Build = 0;
-    AddonDef.Version.Revision = 0;
+    AddonDef.Version.Major = MAJOR;
+    AddonDef.Version.Minor = MINOR;
+    AddonDef.Version.Build = BUILD;
+    AddonDef.Version.Revision = REVISION;
     AddonDef.Author = "Franneck";
     AddonDef.Description = "...";
     AddonDef.Load = AddonLoad;
@@ -115,18 +116,12 @@ void AddonRender()
         return;
     }
 
-    if (ImGui::Begin("GW2TP"))
-    {
-        ImGui::Text("Test");
-        ImGui::End();
-    }
+    static GW2TPHelper helper;
+    helper.render();
 }
 
 void AddonOptions()
 {
-    if (ImGui::Begin("GW2TP"))
-    {
-        ImGui::Text("Test");
-        ImGui::End();
-    }
+    static GW2TPHelper helper;
+    helper.render_options();
 }

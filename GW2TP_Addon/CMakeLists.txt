@@ -24,6 +24,13 @@ file(GLOB IMGUI_SOURCES
 )
 target_sources(third_party_libs PRIVATE ${IMGUI_SOURCES} ${KIERO_SOURCES})
 
+FetchContent_Declare(
+  cpr
+  GIT_REPOSITORY https://github.com/libcpr/cpr.git
+  GIT_TAG 1.11.1
+)
+FetchContent_MakeAvailable(cpr)
+
 add_library(nexus INTERFACE
     "nexus/Nexus.h"
 )
@@ -34,12 +41,13 @@ add_library(rtapi INTERFACE
     "rtapi/RTAPI.hpp"
 )
 
-target_link_libraries(third_party_libs PRIVATE
+target_link_libraries(third_party_libs PUBLIC
     d3d11
     d3dcompiler
     nexus
     mumble
     rtapi
+    cpr::cpr
 )
 
 add_library(Shared STATIC
@@ -57,6 +65,15 @@ target_link_libraries(Settings PRIVATE
     Shared
 )
 
+add_library(Render STATIC
+    "Render.cpp"
+)
+target_link_libraries(Render PRIVATE
+    third_party_libs
+    Shared
+    Settings
+)
+
 add_library(GW2TP SHARED
     "entry.cpp"
 )
@@ -64,6 +81,7 @@ target_link_libraries(GW2TP PRIVATE
     third_party_libs
     Shared
     Settings
+    Render
 )
 set_target_properties(GW2TP PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
