@@ -57,11 +57,15 @@ target_link_libraries(Settings PRIVATE
     Shared
 )
 
-add_library(entry SHARED
+add_library(GW2TP SHARED
     "entry.cpp"
 )
-target_link_libraries(entry PRIVATE
+target_link_libraries(GW2TP PRIVATE
     third_party_libs
     Shared
     Settings
+)
+set_target_properties(GW2TP PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release"
 )
