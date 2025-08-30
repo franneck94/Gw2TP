@@ -8,7 +8,7 @@ include(FetchContent)
 FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
-    GIT_TAG v1.89.9
+    GIT_TAG v1.80
 )
 FetchContent_MakeAvailable(imgui)
 
@@ -68,4 +68,10 @@ target_link_libraries(GW2TP PRIVATE
 set_target_properties(GW2TP PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
     RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release"
+)
+add_custom_command(TARGET GW2TP POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/bin/debug"
+    "D:/GW2/addons"
+    COMMENT "Copying debug files to GW2 addons directory"
 )

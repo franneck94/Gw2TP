@@ -49,7 +49,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 extern "C" __declspec(dllexport) AddonDefinition *GetAddonDef()
 {
-    AddonDef.Signature = 17;
+    AddonDef.Signature = -1245535;
     AddonDef.APIVersion = NEXUS_API_VERSION;
     AddonDef.Name = "GW2TP";
     AddonDef.Version.Major = 0;
@@ -115,12 +115,18 @@ void AddonRender()
         return;
     }
 
-    ImGui::Begin("GW2TP");
-    ImGui::Text("Test");
-    ImGui::End();
+    if (ImGui::Begin("GW2TP"))
+    {
+        ImGui::Text("Test");
+        ImGui::End();
+    }
 }
 
 void AddonOptions()
 {
-    ImGui::Text("GW2TP");
+    if (ImGui::Begin("GW2TP"))
+    {
+        ImGui::Text("Test");
+        ImGui::End();
+    }
 }

@@ -56,5 +56,4 @@ namespace Settings
 
     /* Widget */
     bool IsVisible = true;
-
 }
