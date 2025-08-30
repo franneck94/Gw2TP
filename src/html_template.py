@@ -433,7 +433,7 @@ HTML_PAGE = f"""
             {COMMON_GEAR_SALVAGE_TABLE}
 
             <h3 style="text-align: center;">
-                <a href="https://wiki.guildwars2.com/wiki/Charged_Lodestone" target="_blank" style="color: inherit; text-decoration: none;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard" target="_blank" style="color: inherit; text-decoration: none;">
                     Forge Loadstones Profit
                 </a>
             </h3>
@@ -456,7 +456,11 @@ HTML_PAGE = f"""
             <h3 style="text-align: center;">T5 Mats Buy Order</h3>
             {T5_MATS_BUY_TABLE}
 
-            <h3 style="text-align: center;">Forge Symbol of Enhancement</h3>
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/symbol-of-enhancement" target="_blank" style="color: inherit; text-decoration: none;">
+                    Forge Symbol of Enhancement
+                </a>
+            </h3>
             {FORGE_ENH_TABLE}
         </div>
         <div style="flex: 1;">
@@ -482,7 +486,7 @@ HTML_PAGE = f"""
             {DRAGONHUNTER_RUNE_TABLE}
 
             <h3 style="text-align: center;">
-                <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
+                <a href="https://wiki.guildwars2.com/wiki/Relic_of_Fireworks" target="_blank" style="color: inherit; text-decoration: none;">
                     Fireworks Relic
                 </a>
             </h3>

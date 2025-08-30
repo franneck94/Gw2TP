@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.pyx": "cython",
+        ".clang*": "yaml",
+        "*.gpj": "jsonc",
+        "*.gvw": "jsonc",
+        "*.hpp.in": "cpp",
+        "fstream": "cpp"
+    }
+}
