@@ -5,10 +5,10 @@
 #include "nexus/Nexus.h"
 #include "rtapi/RTAPI.hpp"
 
-extern AddonAPI_t *APIDefs;
+extern AddonAPI *APIDefs;
 extern Mumble::Data *MumbleLink;
 extern Mumble::Identity *MumbleIdentity;
-extern NexusLinkData_t *NexusLink;
+extern NexusLinkData *NexusLink;
 extern RTAPI::RealTimeData *RTAPIData;
 
 #endif

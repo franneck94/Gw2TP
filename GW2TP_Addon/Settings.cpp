@@ -34,8 +34,8 @@ namespace Settings
 			}
 			catch (json::parse_error& ex)
 			{
-				APIDefs->Log(LOGL_WARNING, "Compass", "Settings.json could not be parsed.");
-				APIDefs->Log(LOGL_WARNING, "Compass", ex.what());
+				APIDefs->Log(ELogLevel_WARNING, "Compass", "Settings.json could not be parsed.");
+				APIDefs->Log(ELogLevel_WARNING, "Compass", ex.what());
 			}
 		}
 		Settings::Mutex.unlock();

@@ -1,7 +1,7 @@
 #include "Shared.h"
 
-AddonAPI_t *APIDefs = nullptr;
+AddonAPI *APIDefs = nullptr;
 Mumble::Data *MumbleLink = nullptr;
 Mumble::Identity *MumbleIdentity = nullptr;
-NexusLinkData_t *NexusLink = nullptr;
+NexusLinkData *NexusLink = nullptr;
 RTAPI::RealTimeData *RTAPIData = nullptr;

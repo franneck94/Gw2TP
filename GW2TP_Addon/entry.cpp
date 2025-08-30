@@ -23,21 +23,17 @@ namespace dx = DirectX;
 void ProcessKeybind(const char *aIdentifier);
 void OnWindowResized(void *aEventArgs);
 void OnMumbleIdentityUpdated(void *aEventArgs);
-void ReceiveTexture(const char *aIdentifier, Texture *aTexture);
 
-void AddonLoad(AddonAPI_t *aApi);
+void AddonLoad(AddonAPI *aApi);
 void AddonUnload();
 void AddonRender();
 void AddonOptions();
 void AddonShortcut();
 
 HMODULE hSelf;
-AddonDefinition_t AddonDef{};
+AddonDefinition AddonDef{};
 std::filesystem::path AddonPath;
 std::filesystem::path SettingsPath;
-Texture *hrTex = nullptr;
-float padding = 5.0f;
-ImVec2 CompassStripPosition = ImVec2(0, 0);
 
 const char *COMPASS_TOGGLEVIS = "KB_COMPASS_TOGGLEVIS";
 const char *WINDOW_RESIZED = "EV_WINDOW_RESIZED";
@@ -61,7 +57,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     return TRUE;
 }
 
-extern "C" __declspec(dllexport) AddonDefinition_t *GetAddonDef()
+extern "C" __declspec(dllexport) AddonDefinition *GetAddonDef()
 {
     AddonDef.Signature = 17;
     AddonDef.APIVersion = NEXUS_API_VERSION;
@@ -74,8 +70,8 @@ extern "C" __declspec(dllexport) AddonDefinition_t *GetAddonDef()
     AddonDef.Description = "Adds a simple compass widget to the UI, as well as to your character in the world.";
     AddonDef.Load = AddonLoad;
     AddonDef.Unload = AddonUnload;
-    AddonDef.Flags = AF_None;
-    AddonDef.Provider = UP_GitHub;
+    AddonDef.Flags = EAddonFlags_None;
+    AddonDef.Provider = EUpdateProvider_GitHub;
     AddonDef.UpdateLink = "https://github.com/RaidcoreGG/GW2-Compass";
 
     return &AddonDef;
@@ -87,11 +83,6 @@ void OnAddonLoaded(int *aSignature)
     {
         return;
     }
-
-    if (*aSignature == RTAPI_SIG)
-    {
-        RTAPIData = (RTAPI::RealTimeData *)APIDefs->GetResource(DL_RTAPI);
-    }
 }
 void OnAddonUnloaded(int *aSignature)
 {
@@ -99,14 +90,9 @@ void OnAddonUnloaded(int *aSignature)
     {
         return;
     }
-
-    if (*aSignature == RTAPI_SIG)
-    {
-        RTAPIData = nullptr;
-    }
 }
 
-void AddonLoad(AddonAPI_t *aApi)
+void AddonLoad(AddonAPI *aApi)
 {
     APIDefs = aApi;
     ImGui::SetCurrentContext((ImGuiContext *)APIDefs->ImguiContext);
@@ -118,14 +104,9 @@ void AddonLoad(AddonAPI_t *aApi)
     RTAPIData = (RTAPI::RealTimeData *)APIDefs->GetResource(DL_RTAPI);
 
     APIDefs->RegisterKeybindWithString(COMPASS_TOGGLEVIS, ProcessKeybind, "(null)");
-
     APIDefs->SubscribeEvent(WINDOW_RESIZED, OnWindowResized);
     APIDefs->SubscribeEvent(MUMBLE_IDENTITY_UPDATED, OnMumbleIdentityUpdated);
-
-    APIDefs->LoadTextureFromResource(HR_TEX, IDB_PNG1, hSelf, ReceiveTexture);
-
     APIDefs->AddSimpleShortcut("QAS_COMPASS", AddonShortcut);
-
     APIDefs->RegisterRender(ERenderType_Render, AddonRender);
     APIDefs->RegisterRender(ERenderType_OptionsRender, AddonOptions);
 
@@ -140,13 +121,8 @@ void AddonUnload()
 {
     APIDefs->DeregisterRender(AddonOptions);
     APIDefs->DeregisterRender(AddonRender);
-
     APIDefs->RemoveSimpleShortcut("QAS_COMPASS");
-
-    // textures do not have to be freed
-
     APIDefs->UnsubscribeEvent(WINDOW_RESIZED, OnWindowResized);
-
     APIDefs->DeregisterKeybind(COMPASS_TOGGLEVIS);
 
     MumbleLink = nullptr;
@@ -187,20 +163,9 @@ void ProcessKeybind(const char *aIdentifier)
 
 void OnWindowResized(void *aEventArgs)
 {
-    CompassStripPosition = ImVec2((NexusLink->Width - Settings::WidgetWidth) / 2, (NexusLink->Height * .2f) + Settings::WidgetOffsetV);
 }
 
 void OnMumbleIdentityUpdated(void *aEventArgs)
 {
     MumbleIdentity = (Mumble::Identity *)aEventArgs;
-}
-
-void ReceiveTexture(const char *aIdentifier, Texture *aTexture)
-{
-    std::string str = aIdentifier;
-
-    if (str == HR_TEX)
-    {
-        hrTex = aTexture;
-    }
 }
