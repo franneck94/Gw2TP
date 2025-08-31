@@ -2,6 +2,7 @@
 #define RENDER_H
 
 #include <string>
+#include <map>
 
 #include "imgui.h"
 
@@ -18,6 +19,8 @@ private:
     const std::wstring api_url = L"http://127.0.0.1:8000/api/";
 
     Price fetchPrice(int item_id);
+    bool loaded_prices = false;
+    std::map<std::string, Price> prices;
 
 public:
     GW2TPHelper() {};

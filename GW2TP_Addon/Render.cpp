@@ -88,6 +88,15 @@ void GW2TPHelper::render()
     ImGui::End();
 }
 
+void _head(const std::string name)
+{
+    ImGui::TableSetupColumn(name.c_str());
+    ImGui::TableSetupColumn("Gold");
+    ImGui::TableSetupColumn("Silver");
+    ImGui::TableSetupColumn("Copper");
+    ImGui::TableHeadersRow();
+}
+
 void _row(const std::string name, const Price &price)
 {
     ImGui::TableNextRow();
@@ -103,26 +112,24 @@ void _row(const std::string name, const Price &price)
 
 void GW2TPHelper::renderPriceTable(const char *label, int item_id)
 {
-    static bool first_load = true;
     static Price price;
 
-    if (first_load)
+    if (ImGui::BeginTable("EctoTable", 4, ImGuiTableFlags_Borders))
     {
-        first_load = false;
-        price = GW2TPHelper::fetchPrice(item_id);
+        _head("Ectoplasm");
+        _row("Buy", prices["19721"]);
+        _row("Sell", prices["19721"]);
+        _row("Flip", prices["19721"]);
+
+        ImGui::EndTable();
     }
 
-    if (ImGui::BeginTable(label, 4, ImGuiTableFlags_Borders))
+    if (ImGui::BeginTable("ScholarTable", 4, ImGuiTableFlags_Borders))
     {
-        ImGui::TableSetupColumn(std::to_string(item_id).c_str());
-        ImGui::TableSetupColumn("Gold");
-        ImGui::TableSetupColumn("Silver");
-        ImGui::TableSetupColumn("Copper");
-        ImGui::TableHeadersRow();
-
-        _row("Buy", price);
-        _row("Sell", price);
-        _row("Flip", price);
+        _head("Scholar Rune");
+        _row("Buy", prices["19721"]);
+        _row("Sell", prices["19721"]);
+        _row("Flip", prices["19721"]);
 
         ImGui::EndTable();
     }
@@ -130,5 +137,16 @@ void GW2TPHelper::renderPriceTable(const char *label, int item_id)
 
 bool GW2TPHelper::refresh_prices()
 {
-    return true;
+    if (!loaded_prices)
+    {
+        loaded_prices = true;
+
+        const auto price1 = GW2TPHelper::fetchPrice(19721); // Ectoplasm
+        prices["19721"] = price1;
+
+        const auto price2 = GW2TPHelper::fetchPrice(24836); // Ectoplasm
+        prices["24836"] = price2;
+    }
+
+    return loaded_prices;
 }
