@@ -22,14 +22,7 @@ file(GLOB IMGUI_SOURCES
     ${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp
 )
-target_sources(third_party_libs PRIVATE ${IMGUI_SOURCES} ${KIERO_SOURCES})
-
-FetchContent_Declare(
-  cpr
-  GIT_REPOSITORY https://github.com/libcpr/cpr.git
-  GIT_TAG 1.11.1
-)
-FetchContent_MakeAvailable(cpr)
+target_sources(third_party_libs PRIVATE ${IMGUI_SOURCES})
 
 add_library(nexus INTERFACE
     "nexus/Nexus.h"
@@ -41,13 +34,12 @@ add_library(rtapi INTERFACE
     "rtapi/RTAPI.hpp"
 )
 
-target_link_libraries(third_party_libs PUBLIC
+target_link_libraries(third_party_libs PRIVATE
     d3d11
     d3dcompiler
     nexus
     mumble
     rtapi
-    cpr::cpr
 )
 
 add_library(Shared STATIC
@@ -92,4 +84,14 @@ add_custom_command(TARGET GW2TP POST_BUILD
     "${CMAKE_SOURCE_DIR}/bin/debug"
     "D:/GW2/addons"
     COMMENT "Copying debug files to GW2 addons directory"
+)
+
+add_executable(GW2TP_App
+    "main.cpp"
+)
+target_link_libraries(GW2TP_App PRIVATE
+    third_party_libs
+    Shared
+    Settings
+    Render
 )

@@ -1,11 +1,9 @@
-#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <iostream>
 #include <string>
 
 #include <DirectXMath.h>
 #include <Windows.h>
 
-// #include "cpr/cpr.h"
 #include "imgui.h"
 #include "imgui_extensions.h"
 #include "mumble/Mumble.h"
@@ -17,10 +15,6 @@
 
 Price GW2TPHelper::fetchPrice(int item_id)
 {
-    // auto r = cpr::Get(cpr::Url{GW2TPHelper::api_url + "/api/price?item_id=83008"});
-    // std::cout << r.status_code << "\n"
-    //           << r.text << std::endl;
-
     return Price{};
 }
 
