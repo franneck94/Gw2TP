@@ -1,32 +1,36 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include <string>
 #include <map>
+#include <string>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 #include "imgui.h"
+#include "nlohmann/json.hpp"
 
-struct Price
-{
-    int gold = 0;
-    int silver = 0;
-    int copper = 0;
-};
+#include "Constants.h"
+#include "Types.h"
+
+using json = nlohmann::json;
 
 class GW2TPHelper
 {
 private:
-    const std::wstring api_url = L"http://127.0.0.1:8000/api/";
+    const std::wstring api_url = API::DEV_API_URL;
 
-    Price fetchPrice(int item_id);
     bool loaded_prices = false;
-    std::map<std::string, Price> prices;
+    std::map<std::wstring, std::vector<std::pair<std::string, json>>> fetched_kv;
+
+    std::vector<std::pair<std::string, json>> fetch_item_id_price(int item_id);
+    std::vector<std::pair<std::string, json>> fetch_command(const std::wstring &command);
 
 public:
     GW2TPHelper() {};
     ~GW2TPHelper() {};
 
-    void renderPriceTable(const char *label, int item_id);
+    void render_table(const std::wstring item_id);
     void render();
     void render_options();
     bool refresh_prices();

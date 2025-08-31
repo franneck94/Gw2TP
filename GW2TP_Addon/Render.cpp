@@ -36,24 +36,13 @@ static std::tuple<int, int, int> copper_to_gsc(int copper)
     return {gold, silver, rest};
 }
 
-Price GW2TPHelper::fetchPrice(int item_id)
+static json _parse_json(const std::string &response)
 {
-    const auto full_url = api_url + L"price?item_id=" + std::to_wstring(item_id);
-    auto future = HTTPClient::GetRequestAsync(full_url);
-    auto response = future.get();
-
     try
     {
         json j = json::parse(response);
 
-        // Access some values
-        int buy = j["buy"];
-        int sell = j["sell"];
-
-        auto [buy_g, buy_s, buy_c] = copper_to_gsc(buy);
-        auto [sell_g, sell_s, sell_c] = copper_to_gsc(sell);
-
-        return Price{.gold = buy_g, .silver = buy_s, .copper = buy_c};
+        return j;
     }
     catch (const json::parse_error &e)
     {
@@ -64,7 +53,73 @@ Price GW2TPHelper::fetchPrice(int item_id)
         std::cerr << "JSON type error: " << e.what() << std::endl;
     }
 
-    return Price{.gold = -1, .silver = -1, .copper = -1};
+    return json{};
+}
+
+static void _head(const char *name)
+{
+    ImGui::TableSetupColumn(name);
+    ImGui::TableSetupColumn("Gold");
+    ImGui::TableSetupColumn("Silver");
+    ImGui::TableSetupColumn("Copper");
+    ImGui::TableHeadersRow();
+}
+
+static void _row(const char *name, const Price &price)
+{
+    ImGui::TableNextRow();
+    ImGui::TableNextColumn();
+    ImGui::Text(name);
+    ImGui::TableNextColumn();
+    ImGui::Text("%d", price.gold);
+    ImGui::TableNextColumn();
+    ImGui::Text("%d", price.silver);
+    ImGui::TableNextColumn();
+    ImGui::Text("%d", price.copper);
+}
+
+static std::string _wstring_to_string(const std::wstring &wstr)
+{
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0],
+                                          (int)wstr.size(), NULL, 0, NULL, NULL);
+    std::string str(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(),
+                        &str[0], size_needed, NULL, NULL);
+    return str;
+}
+
+std::vector<std::pair<std::string, json>> GW2TPHelper::fetch_item_id_price(int item_id)
+{
+    const auto full_url = api_url + L"price?item_id=" + std::to_wstring(item_id);
+    auto future = HTTPClient::GetRequestAsync(full_url);
+    auto response = future.get();
+    auto j = _parse_json(response);
+
+    std::vector<std::pair<std::string, json>> kv_pairs;
+
+    for (auto &el : j.items())
+    {
+        kv_pairs.emplace_back(el.key(), el.value());
+    }
+
+    return kv_pairs;
+}
+
+std::vector<std::pair<std::string, json>> GW2TPHelper::fetch_command(const std::wstring &command)
+{
+    const auto full_url = api_url + command;
+    auto future = HTTPClient::GetRequestAsync(full_url);
+    auto response = future.get();
+    auto j = _parse_json(response);
+
+    std::vector<std::pair<std::string, json>> kv_pairs;
+
+    for (auto &el : j.items())
+    {
+        kv_pairs.emplace_back(el.key(), el.value());
+    }
+
+    return kv_pairs;
 }
 
 void GW2TPHelper::render_options()
@@ -83,53 +138,35 @@ void GW2TPHelper::render()
         GW2TPHelper::refresh_prices();
     }
 
-    renderPriceTable("Ectoplasm", 19721);
+    for (const auto command : API::COMMANDS_LIST)
+    {
+        render_table(command);
+    }
 
     ImGui::End();
 }
 
-void _head(const std::string name)
+void GW2TPHelper::render_table(const std::wstring item_id)
 {
-    ImGui::TableSetupColumn(name.c_str());
-    ImGui::TableSetupColumn("Gold");
-    ImGui::TableSetupColumn("Silver");
-    ImGui::TableSetupColumn("Copper");
-    ImGui::TableHeadersRow();
-}
+    const auto label_ = _wstring_to_string(item_id);
 
-void _row(const std::string name, const Price &price)
-{
-    ImGui::TableNextRow();
-    ImGui::TableNextColumn();
-    ImGui::Text(name.c_str());
-    ImGui::TableNextColumn();
-    ImGui::Text("%d", price.gold);
-    ImGui::TableNextColumn();
-    ImGui::Text("%d", price.silver);
-    ImGui::TableNextColumn();
-    ImGui::Text("%d", price.copper);
-}
-
-void GW2TPHelper::renderPriceTable(const char *label, int item_id)
-{
-    static Price price;
-
-    if (ImGui::BeginTable("EctoTable", 4, ImGuiTableFlags_Borders))
+    if (ImGui::BeginTable(label_.c_str(), 4, ImGuiTableFlags_Borders))
     {
-        _head("Ectoplasm");
-        _row("Buy", prices["19721"]);
-        _row("Sell", prices["19721"]);
-        _row("Flip", prices["19721"]);
-
-        ImGui::EndTable();
-    }
-
-    if (ImGui::BeginTable("ScholarTable", 4, ImGuiTableFlags_Borders))
-    {
-        _head("Scholar Rune");
-        _row("Buy", prices["19721"]);
-        _row("Sell", prices["19721"]);
-        _row("Flip", prices["19721"]);
+        _head(label_.c_str());
+        const auto curr_fetched_kv = fetched_kv.find(item_id);
+        if (curr_fetched_kv != fetched_kv.end())
+        {
+            for (const auto &[key, value] : curr_fetched_kv->second)
+            {
+                int _value = -1;
+                // value.get<int>();
+                Price price;
+                price.copper = _value;
+                price.silver = _value;
+                price.gold = _value;
+                _row(key.c_str(), price);
+            }
+        }
 
         ImGui::EndTable();
     }
@@ -140,12 +177,13 @@ bool GW2TPHelper::refresh_prices()
     if (!loaded_prices)
     {
         loaded_prices = true;
+        fetched_kv.clear();
 
-        const auto price1 = GW2TPHelper::fetchPrice(19721); // Ectoplasm
-        prices["19721"] = price1;
-
-        const auto price2 = GW2TPHelper::fetchPrice(24836); // Ectoplasm
-        prices["24836"] = price2;
+        for (const auto command : API::COMMANDS_LIST)
+        {
+            auto curr_fetched_kv = GW2TPHelper::fetch_command(command);
+            fetched_kv[command] = curr_fetched_kv;
+        }
     }
 
     return loaded_prices;
