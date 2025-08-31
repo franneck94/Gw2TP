@@ -12,6 +12,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(nlohmann_json)
+
 add_library(third_party_libs STATIC)
 target_include_directories(third_party_libs PUBLIC
     ${imgui_SOURCE_DIR}
@@ -23,6 +29,11 @@ file(GLOB IMGUI_SOURCES
     ${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp
 )
 target_sources(third_party_libs PRIVATE ${IMGUI_SOURCES})
+
+add_library(httpclient STATIC
+    "httpclient/httpclient.h"
+    "httpclient/httpclient.cpp"
+)
 
 add_library(nexus INTERFACE
     "nexus/Nexus.h"
@@ -40,6 +51,7 @@ target_link_libraries(third_party_libs PRIVATE
     nexus
     mumble
     rtapi
+    nlohmann_json::nlohmann_json
 )
 
 add_library(Shared STATIC
@@ -74,6 +86,7 @@ target_link_libraries(GW2TP PRIVATE
     Shared
     Settings
     Render
+    httpclient
 )
 set_target_properties(GW2TP PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
@@ -94,4 +107,5 @@ target_link_libraries(GW2TP_App PRIVATE
     Shared
     Settings
     Render
+    httpclient
 )

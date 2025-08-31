@@ -15,7 +15,7 @@ struct Price
 class GW2TPHelper
 {
 private:
-    const std::string api_url = "https://gw2tp-production.up.railway.app/api/";
+    const std::wstring api_url = L"http://127.0.0.1:8000/api/";
 
     Price fetchPrice(int item_id);
 
