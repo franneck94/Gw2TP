@@ -63,6 +63,7 @@ int main(int, char **)
 
     // Main loop
     MSG msg;
+    Render render;
     ZeroMemory(&msg, sizeof(msg));
     while (msg.message != WM_QUIT)
     {
@@ -78,8 +79,9 @@ int main(int, char **)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        static GW2TPHelper helper;
-        helper.render();
+        render.requesting();
+        render.storing();
+        render.render();
 
         ImGui::Render();
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, NULL);

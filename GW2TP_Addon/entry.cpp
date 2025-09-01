@@ -116,12 +116,12 @@ void AddonRender()
         return;
     }
 
-    static GW2TPHelper helper;
-    helper.render();
+    static Render render;
+    render.requesting();
+    render.storing();
+    render.render();
 }
 
 void AddonOptions()
 {
-    static GW2TPHelper helper;
-    helper.render_options();
 }

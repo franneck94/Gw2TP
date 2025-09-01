@@ -81,37 +81,37 @@ static constexpr float TAX_RATE = 0.85f;
 class API
 {
 public:
-    static constexpr const WCHAR *GW2_COMMERCE_API_URL = L"https://api.guildwars2.com/v2/commerce/prices";
-    static constexpr const WCHAR *PRODUCTION_API_URL = L"https://gw2tp-production.up.railway.app/api/";
-    static constexpr const WCHAR *DEV_API_URL = L"http://127.0.0.1:8000/api/";
-    static constexpr const WCHAR *COMMAND_PREFIX = L"/gw2tp";
+    static const inline std::string GW2_COMMERCE_API_URL = "https://api.guildwars2.com/v2/commerce/prices";
+    static const inline std::string PRODUCTION_API_URL = "https://gw2tp-production.up.railway.app/api";
+    static const inline std::string DEV_API_URL = "http://127.0.0.1:8000/api";
+    static const inline std::string COMMAND_PREFIX = "/gw2tp";
 
-    static const inline std::set<std::wstring> COMMANDS_LIST = {
+    static const inline std::set<std::string> COMMANDS_LIST = {
         // runes
-        L"scholar_rune",
-        L"dragonhunter_rune",
-        L"guardian_rune",
+        "scholar_rune",
+        "dragonhunter_rune",
+        "guardian_rune",
         // relics
-        L"relic_of_fireworks",
-        L"relic_of_aristocracy",
-        L"relic_of_thief",
+        "relic_of_fireworks",
+        "relic_of_aristocracy",
+        "relic_of_thief",
         // rare / ecto
-        L"rare_weapon_craft",
-        L"rare_gear_salvage",
-        L"ecto",
+        "rare_weapon_craft",
+        "rare_gear_salvage",
+        "ecto",
         // gear
-        L"gear_salvage",
-        L"common_gear_salvage",
+        "gear_salvage",
+        "common_gear_salvage",
         // t5
-        L"t5_mats_buy",
-        L"t5_mats_sell",
+        "t5_mats_buy",
+        "t5_mats_sel",
         // forge
-        L"smybol_enh_forge",
-        L"loadstone_forge"};
+        "smybol_enh_forge",
+        "loadstone_forge"};
 
-    static const inline std::set<std::wstring> GENERAL_COMMANDS_LIST = {
-        L"profits",
-        L"get_price"};
+    static const inline std::set<std::string> GENERAL_COMMANDS_LIST = {
+        "profits",
+        "get_price"};
 };
 
 #endif // CONSTANTS_HPP
