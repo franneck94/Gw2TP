@@ -31,6 +31,7 @@ class ItemIDs:
     INTRICATE_TOTEM: int = 24299
     LARGE_FANG: int = 24356
     POTENT_VENOM_SAC: int = 24282
+    LARGE_SCALE: int = 24288
     # Other
     PILE_OF_LUCENT_CRYSTAL: int = 89271
     BARBED_THORN: int = 74202

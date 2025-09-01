@@ -17,7 +17,7 @@
 
 using json = nlohmann::json;
 
-static std::string get_clean_category_name(const std::string &input)
+static std::string get_clean_category_name(const std::string &input, const bool skip_last_two)
 {
     auto view = input | std::views::transform(
                             [newWord = true](char c) mutable
@@ -35,7 +35,10 @@ static std::string get_clean_category_name(const std::string &input)
                                 return static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
                             });
 
-    return {view.begin(), view.end()};
+    if (skip_last_two)
+        return {view.begin(), view.end() - 2};
+    else
+        return {view.begin(), view.end()};
 }
 
 static void remove_substring(std::string &str, const std::string &sub)
@@ -95,27 +98,61 @@ static void _row(const std::string name, const Price &price)
 
 static void _head(const std::string name)
 {
-    const auto transformed_name = get_clean_category_name(name);
+    const auto transformed_name = get_clean_category_name(name, false);
 
     ImGui::TableSetupColumn(transformed_name.c_str(), ImGuiTableColumnFlags_WidthFixed, NAME_COLUMN_WIDTH_PX);
-    ImGui::TableSetupColumn("Gold", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
-    ImGui::TableSetupColumn("Silver", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
-    ImGui::TableSetupColumn("Copper", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
+    ImGui::TableSetupColumn("G", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
+    ImGui::TableSetupColumn("S", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
+    ImGui::TableSetupColumn("C", ImGuiTableColumnFlags_WidthFixed, NUMBER_COLUMN_WIDTH_PX);
     ImGui::TableHeadersRow();
 }
 
 static void _get_row_data(const std::map<std::string, int> &kv)
 {
-    for (size_t i = 0; i < kv.size(); i += 3)
+    for (size_t i = 0; i < kv.size() - 2; i += 3)
     {
         auto it = std::next(kv.begin(), i);
-        auto name = it->first;
-        remove_substring(name, "_c");
-        const auto transformed_name = get_clean_category_name(name);
-        const auto gold = std::next(it, 0)->second;
-        const auto silver = std::next(it, 1)->second;
-        const auto copper = std::next(it, 2)->second;
-        _row(transformed_name, Price{gold, silver, copper});
+
+        auto name0 = std::next(it, 0)->first;
+        auto name1 = std::next(it, 1)->first;
+        auto name2 = std::next(it, 2)->first;
+
+        const auto val0 = std::next(it, 0)->second;
+        const auto val1 = std::next(it, 1)->second;
+        const auto val2 = std::next(it, 2)->second;
+
+        const auto gold = name0.find("_g") != std::string::npos ? val0 : name1.find("_g") != std::string::npos ? val1
+                                                                                                               : val2;
+        const auto silver = name0.find("_s") != std::string::npos ? val0 : name1.find("_s") != std::string::npos ? val1
+                                                                                                                 : val2;
+        const auto copper = name0.find("_c") != std::string::npos ? val0 : name1.find("_c") != std::string::npos ? val1
+                                                                                                                 : val2;
+
+        const auto transformed_name = get_clean_category_name(name0, true);
+
+        _row(transformed_name, Price{
+                                   .copper = copper,
+                                   .silver = silver,
+                                   .gold = gold,
+                               });
+    }
+}
+
+static void _get_row_data_ecto(const std::map<std::string, int> &kv)
+{
+    for (size_t i = 0; i < kv.size(); i += 1)
+    {
+        auto it = std::next(kv.begin(), i);
+        auto name = std::next(it, 0)->first;
+        const auto val = std::next(it, 0)->second;
+
+        const auto transformed_name = get_clean_category_name(name, true);
+
+        _row(transformed_name, Price{
+                                   .copper = 0,
+                                   .silver = 0,
+                                   .gold = 0,
+                               });
     }
 }
 
@@ -140,7 +177,6 @@ void Render::render_table(std::string request_id)
             request_id == "relic_of_thief" ||
             request_id == "rare_weapon_craft" ||
             request_id == "rare_gear_salvage" ||
-            request_id == "ecto" ||
             request_id == "gear_salvage" ||
             request_id == "common_gear_salvage" ||
             request_id == "t5_mats_buy" ||
@@ -149,10 +185,9 @@ void Render::render_table(std::string request_id)
             request_id == "get_price" ||
             request_id == "smybol_enh_forge" ||
             request_id == "loadstone_forge" ||
-            request_id == "thumbnail.height")
+            request_id == "ecto")
         {
-            if (kv.size() % 3 == 0)
-                _get_row_data(kv);
+            _get_row_data(kv);
         }
         else
         {
@@ -172,6 +207,11 @@ void Render::requesting()
 
         for (auto command : API::COMMANDS_LIST)
         {
+            if (command == "ecto")
+            {
+                command = "price?item_id=19721";
+            }
+
             const auto wstr_url = std::wstring(API::PRODUCTION_API_URL.begin(), API::PRODUCTION_API_URL.end()) + L"/" + std::wstring(command.begin(), command.end());
             auto future = HTTPClient::GetRequestAsync(wstr_url);
             auto req = Request(std::move(command), std::move(future));
@@ -196,9 +236,15 @@ void Render::storing()
     {
         if (it->future.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
         {
-            const auto request_id = it->request_id;
+            auto request_id = it->request_id;
             const auto request = it->future.get();
             auto j = json::parse(request);
+
+            if (request_id == "price?item_id=19721")
+            {
+                int i = 2;
+                request_id = "ecto";
+            }
 
             auto kv = _collect_json(j, "");
 
@@ -240,7 +286,7 @@ void Render::render()
         auto idx = 0U;
         for (const auto command : API::COMMANDS_LIST)
         {
-            const auto child_size = ImVec2(NAME_COLUMN_WIDTH_PX + 3 * NUMBER_COLUMN_WIDTH_PX + 100.0F, 100);
+            const auto child_size = ImVec2(NAME_COLUMN_WIDTH_PX + 3 * NUMBER_COLUMN_WIDTH_PX + 100.0F, 150.0F);
             ImGui::BeginChild(("tableChild" + std::to_string(idx)).c_str(), child_size, false, ImGuiWindowFlags_AlwaysAutoResize);
             render_table(command);
             ImGui::EndChild();

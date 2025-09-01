@@ -57,8 +57,8 @@ extern "C" __declspec(dllexport) AddonDefinition *GetAddonDef()
     AddonDef.Version.Minor = MINOR;
     AddonDef.Version.Build = BUILD;
     AddonDef.Version.Revision = REVISION;
-    AddonDef.Author = "Franneck";
-    AddonDef.Description = "...";
+    AddonDef.Author = "Franneck.1274";
+    AddonDef.Description = "API Fetch from https://gw2tp-production.up.railway.app/";
     AddonDef.Load = AddonLoad;
     AddonDef.Unload = AddonUnload;
     AddonDef.Flags = EAddonFlags_None;

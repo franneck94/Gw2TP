@@ -280,6 +280,7 @@ def get_t5_mats_buy() -> JSONResponse:
                 ItemIDs.INTRICATE_TOTEM,
                 ItemIDs.LARGE_FANG,
                 ItemIDs.POTENT_VENOM_SAC,
+                ItemIDs.LARGE_SCALE,
             ],
         )
     except Exception as e:
@@ -291,6 +292,7 @@ def get_t5_mats_buy() -> JSONResponse:
     intricate_totem_buy = fetched_data[ItemIDs.INTRICATE_TOTEM]["buy"]
     large_fang_buy = fetched_data[ItemIDs.LARGE_FANG]["buy"]
     venom_sac_buy = fetched_data[ItemIDs.POTENT_VENOM_SAC]["buy"]
+    large_scale_buy = fetched_data[ItemIDs.LARGE_SCALE]["buy"]
 
     data = {
         **get_sub_dct("large_claw", large_claw_buy),
@@ -299,6 +301,7 @@ def get_t5_mats_buy() -> JSONResponse:
         **get_sub_dct("intricate_totem", intricate_totem_buy),
         **get_sub_dct("large_fang", large_fang_buy),
         **get_sub_dct("potent_venom", venom_sac_buy),
+        **get_sub_dct("large_scale_buy", large_scale_buy),
     }
 
     return JSONResponse(content=jsonable_encoder(data))

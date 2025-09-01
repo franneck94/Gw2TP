@@ -146,6 +146,7 @@ T5_MATS_BUY_NAMES = [
     "intricate_totem",
     "large_fang",
     "potent_venom",
+    "large_scale_buy",
 ]
 T5_MATS_BUY_TABLE = get_table_html(
     price_names=T5_MATS_BUY_NAMES,

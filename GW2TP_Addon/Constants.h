@@ -108,10 +108,6 @@ public:
         // forge
         "smybol_enh_forge",
         "loadstone_forge"};
-
-    static const inline std::set<std::string> GENERAL_COMMANDS_LIST = {
-        "profits",
-        "get_price"};
 };
 
 #endif // CONSTANTS_HPP
