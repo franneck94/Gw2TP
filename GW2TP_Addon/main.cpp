@@ -79,8 +79,8 @@ int main(int, char **)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        render.requesting();
-        render.storing();
+        render.data.requesting();
+        render.data.storing();
         render.render();
 
         ImGui::Render();

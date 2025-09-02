@@ -81,10 +81,7 @@ static constexpr float TAX_RATE = 0.85f;
 class API
 {
 public:
-    static const inline std::string GW2_COMMERCE_API_URL = "https://api.guildwars2.com/v2/commerce/prices";
-    static const inline std::string PRODUCTION_API_URL = "https://gw2tp-production.up.railway.app/api";
-    static const inline std::string DEV_API_URL = "http://127.0.0.1:8000/api";
-    static const inline std::string COMMAND_PREFIX = "/gw2tp";
+    static const inline std::wstring PRODUCTION_API_URL = L"https://gw2tp-production.up.railway.app/api";
 
     static const inline std::set<std::string> COMMANDS_LIST = {
         // runes

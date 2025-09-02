@@ -51,52 +51,18 @@ target_link_libraries(third_party_libs PRIVATE
     nexus
     mumble
     rtapi
+    httpclient
     nlohmann_json::nlohmann_json
 )
 
-add_library(Shared STATIC
+add_library(first_party_libs STATIC
     "Shared.cpp"
-)
-target_link_libraries(Shared PRIVATE
-    third_party_libs
-)
-
-add_library(Settings STATIC
     "Settings.cpp"
-)
-target_link_libraries(Settings PRIVATE
-    third_party_libs
-    Shared
-)
-
-add_library(Render STATIC
     "Render.cpp"
+    "Data.cpp"
 )
-target_link_libraries(Render PRIVATE
+target_link_libraries(first_party_libs PRIVATE
     third_party_libs
-    Shared
-    Settings
-)
-
-add_library(GW2TP SHARED
-    "entry.cpp"
-)
-target_link_libraries(GW2TP PRIVATE
-    third_party_libs
-    Shared
-    Settings
-    Render
-    httpclient
-)
-set_target_properties(GW2TP PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release"
-)
-add_custom_command(TARGET GW2TP POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/bin/debug"
-    "D:/GW2/addons"
-    COMMENT "Copying debug files to GW2 addons directory"
 )
 
 add_executable(GW2TP_App
@@ -104,8 +70,23 @@ add_executable(GW2TP_App
 )
 target_link_libraries(GW2TP_App PRIVATE
     third_party_libs
-    Shared
-    Settings
-    Render
-    httpclient
+    first_party_libs
+)
+
+add_library(GW2TP SHARED
+    "entry.cpp"
+)
+target_link_libraries(GW2TP PRIVATE
+    third_party_libs
+    first_party_libs
+)
+set_target_properties(GW2TP PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/bin/debug"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/bin/release"
+)
+add_custom_command(TARGET GW2TP POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/bin/$<CONFIG>"
+        "D:/GW2/addons"
+    COMMENT "Copying $<CONFIG> files to GW2 addons directory"
 )
