@@ -9,6 +9,7 @@ class Render
 public:
     constexpr static auto NAME_COLUMN_WIDTH_PX = 140.0F;
     constexpr static auto NUMBER_COLUMN_WIDTH_PX = 25.0F;
+    constexpr static auto OFFSET_PX = 40.0F;
 
     Data data;
 

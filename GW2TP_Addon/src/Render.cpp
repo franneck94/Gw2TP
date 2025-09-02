@@ -186,7 +186,7 @@ void Render::render()
         auto idx = 0U;
         for (const auto command : API::COMMANDS_LIST)
         {
-            const auto child_size = ImVec2(NAME_COLUMN_WIDTH_PX + 3 * NUMBER_COLUMN_WIDTH_PX + 30.0F, 150.0F);
+            const auto child_size = ImVec2(NAME_COLUMN_WIDTH_PX + 3 * NUMBER_COLUMN_WIDTH_PX + OFFSET_PX, 150.0F);
             ImGui::BeginChild(("tableChild" + std::to_string(idx)).c_str(), child_size, false, ImGuiWindowFlags_AlwaysAutoResize);
             render_table(command);
             ImGui::EndChild();

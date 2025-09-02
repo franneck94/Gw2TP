@@ -54,19 +54,25 @@ target_link_libraries(third_party_libs PRIVATE
     httpclient
     nlohmann_json::nlohmann_json
 )
+target_include_directories(third_party_libs PUBLIC
+    "."
+)
 
 add_library(first_party_libs STATIC
-    "Shared.cpp"
-    "Settings.cpp"
-    "Render.cpp"
-    "Data.cpp"
+    "src/Shared.cpp"
+    "src/Settings.cpp"
+    "src/Render.cpp"
+    "src/Data.cpp"
+)
+target_include_directories(first_party_libs PUBLIC
+    "src"
 )
 target_link_libraries(first_party_libs PRIVATE
     third_party_libs
 )
 
 add_executable(GW2TP_App
-    "main.cpp"
+    "src/main.cpp"
 )
 target_link_libraries(GW2TP_App PRIVATE
     third_party_libs
@@ -74,7 +80,7 @@ target_link_libraries(GW2TP_App PRIVATE
 )
 
 add_library(GW2TP SHARED
-    "entry.cpp"
+    "src/entry.cpp"
 )
 target_link_libraries(GW2TP PRIVATE
     third_party_libs

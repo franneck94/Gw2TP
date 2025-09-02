@@ -9,7 +9,6 @@
 #include <Windows.h>
 
 #include "imgui.h"
-#include "imgui_extensions.h"
 #include "mumble/Mumble.h"
 #include "nexus/Nexus.h"
 #include "rtapi/RTAPI.hpp"
