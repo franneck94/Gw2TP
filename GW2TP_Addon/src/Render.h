@@ -12,9 +12,11 @@ public:
     constexpr static auto OFFSET_PX = 40.0F;
 
     Data data;
-    bool do_render = true;
+    bool &show_window;
 
     void render();
+
+    Render(bool &show_window) : show_window(show_window) {}
 
 private:
     void render_table(std::string request_id);

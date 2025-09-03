@@ -161,10 +161,10 @@ void Render::render_table(std::string request_id)
 
 void Render::render()
 {
-    if (!do_render)
+    if (!show_window)
         return;
 
-    if (ImGui::Begin("GW2TP", &do_render))
+    if (ImGui::Begin("GW2TP", &show_window))
     {
         auto *btn_label = "Refresh Data";
         center_next_element(btn_label);

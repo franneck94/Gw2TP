@@ -17,6 +17,7 @@
 #include "Settings.h"
 #include "Shared.h"
 #include "Version.h"
+#include "resource.h"
 
 namespace dx = DirectX;
 
@@ -29,6 +30,25 @@ HMODULE hSelf;
 AddonDefinition AddonDef{};
 std::filesystem::path AddonPath;
 std::filesystem::path SettingsPath;
+
+void ToggleShowWindowLogProofs(const char *keybindIdentifier)
+{
+    Settings::ShowWindow = !Settings::ShowWindow;
+    Settings::Settings[SHOW_WINDOW] = Settings::ShowWindow;
+    Settings::Save(SettingsPath);
+}
+
+void RegisterQuickAccessShortcut()
+{
+    APIDefs->Log(ELogLevel_DEBUG, ADDON_NAME, "Registering GW2TP quick access shortcut");
+    APIDefs->AddShortcut("SHORTCUT_LOG_PROOFS", "TEX_GW2TP_NORMAL", "TEX_LOG_HOVER", KB_TOGGLE_GW2TP, "Toggle GW2TP Window");
+}
+
+void DeregisterQuickAccessShortcut()
+{
+    APIDefs->Log(ELogLevel_DEBUG, ADDON_NAME, "Deregistering GW2TP quick access shortcut");
+    APIDefs->RemoveShortcut("SHORTCUT_LOG_PROOFS");
+}
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
@@ -96,6 +116,11 @@ void AddonLoad(AddonAPI *aApi)
     SettingsPath = APIDefs->GetAddonDirectory("GW2TP/settings.json");
     std::filesystem::create_directory(AddonPath);
     Settings::Load(SettingsPath);
+
+    APIDefs->GetTextureOrCreateFromResource("TEX_GW2TP_NORMAL", IDB_GW2TP_NORMAL, hSelf);
+    APIDefs->GetTextureOrCreateFromResource("TEX_GW2TP_HOVER", IDB_GW2TP_HOVER, hSelf);
+    APIDefs->RegisterKeybindWithString(KB_TOGGLE_GW2TP, ToggleShowWindowLogProofs, "(null)");
+    RegisterQuickAccessShortcut();
 }
 void AddonUnload()
 {
@@ -106,17 +131,19 @@ void AddonUnload()
     RTAPIData = nullptr;
 
     Settings::Save(SettingsPath);
+
+    DeregisterQuickAccessShortcut();
+    APIDefs->DeregisterKeybind(KB_TOGGLE_GW2TP);
 }
 
 void AddonRender()
 {
-    if (!NexusLink || !NexusLink->IsGameplay)
+    if ((!NexusLink) || (!NexusLink->IsGameplay) || (!Settings::ShowWindow))
     {
         return;
     }
 
-    static Render render;
-    render.do_render = true;
+    static Render render{Settings::ShowWindow};
     render.data.requesting();
     render.data.storing();
     render.render();

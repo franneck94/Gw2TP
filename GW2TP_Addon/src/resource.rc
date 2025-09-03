@@ -49,9 +49,9 @@ END
 // PNG
 //
 
-IDB_LOG_HOVER           PNG                     "resources\\Log_Hover.png"
+IDB_GW2TP_HOVER           PNG                     "resources\\GW2TP_Hover.png"
 
-IDB_LOG_NORMAL          PNG                     "resources\\Log_Normal.png"
+IDB_GW2TP_NORMAL         PNG                     "resources\\GW2TP_Normal.png"
 
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
