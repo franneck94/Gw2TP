@@ -63,7 +63,9 @@ add_library(first_party_libs STATIC
     "src/Settings.cpp"
     "src/Render.cpp"
     "src/Data.cpp"
+    "src/resource.rc"
 )
+set_source_files_properties("src/resource.rc" PROPERTIES LANGUAGE RC)
 target_include_directories(first_party_libs PUBLIC
     "src"
 )
