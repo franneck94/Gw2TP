@@ -12,6 +12,7 @@ public:
     constexpr static auto OFFSET_PX = 40.0F;
 
     Data data;
+    bool do_render = true;
 
     void render();
 

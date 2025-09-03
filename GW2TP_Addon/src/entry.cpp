@@ -116,6 +116,7 @@ void AddonRender()
     }
 
     static Render render;
+    render.do_render = true;
     render.data.requesting();
     render.data.storing();
     render.render();

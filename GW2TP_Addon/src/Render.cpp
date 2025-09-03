@@ -90,9 +90,12 @@ namespace
             const auto val1 = std::next(it, 1)->second;
             const auto val2 = std::next(it, 2)->second;
 
-            const auto gold = name0.ends_with("_g") ? val0 : name1.ends_with("_g") ? val1 : val2;
-            const auto silver = name0.ends_with("_s") ? val0 : name1.ends_with("_s") ? val1 : val2;
-            const auto copper = name0.ends_with("_c") ? val0 : name1.ends_with("_c") ? val1 : val2;
+            const auto gold = name0.ends_with("_g") ? val0 : name1.ends_with("_g") ? val1
+                                                                                   : val2;
+            const auto silver = name0.ends_with("_s") ? val0 : name1.ends_with("_s") ? val1
+                                                                                     : val2;
+            const auto copper = name0.ends_with("_c") ? val0 : name1.ends_with("_c") ? val1
+                                                                                     : val2;
 
             const auto transformed_name = get_clean_category_name(name0, true);
 
@@ -158,7 +161,10 @@ void Render::render_table(std::string request_id)
 
 void Render::render()
 {
-    if (ImGui::Begin("GW2TP"))
+    if (!do_render)
+        return;
+
+    if (ImGui::Begin("GW2TP", &do_render))
     {
         auto *btn_label = "Refresh Data";
         center_next_element(btn_label);
