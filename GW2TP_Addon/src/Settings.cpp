@@ -4,7 +4,7 @@
 #include "Settings.h"
 #include "Shared.h"
 
-const char *IS_VISIBLE = "IsVisible";
+const char *SHOW_WINDOW = "ShowWindow";
 
 namespace Settings
 {
@@ -35,9 +35,9 @@ namespace Settings
         Settings::Mutex.unlock();
 
         /* Widget */
-        if (!Settings[IS_VISIBLE].is_null())
+        if (!Settings[SHOW_WINDOW].is_null())
         {
-            Settings[IS_VISIBLE].get_to<bool>(IsVisible);
+            Settings[SHOW_WINDOW].get_to<bool>(ShowWindow);
         }
     }
 
@@ -52,8 +52,5 @@ namespace Settings
         Settings::Mutex.unlock();
     }
 
-    /* Global */
-
-    /* Widget */
-    bool IsVisible = true;
+    bool ShowWindow = true;
 }

@@ -10,7 +10,7 @@ using json = nlohmann::json;
 #include "nexus/Nexus.h"
 #include "rtapi/RTAPI.hpp"
 
-extern const char *IS_VISIBLE;
+extern const char *SHOW_WINDOW;
 
 namespace Settings
 {
@@ -22,7 +22,7 @@ namespace Settings
     /* Saves the settings. */
     void Save(std::filesystem::path aPath);
 
-    extern bool IsVisible;
+    extern bool ShowWindow;
 }
 
 #endif
