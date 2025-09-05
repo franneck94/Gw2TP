@@ -54,7 +54,7 @@ public:
         "intricate_totem",
         "large_fang",
         "potent_venom",
-        "large_scale_buy",
+        "large_scale",
     };
 
     static const inline std::array<const char *, 4> COMMON_GEAR_NAMES = {
