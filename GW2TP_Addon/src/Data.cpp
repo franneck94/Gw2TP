@@ -9,6 +9,7 @@
 
 #include "Constants.h"
 #include "Data.h"
+#include "API.h"
 
 using json = nlohmann::json;
 

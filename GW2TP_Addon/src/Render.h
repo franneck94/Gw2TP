@@ -19,5 +19,5 @@ public:
     Render(bool &show_window) : show_window(show_window) {}
 
 private:
-    void render_table(std::string request_id);
+    int render_table(const std::string &request_id);
 };

@@ -63,7 +63,7 @@ int main(int, char **)
 
     // Main loop
     MSG msg;
-    Render render;
+    Render render(show_demo_window);
     ZeroMemory(&msg, sizeof(msg));
     while (msg.message != WM_QUIT)
     {

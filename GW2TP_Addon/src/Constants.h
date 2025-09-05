@@ -78,33 +78,4 @@ public:
 
 static constexpr float TAX_RATE = 0.85f;
 
-class API
-{
-public:
-    static const inline std::wstring PRODUCTION_API_URL = L"https://gw2tp-production.up.railway.app/api";
-
-    static const inline std::set<std::string> COMMANDS_LIST = {
-        // runes
-        "scholar_rune",
-        "dragonhunter_rune",
-        "guardian_rune",
-        // relics
-        "relic_of_fireworks",
-        "relic_of_aristocracy",
-        "relic_of_thief",
-        // rare / ecto
-        "rare_weapon_craft",
-        "rare_gear_salvage",
-        "ecto",
-        // gear
-        "gear_salvage",
-        "common_gear_salvage",
-        // t5
-        "t5_mats_buy",
-        "t5_mats_sel",
-        // forge
-        "smybol_enh_forge",
-        "loadstone_forge"};
-};
-
 #endif // CONSTANTS_HPP

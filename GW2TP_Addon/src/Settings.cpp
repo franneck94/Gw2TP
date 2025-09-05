@@ -11,9 +11,9 @@ namespace Settings
     std::mutex Mutex;
     json Settings = json::object();
 
-    void Load(std::filesystem::path aPath)
+    void Load(std::filesystem::path SettingsPath)
     {
-        if (!std::filesystem::exists(aPath))
+        if (!std::filesystem::exists(SettingsPath))
         {
             return;
         }
@@ -22,7 +22,7 @@ namespace Settings
         {
             try
             {
-                std::ifstream file(aPath);
+                std::ifstream file(SettingsPath);
                 Settings = json::parse(file);
                 file.close();
             }
@@ -41,15 +41,22 @@ namespace Settings
         }
     }
 
-    void Save(std::filesystem::path aPath)
+    void Save(std::filesystem::path SettingsPath)
     {
         Settings::Mutex.lock();
         {
-            std::ofstream file(aPath);
+            std::ofstream file(SettingsPath);
             file << Settings.dump(1, '\t') << std::endl;
             file.close();
         }
         Settings::Mutex.unlock();
+    }
+
+    void ToggleShowWindow(std::filesystem::path SettingsPath)
+    {
+        ShowWindow = !ShowWindow;
+        Settings[SHOW_WINDOW] = ShowWindow;
+        Save(SettingsPath);
     }
 
     bool ShowWindow = true;

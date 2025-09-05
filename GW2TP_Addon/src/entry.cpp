@@ -30,12 +30,11 @@ HMODULE hSelf;
 AddonDefinition AddonDef{};
 std::filesystem::path AddonPath;
 std::filesystem::path SettingsPath;
+Render render{Settings::ShowWindow};
 
 void ToggleShowWindowLogProofs(const char *keybindIdentifier)
 {
-    Settings::ShowWindow = !Settings::ShowWindow;
-    Settings::Settings[SHOW_WINDOW] = Settings::ShowWindow;
-    Settings::Save(SettingsPath);
+    Settings::ToggleShowWindow(SettingsPath);
 }
 
 void RegisterQuickAccessShortcut()
@@ -93,6 +92,8 @@ void OnAddonLoaded(int *aSignature)
     {
         return;
     }
+
+    Settings::Load(SettingsPath);
 }
 void OnAddonUnloaded(int *aSignature)
 {
@@ -143,7 +144,6 @@ void AddonRender()
         return;
     }
 
-    static Render render{Settings::ShowWindow};
     render.data.requesting();
     render.data.storing();
     render.render();

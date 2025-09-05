@@ -7,6 +7,7 @@
 #include "httpclient/httpclient.h"
 #include "imgui.h"
 
+#include "API.h"
 #include "Constants.h"
 #include "Data.h"
 #include "Render.h"
@@ -70,8 +71,31 @@ namespace
         ImGui::TableHeadersRow();
     }
 
-    void get_row_data(const std::map<std::string, int> &kv)
+    template <size_t N>
+    void _get_ordered_row_data(const std::array<const char *, N> &keys, const std::vector<std::pair<std::string, Price>> &rows)
     {
+        for (const auto &key : keys)
+        {
+            auto it = std::find_if(rows.begin(), rows.end(), [&key](const auto &pair)
+                                   { return pair.first == key; });
+            if (it != rows.end())
+            {
+                const auto name = get_clean_category_name(it->first, false);
+                const auto price = it->second;
+
+                add_row(name, price);
+            }
+            else
+            {
+                assert(false);
+            }
+        }
+    }
+
+    void get_row_data(const std::map<std::string, int> &kv, const std::string &request_id)
+    {
+        auto rows = std::vector<std::pair<std::string, Price>>{};
+
         for (size_t i = 0; i < kv.size() - 2; i += 3)
         {
             auto it = std::next(kv.begin(), i);
@@ -97,32 +121,87 @@ namespace
             const auto copper = name0.ends_with("_c") ? val0 : name1.ends_with("_c") ? val1
                                                                                      : val2;
 
-            const auto transformed_name = get_clean_category_name(name0, true);
+            const auto transformed_name = std::string{name0.substr(0, name0.size() - 2)};
 
-            add_row(transformed_name, Price{
-                                          .copper = copper,
-                                          .silver = silver,
-                                          .gold = gold,
-                                      });
+            rows.emplace_back(transformed_name, Price{
+                                                    .copper = copper,
+                                                    .silver = silver,
+                                                    .gold = gold,
+                                                });
         }
-    }
 
-    void get_row_data_ecto(const std::map<std::string, int> &kv)
-    {
-        for (size_t i = 0; i < kv.size(); i += 1)
+        // runes
+        if (request_id == "scholar_rune")
         {
-            auto it = std::next(kv.begin(), i);
-            auto name = std::next(it, 0)->first;
-            const auto val = std::next(it, 0)->second;
-
-            const auto transformed_name = get_clean_category_name(name, true);
-
+            _get_ordered_row_data(API::SCHOLAR_RUNE_NAMES, rows);
+        }
+        else if (request_id == "dragonhunter_rune")
+        {
+            _get_ordered_row_data(API::DRAGONHUNTER_RUNE_NAMES, rows);
+        }
+        else if (request_id == "guardian_rune")
+        {
+            _get_ordered_row_data(API::GUARDIAN_RUNE_NAMES, rows);
+        }
+        // relics
+        else if (request_id == "relic_of_fireworks")
+        {
+            _get_ordered_row_data(API::FIREWORKS_NAMES, rows);
+        }
+        else if (request_id == "relic_of_thief")
+        {
+            _get_ordered_row_data(API::THIEF_NAMES, rows);
+        }
+        else if (request_id == "relic_of_aristocracy")
+        {
+            _get_ordered_row_data(API::ARISTOCRACY_NAMES, rows);
+        }
+        // gear
+        if (request_id == "rare_weapon_craft")
+        {
+            _get_ordered_row_data(API::RARE_WEAPON_CRAFT_NAMES, rows);
+        }
+        else if (request_id == "rare_gear_salvage")
+        {
+            _get_ordered_row_data(API::RARE_GEAR_NAMES, rows);
+        }
+        else if (request_id == "ecto")
+        {
+            for (const auto &[name, price] : rows)
+            {
+                add_row(name, price);
+            }
+        }
+        // gear
+        else if (request_id == "gear_salvage")
+        {
+            _get_ordered_row_data(API::GEAR_SALVAGE_NAMES, rows);
+        }
+        else if (request_id == "common_gear_salvage")
+        {
+            _get_ordered_row_data(API::COMMON_GEAR_NAMES, rows);
+        }
+        // t5
+        else if (request_id == "t5_mats_buy")
+        {
+            _get_ordered_row_data(API::MATS_CRAFT_COMPARE_NAMES, rows);
+        }
+        else if (request_id == "t5_mats_sell")
+        {
             // TODO
-            add_row(transformed_name, Price{
-                                          .copper = 0,
-                                          .silver = 0,
-                                          .gold = 0,
-                                      });
+        }
+        // forge
+        else if (request_id == "smybol_enh_forge")
+        {
+            _get_ordered_row_data(API::FORGE_ENH_NAMES, rows);
+        }
+        else if (request_id == "loadstone_forge")
+        {
+            _get_ordered_row_data(API::LOADSTONE_NAMES, rows);
+        }
+        else
+        {
+            int i = 2;
         }
     }
 
@@ -134,21 +213,21 @@ namespace
     }
 }
 
-void Render::render_table(std::string request_id)
+int Render::render_table(const std::string &request_id)
 {
     const auto &kv = data.api_data[request_id];
     if (API::COMMANDS_LIST.find(request_id) == API::COMMANDS_LIST.end() || data.api_data.find(request_id) == data.api_data.end() || data.api_data[request_id].empty())
-        return;
+        return -1;
 
     ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableColumnFlags_NoSort;
-    ImGui::SetNextItemWidth(400);
+    ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionWidth() * 0.5f);
     if (ImGui::BeginTable(("Prices##" + request_id).c_str(), 4, flags))
     {
         add_header(request_id);
 
         if (API::COMMANDS_LIST.find(request_id) != API::COMMANDS_LIST.end())
         {
-            get_row_data(kv);
+            get_row_data(kv, request_id);
         }
         else
         {
@@ -157,6 +236,8 @@ void Render::render_table(std::string request_id)
 
         ImGui::EndTable();
     }
+
+    return static_cast<int>(ImGui::GetCursorPosY());
 }
 
 void Render::render()
@@ -192,12 +273,14 @@ void Render::render()
         auto idx = 0U;
         for (const auto command : API::COMMANDS_LIST)
         {
-            const auto child_size = ImVec2(NAME_COLUMN_WIDTH_PX + 3 * NUMBER_COLUMN_WIDTH_PX + OFFSET_PX, 150.0F);
+            const auto child_size = ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 150.0F);
             ImGui::BeginChild(("tableChild" + std::to_string(idx)).c_str(), child_size, false, ImGuiWindowFlags_AlwaysAutoResize);
-            render_table(command);
+            const auto table_height = render_table(command);
             ImGui::EndChild();
-            if (ImGui::GetWindowSize().x > 1.5f * child_size.x && idx % 2 == 0)
+            if ((ImGui::GetWindowSize().x > 400.0F) && (idx % 2 == 0))
                 ImGui::SameLine();
+            else
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + table_height - 150.0F);
             ++idx;
         }
     }

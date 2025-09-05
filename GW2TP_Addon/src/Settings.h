@@ -17,10 +17,10 @@ namespace Settings
     extern std::mutex Mutex;
     extern json Settings;
 
-    /* Loads the settings. */
-    void Load(std::filesystem::path aPath);
-    /* Saves the settings. */
-    void Save(std::filesystem::path aPath);
+    void Load(std::filesystem::path SettingsPath);
+    void Save(std::filesystem::path SettingsPath);
+
+    void ToggleShowWindow(std::filesystem::path SettingsPath);
 
     extern bool ShowWindow;
 }
