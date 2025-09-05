@@ -85,10 +85,6 @@ namespace
 
                 add_row(name, price);
             }
-            else
-            {
-                assert(false);
-            }
         }
     }
 
@@ -229,10 +225,6 @@ int Render::render_table(const std::string &request_id)
         {
             get_row_data(kv, request_id);
         }
-        else
-        {
-            assert(false);
-        }
 
         ImGui::EndTable();
     }
@@ -270,17 +262,17 @@ void Render::render()
             return;
         }
 
+        const auto large_window = ImGui::GetWindowSize().x > 400.0F;
+        const auto child_size = ImVec2(ImGui::GetWindowContentRegionWidth() * (large_window ? 0.5f : 1.0F), 150.0F);
+
         auto idx = 0U;
         for (const auto command : API::COMMANDS_LIST)
         {
-            const auto child_size = ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 150.0F);
             ImGui::BeginChild(("tableChild" + std::to_string(idx)).c_str(), child_size, false, ImGuiWindowFlags_AlwaysAutoResize);
             const auto table_height = render_table(command);
             ImGui::EndChild();
-            if ((ImGui::GetWindowSize().x > 400.0F) && (idx % 2 == 0))
+            if ((large_window) && (idx % 2 == 0))
                 ImGui::SameLine();
-            else
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + table_height - 150.0F);
             ++idx;
         }
     }

@@ -117,6 +117,7 @@ void AddonLoad(AddonAPI *aApi)
     SettingsPath = APIDefs->GetAddonDirectory("GW2TP/settings.json");
     std::filesystem::create_directory(AddonPath);
     Settings::Load(SettingsPath);
+    Settings::ShowWindow = false;
 
     APIDefs->GetTextureOrCreateFromResource("TEX_GW2TP_NORMAL", IDB_GW2TP_NORMAL, hSelf);
     APIDefs->GetTextureOrCreateFromResource("TEX_GW2TP_HOVER", IDB_GW2TP_HOVER, hSelf);
