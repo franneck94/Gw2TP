@@ -56,9 +56,9 @@ void Data::requesting()
         for (auto command : API::COMMANDS_LIST)
         {
             if (command == "ecto")
-            {
                 command = "price?item_id=19721";
-            }
+            else if (command == "rare_gear")
+                command = "price?item_id=83008";
 
             const auto wstr_url = API::PRODUCTION_API_URL + L"/" + std::wstring(command.begin(), command.end());
             auto future = HTTPClient::GetRequestAsync(wstr_url);
@@ -99,9 +99,9 @@ void Data::storing()
             }
 
             if (request_id == "price?item_id=19721")
-            {
                 request_id = "ecto";
-            }
+            if (request_id == "price?item_id=83008")
+                request_id = "rare_gear";
 
             auto kv = _collect_json(j, "");
 

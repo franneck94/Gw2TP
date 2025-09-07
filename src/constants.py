@@ -96,7 +96,7 @@ class API:
         "common_gear_salvage",
         # t5
         "t5_mats_buy",
-        "t5_mats_sell",
+        "mats_craft_compare",
         # general
         "profits",
         "get_price",

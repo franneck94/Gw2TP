@@ -788,8 +788,8 @@ def get_profits() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/t5_mats_sell")
-def get_t5_mats_sell() -> JSONResponse:
+@fastapi_app.get("/mats_craft_compare")
+def get_mats_craft_compare() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [

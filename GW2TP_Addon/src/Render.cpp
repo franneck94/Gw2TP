@@ -69,6 +69,16 @@ namespace
         ImGui::TableSetupColumn("S", ImGuiTableColumnFlags_WidthFixed, Render::NUMBER_COLUMN_WIDTH_PX);
         ImGui::TableSetupColumn("C", ImGuiTableColumnFlags_WidthFixed, Render::NUMBER_COLUMN_WIDTH_PX);
         ImGui::TableHeadersRow();
+
+        // Check for hover and double-click after headers are rendered
+        if (ImGui::TableGetColumnFlags(0) & ImGuiTableColumnFlags_IsHovered && ImGui::IsMouseDoubleClicked(0))
+            ImGui::SetClipboardText(transformed_name.c_str());
+        if (ImGui::TableGetColumnFlags(1) & ImGuiTableColumnFlags_IsHovered && ImGui::IsMouseDoubleClicked(0))
+            ImGui::SetClipboardText(transformed_name.c_str());
+        if (ImGui::TableGetColumnFlags(2) & ImGuiTableColumnFlags_IsHovered && ImGui::IsMouseDoubleClicked(0))
+            ImGui::SetClipboardText(transformed_name.c_str());
+        if (ImGui::TableGetColumnFlags(3) & ImGuiTableColumnFlags_IsHovered && ImGui::IsMouseDoubleClicked(0))
+            ImGui::SetClipboardText(transformed_name.c_str());
     }
 
     template <size_t N>
@@ -128,84 +138,60 @@ namespace
 
         // runes
         if (request_id == "scholar_rune")
-        {
             _get_ordered_row_data(API::SCHOLAR_RUNE_NAMES, rows);
-        }
         else if (request_id == "dragonhunter_rune")
-        {
             _get_ordered_row_data(API::DRAGONHUNTER_RUNE_NAMES, rows);
-        }
         else if (request_id == "guardian_rune")
-        {
             _get_ordered_row_data(API::GUARDIAN_RUNE_NAMES, rows);
-        }
         // relics
         else if (request_id == "relic_of_fireworks")
-        {
             _get_ordered_row_data(API::FIREWORKS_NAMES, rows);
-        }
         else if (request_id == "relic_of_thief")
-        {
             _get_ordered_row_data(API::THIEF_NAMES, rows);
-        }
         else if (request_id == "relic_of_aristocracy")
-        {
             _get_ordered_row_data(API::ARISTOCRACY_NAMES, rows);
-        }
         // gear
-        if (request_id == "rare_weapon_craft")
-        {
+        else if (request_id == "rare_weapon_craft")
             _get_ordered_row_data(API::RARE_WEAPON_CRAFT_NAMES, rows);
-        }
         else if (request_id == "rare_gear_salvage")
-        {
             _get_ordered_row_data(API::RARE_GEAR_NAMES, rows);
-        }
-        else if (request_id == "ecto")
-        {
-            for (const auto &[name, price] : rows)
-            {
-                add_row(name, price);
-            }
-        }
         // gear
         else if (request_id == "gear_salvage")
-        {
             _get_ordered_row_data(API::GEAR_SALVAGE_NAMES, rows);
-        }
         else if (request_id == "common_gear_salvage")
-        {
             _get_ordered_row_data(API::COMMON_GEAR_NAMES, rows);
-        }
         // t5
         else if (request_id == "t5_mats_buy")
-        {
+            _get_ordered_row_data(API::T5_MATS_BUY_NAMES, rows);
+        else if (request_id == "mats_craft_compare")
             _get_ordered_row_data(API::MATS_CRAFT_COMPARE_NAMES, rows);
-        }
-        else if (request_id == "t5_mats_sell")
-        {
-            // TODO
-        }
         // forge
         else if (request_id == "smybol_enh_forge")
-        {
             _get_ordered_row_data(API::FORGE_ENH_NAMES, rows);
-        }
         else if (request_id == "loadstone_forge")
-        {
             _get_ordered_row_data(API::LOADSTONE_NAMES, rows);
+        else if (request_id == "ecto" || request_id == "rare_gear")
+        {
+            for (const auto &[name, price] : rows)
+                add_row(name, price);
+        }
+        else
+            int i = 2;
+    }
+
+    void center_next_element(const char *label, bool is_text = false)
+    {
+        float windowWidth = ImGui::GetWindowSize().x;
+        float elementWidth;
+        if (is_text)
+        {
+            elementWidth = ImGui::CalcTextSize(label).x;
         }
         else
         {
-            int i = 2;
+            elementWidth = ImGui::CalcTextSize(label).x + ImGui::GetStyle().FramePadding.x * 2.0f;
         }
-    }
-
-    void center_next_element(const char *label = "")
-    {
-        float windowWidth = ImGui::GetWindowSize().x;
-        float buttonWidth = ImGui::CalcTextSize(label).x + ImGui::GetStyle().FramePadding.x * 2.0f;
-        ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
+        ImGui::SetCursorPosX((windowWidth - elementWidth) * 0.5f);
     }
 }
 
@@ -239,31 +225,34 @@ void Render::render()
 
     if (ImGui::Begin("GW2TP", &show_window))
     {
+        const auto window_width = ImGui::GetWindowContentRegionWidth();
+
+        ImGui::BeginChild("TopSection", ImVec2(window_width, 50.0f), false, ImGuiWindowFlags_AlwaysAutoResize);
+
         auto *btn_label = "Refresh Data";
         center_next_element(btn_label);
-
         if (ImGui::Button(btn_label))
         {
             data.loaded = false;
             data.requested = false;
             data.api_data.clear();
             data.futures.clear();
-
             data.requesting();
         }
 
         if (!data.loaded)
         {
             auto *text_label = "Loading...";
-            center_next_element(text_label);
+            center_next_element(text_label, true);
             ImGui::Text(text_label);
-            ImGui::End();
-
-            return;
         }
+        ImGui::EndChild();
 
-        const auto large_window = ImGui::GetWindowSize().x > 400.0F;
-        const auto child_size = ImVec2(ImGui::GetWindowContentRegionWidth() * (large_window ? 0.5f : 1.0F), 150.0F);
+        ImGui::BeginChild("ScrollableContent", ImVec2(window_width, -1.0), false, ImGuiWindowFlags_AlwaysAutoResize);
+
+        const auto large_window = window_width > 450.0F;
+        const auto very_large_window = window_width > 750.0F;
+        const auto child_size = ImVec2(window_width * (very_large_window ? 0.33f : (large_window ? 0.5f : 1.0F)), TABLE_HEIGHT_PX);
 
         auto idx = 0U;
         for (const auto command : API::COMMANDS_LIST)
@@ -271,11 +260,14 @@ void Render::render()
             ImGui::BeginChild(("tableChild" + std::to_string(idx)).c_str(), child_size, false, ImGuiWindowFlags_AlwaysAutoResize);
             const auto table_height = render_table(command);
             ImGui::EndChild();
-            if ((large_window) && (idx % 2 == 0))
+            if (very_large_window && (idx % 3 != 2))
+                ImGui::SameLine();
+            else if (!very_large_window && large_window && (idx % 2 == 0))
                 ImGui::SameLine();
             ++idx;
         }
     }
+    ImGui::EndChild();
 
     ImGui::End();
 }

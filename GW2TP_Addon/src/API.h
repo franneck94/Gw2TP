@@ -23,6 +23,7 @@ public:
         "rare_weapon_craft",
         "rare_gear_salvage",
         "ecto",
+        "rare_gear",
         // gear
         "gear_salvage",
         "common_gear_salvage",
@@ -47,7 +48,7 @@ public:
         "profit_stack",
     };
 
-    static const inline std::array<const char *, 7> MATS_CRAFT_COMPARE_NAMES = {
+    static const inline std::array<const char *, 7> T5_MATS_BUY_NAMES = {
         "large_claw",
         "potent_blood",
         "large_bone",
@@ -55,6 +56,15 @@ public:
         "large_fang",
         "potent_venom",
         "large_scale",
+    };
+
+    static const inline std::array<const char *, 6> MATS_CRAFT_COMPARE_NAMES = {
+        "mithril_ore_to_ingot",
+        "mithril_ingot_buy",
+        "elder_wood_log_to_plank",
+        "elder_wood_plank_buy",
+        "lucent_mote_to_crystal",
+        "lucent_crystal_buy",
     };
 
     static const inline std::array<const char *, 4> COMMON_GEAR_NAMES = {

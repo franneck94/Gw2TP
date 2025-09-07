@@ -164,7 +164,7 @@ MATS_CRAFT_COMPARE_NAMES = [
 ]
 MATS_CRAFT_COMPARE_TABLE = get_table_html(
     price_names=MATS_CRAFT_COMPARE_NAMES,
-    category_name="mats_crafting_compare",
+    category_name="mats_craft_compare",
 )
 
 COMMON_GEAR_NAMES = [
