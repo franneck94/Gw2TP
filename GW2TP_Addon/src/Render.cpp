@@ -202,10 +202,13 @@ int Render::render_table(const std::string &request_id)
 {
     const auto &kv = data.api_data[request_id];
     if (API::COMMANDS_LIST.find(request_id) == API::COMMANDS_LIST.end() || data.api_data.find(request_id) == data.api_data.end() || data.api_data[request_id].empty())
+    {
+        ImGui::Text("No data yet for %s", request_id.c_str());
+
         return -1;
+    }
 
     ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableColumnFlags_NoSort;
-    ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionWidth() * 0.5f);
     if (ImGui::BeginTable(("Prices##" + request_id).c_str(), 4, flags))
     {
         add_header(request_id);
