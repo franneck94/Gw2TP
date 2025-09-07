@@ -105,10 +105,10 @@ def get_unid_gear_data(
                 ItemIDs.GOSSAMER_SCRAP,
                 ItemIDs.SILK_SCRAP,
                 ItemIDs.HARDENED_LEATHER,
-                ItemIDs.ANCIENT_WOOD,
+                ItemIDs.ANCIENT_WOOD_LOG,
                 ItemIDs.SYMBOL_OF_ENH,
                 ItemIDs.SYMBOL_OF_PAIN,
-                ItemIDs.ORICHALCUM,
+                ItemIDs.ORICHALCUM_ORE,
                 ItemIDs.SYMBOL_OF_CONTROL,
                 ItemIDs.CHARM_OF_BRILLIANCE,
                 ItemIDs.CHARM_OF_POTENCE,
@@ -154,10 +154,10 @@ def get_rare_gear_salvage() -> JSONResponse:
     gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
     silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
     hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
-    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD_LOG]["sell"]
     symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
     symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
-    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM_ORE]["sell"]
     symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
     charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
     charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
@@ -662,10 +662,10 @@ def get_common_gear_salvage() -> JSONResponse:
     gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
     silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
     hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
-    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD_LOG]["sell"]
     symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
     symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
-    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM_ORE]["sell"]
     symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
     charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
     charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
@@ -722,10 +722,10 @@ def get_gear_salvage() -> JSONResponse:
     gossamer_scrap_sell = fetched_data[ItemIDs.GOSSAMER_SCRAP]["sell"]
     silk_scrap_sell = fetched_data[ItemIDs.SILK_SCRAP]["sell"]
     hardened_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
-    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD]["sell"]
+    ancient_wood_sell = fetched_data[ItemIDs.ANCIENT_WOOD_LOG]["sell"]
     symbol_of_enh_sell = fetched_data[ItemIDs.SYMBOL_OF_ENH]["sell"]
     symbol_of_pain_sell = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["sell"]
-    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM]["sell"]
+    orichalcum_sell = fetched_data[ItemIDs.ORICHALCUM_ORE]["sell"]
     symbol_of_control_sell = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["sell"]
     charm_of_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
     charm_of_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
@@ -869,7 +869,7 @@ def get_loadstone_forge() -> JSONResponse:
     charged_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
     corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LOADSTONE]["sell"]
     destroyer_sell = fetched_data[ItemIDs.DESTROYER_LOADSTONE]["sell"]
-    dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
+    crystal_dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
     onyx_core_cost = fetched_data[ItemIDs.ONYX_CORE]["buy"]
     charged_core_cost = fetched_data[ItemIDs.CHARGED_CORE]["buy"]
     corrupted_core_cost = fetched_data[ItemIDs.CORRUPTED_CORE]["buy"]
@@ -877,16 +877,16 @@ def get_loadstone_forge() -> JSONResponse:
 
     elonian_cost = 2_500
 
-    onyx_cost = onyx_core_cost * 2 + dust_buy + elonian_cost
+    onyx_cost = onyx_core_cost * 2 + crystal_dust_buy + elonian_cost
     onyx_profit = (onyx_sell * 0.85) - onyx_cost
 
-    charged_cost = charged_core_cost * 2 + dust_buy + elonian_cost
+    charged_cost = charged_core_cost * 2 + crystal_dust_buy + elonian_cost
     charged_profit = (charged_sell * 0.85) - charged_cost
 
-    corrupted_cost = corrupted_core_cost * 2 + dust_buy + elonian_cost
+    corrupted_cost = corrupted_core_cost * 2 + crystal_dust_buy + elonian_cost
     corrupted_profit = (corrupted_sell * 0.85) - corrupted_cost
 
-    destroyer_cost = destroyer_core_cost * 2 + dust_buy + elonian_cost
+    destroyer_cost = destroyer_core_cost * 2 + crystal_dust_buy + elonian_cost
     destroyer_profit = (destroyer_sell * 0.85) - destroyer_cost
 
     data = {
@@ -895,6 +895,66 @@ def get_loadstone_forge() -> JSONResponse:
         **get_sub_dct("corrupted", corrupted_profit),
         **get_sub_dct("destroyer", destroyer_profit),
     }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/thesis_on_masterful_malice")
+def get_thesis_on_masterful_malice() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.THESIS_MASTERFUL_MALICE,
+                ItemIDs.WRIT_MASTERFUL_MALICE,
+                ItemIDs.CRYSTALINE_DUST,
+                ItemIDs.ANCIENT_WOOD_LOG,
+                ItemIDs.HARDENED_LEATHER,
+                ItemIDs.ORICHALCUM_ORE,
+                ItemIDs.GOSSAMER_SCRAP,
+                ItemIDs.GOSSAMER_THREAD,
+                ItemIDs.POUCH_OF_BLACK_PIGMENTS,
+                ItemIDs.POUCH_OF_WHITE_PIGMENTS,
+                ItemIDs.JUG_OF_WATER,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    masterful_malice_data = fetched_data[ItemIDs.THESIS_MASTERFUL_MALICE]
+    masterful_malice_buy = fetched_data[ItemIDs.WRIT_MASTERFUL_MALICE]["buy"]
+    crystal_dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
+    ancient_wood_log_buy = fetched_data[ItemIDs.ANCIENT_WOOD_LOG]["buy"]
+    hardened_leather_buy = fetched_data[ItemIDs.HARDENED_LEATHER]["buy"]
+    orichalcum_buy = fetched_data[ItemIDs.ORICHALCUM_ORE]["buy"]
+    gossamer_scrap_buy = fetched_data[ItemIDs.GOSSAMER_SCRAP]["buy"]
+    gossamer_thread_buy = fetched_data[ItemIDs.GOSSAMER_THREAD]["buy"]
+    pouch_of_black_buy = fetched_data[ItemIDs.POUCH_OF_BLACK_PIGMENTS]["buy"]
+    pouch_of_white_buy = fetched_data[ItemIDs.POUCH_OF_WHITE_PIGMENTS]["buy"]
+    jug_of_water = fetched_data[ItemIDs.JUG_OF_WATER]["buy"]
+
+    crafting_cost = (
+        masterful_malice_buy * 3.0
+        + crystal_dust_buy * 5.0
+        + ancient_wood_log_buy * 48.0
+        + hardened_leather_buy * 10.0
+        + orichalcum_buy * 12.0
+        + gossamer_scrap_buy * 20.0
+        + gossamer_thread_buy * 10.0
+        + pouch_of_black_buy * 3.0
+        + pouch_of_white_buy * 3.0
+        + jug_of_water * 20.0
+    )
+
+    sell = masterful_malice_data["sell"]
+    flip = (sell * TAX_RATE) - masterful_malice_buy
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("flip", flip),
+        **get_sub_dct("profit", profit),
+    }
+
     return JSONResponse(content=jsonable_encoder(data))
 
 

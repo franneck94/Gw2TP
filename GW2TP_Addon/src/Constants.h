@@ -17,9 +17,9 @@ public:
     static constexpr std::int32_t GOSSAMER_SCRAP = 19745;
     static constexpr std::int32_t SILK_SCRAP = 19748;
     static constexpr std::int32_t HARDENED_LEATHER = 19732;
-    static constexpr std::int32_t ANCIENT_WOOD = 19725;
+    static constexpr std::int32_t ANCIENT_WOOD_LOG = 19725;
     static constexpr std::int32_t CURED_HARDENED_LEATHER_SQUARE = 19737;
-    static constexpr std::int32_t ORICHALCUM = 19701;
+    static constexpr std::int32_t ORICHALCUM_ORE = 19701;
     static constexpr std::int32_t ECTOPLASM = 19721;
     static constexpr std::int32_t ELABORATE_TOTEM = 24300;
     static constexpr std::int32_t CRYSTALINE_DUST = 24277;

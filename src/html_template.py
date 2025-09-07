@@ -260,6 +260,18 @@ ARISTOCRACY_TABLE = get_table_html(
     hidden_name="Relic of Aristocracy",
 )
 
+THESIS_NAMES = [
+    "crafting_cost",
+    "sell",
+    "flip",
+    "profit",
+]
+THESIS_TABLE = get_table_html(
+    price_names=THESIS_NAMES,
+    category_name="thesis_on_masterful_malice",
+    hidden_name="Thesis on Masterful Malice",
+)
+
 RARE_WEAPON_CRAFT_NAMES = [
     "crafting_cost",
     "ecto_sell_after_tax",
@@ -377,6 +389,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
         (async () => {{ {get_all_fetch_price_html("smybol_enh_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
     ]);
 }}
 """
@@ -463,6 +476,13 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {FORGE_ENH_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Thesis_on_Masterful_Malice" target="_blank" style="color: inherit; text-decoration: none;">
+                    Thesis on Masterful Malice
+                </a>
+            </h3>
+            {THESIS_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">
