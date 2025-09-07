@@ -289,7 +289,7 @@ FORGE_ENH_NAMES = [
 ]
 FORGE_ENH_TABLE = get_table_html(
     price_names=FORGE_ENH_NAMES,
-    category_name="smybol_enh_forge",
+    category_name="symbol_enh_forge",
     hidden_name="Symbol of Enhancement",
 )
 
@@ -387,7 +387,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("t5_mats_buy")} }})(),
         (async () => {{ {get_all_fetch_price_html("mats_crafting_compare")} }})(),
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
-        (async () => {{ {get_all_fetch_price_html("smybol_enh_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("symbol_enh_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
     ]);

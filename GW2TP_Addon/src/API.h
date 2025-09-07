@@ -29,10 +29,12 @@ public:
         "common_gear_salvage",
         // t5
         "t5_mats_buy",
-        "t5_mats_sel",
+        "mats_craft_compare",
         // forge
-        "smybol_enh_forge",
-        "loadstone_forge"};
+        "symbol_enh_forge",
+        "loadstone_forge",
+        // other
+        "thesis_on_masterful_malice"};
 
     static const inline std::array<const char *, 4> RARE_GEAR_NAMES = {
         "stack_buy",
@@ -79,6 +81,13 @@ public:
         "charged",
         "corrupted",
         "destroyer",
+    };
+
+    static const inline std::array<const char *, 4> THESIS_MASTERFUL_MALICE = {
+        "crafting_cost",
+        "sell",
+        "flip",
+        "profit",
     };
 
     static const inline std::array<const char *, 3> SCHOLAR_RUNE_NAMES = {

@@ -109,6 +109,6 @@ class API:
         "get_price",
         "thesis_on_masterful_malice",
         # forge
-        "smybol_enh_forge",
+        "symbol_enh_forge",
         "loadstone_forge",
     }

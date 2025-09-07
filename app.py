@@ -816,8 +816,8 @@ def get_mats_craft_compare() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/smybol_enh_forge")
-def get_smybol_enh_forge() -> JSONResponse:
+@fastapi_app.get("/symbol_enh_forge")
+def get_symbol_enh_forge() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [

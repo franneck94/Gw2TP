@@ -136,8 +136,11 @@ namespace
                                                 });
         }
 
+        // other
+        if (request_id == "thesis_on_masterful_malice")
+            _get_ordered_row_data(API::THESIS_MASTERFUL_MALICE, rows);
         // runes
-        if (request_id == "scholar_rune")
+        else if (request_id == "scholar_rune")
             _get_ordered_row_data(API::SCHOLAR_RUNE_NAMES, rows);
         else if (request_id == "dragonhunter_rune")
             _get_ordered_row_data(API::DRAGONHUNTER_RUNE_NAMES, rows);
@@ -166,7 +169,7 @@ namespace
         else if (request_id == "mats_craft_compare")
             _get_ordered_row_data(API::MATS_CRAFT_COMPARE_NAMES, rows);
         // forge
-        else if (request_id == "smybol_enh_forge")
+        else if (request_id == "symbol_enh_forge")
             _get_ordered_row_data(API::FORGE_ENH_NAMES, rows);
         else if (request_id == "loadstone_forge")
             _get_ordered_row_data(API::LOADSTONE_NAMES, rows);
