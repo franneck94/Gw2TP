@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>{{ item_name }} Data Viewer</title>
+    </head>
+    <body>
+        <h1>{{ item_name }} History</h1>
+        <ul>
+            {% for entry in history %}
+            <li>
+                {{ entry.timestamp }}: Sell {{ entry.sell }}: Buy {{ entry.buy}}
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% if plot %}
+        <h2>{{ item_name }} History Plot</h2>
+        <img
+            src="data:image/png;base64,{{ plot }}"
+            alt="{{ item_name }} History Plot"
+        />
+        {% endif %}
+    </body>
+</html>

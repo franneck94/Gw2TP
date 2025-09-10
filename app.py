@@ -21,14 +21,12 @@ from src.constants import ItemIDs
 from src.constants import Kits
 from src.helper import copper_to_gsc
 from src.helper import gsc_dict_to_copper
-from src.helper import is_running_on_railway
+from src.helper import host_url
 from src.html_template import HTML_PAGE
+from src.scheduler import start_scheduler
 
 
-uses_server = is_running_on_railway()
-port = int(os.environ.get("PORT", "8000"))
-api_base = API.PRODUCTION_API_URL if uses_server else API.DEV_API_URL
-
+api_base = host_url()
 fastapi_app = FastAPI()
 flask_app = Flask(__name__)
 port = int(os.environ.get("PORT", "8000"))
@@ -936,6 +934,8 @@ app = Starlette(
         Mount("/", app=WSGIMiddleware(flask_app)),
     ],
 )
+
+start_scheduler()
 
 if __name__ == "_main_":
     uvicorn.run(

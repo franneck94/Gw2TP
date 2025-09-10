@@ -5,7 +5,7 @@ import aiohttp
 import discord
 
 from src.constants import API
-from src.helper import is_running_on_railway
+from src.helper import host_url
 
 
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -18,9 +18,8 @@ COMMANDS = [f"{API.COMMAND_PREFIX} {cmd}" for cmd in API.COMMANDS_LIST]
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
-uses_server = is_running_on_railway()
 port = int(os.environ.get("PORT", "8000"))
-api_base = API.PRODUCTION_API_URL if uses_server else API.DEV_API_URL
+api_base = host_url()
 
 
 def create_price_embed(

@@ -4,6 +4,9 @@ httpx
 flask
 aiohttp
 discord.py
+sqlalchemy
+pydantic
+apscheduler
 
 ruff>=0.6.2
 isort>=5.13.2

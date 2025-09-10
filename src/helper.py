@@ -1,8 +1,15 @@
 import os
 
+from src.constants import API
+
 
 def is_running_on_railway() -> bool:
     return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
+
+
+def host_url() -> str:
+    uses_server = is_running_on_railway()
+    return API.PRODUCTION_API_URL if uses_server else API.DEV_API_URL
 
 
 def copper_to_gsc(
