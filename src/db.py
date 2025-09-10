@@ -1,5 +1,6 @@
 import datetime
 import os
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,8 +9,11 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import sessionmaker
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, '../database/data.db')}"
+FILE_DIR = Path(__file__).parent
+DEFAULT_DB_PATH = FILE_DIR / ".." / "database" / "data.db"
+DATABASE_PATH = Path(os.getenv("DATABASE_URL", str(DEFAULT_DB_PATH)))
+DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
+DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 db = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=db)
@@ -20,7 +24,7 @@ class ItemBase:
     id: Mapped[int] = mapped_column(primary_key=True, index=True, unique=True)
     timestamp: Mapped[datetime.datetime] = mapped_column(
         nullable=False,
-        default=datetime.datetime.now(),
+        default=datetime.datetime.now(tz=datetime.timezone.utc),
     )
 
     @property

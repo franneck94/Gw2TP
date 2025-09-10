@@ -7,6 +7,8 @@ discord.py
 sqlalchemy
 pydantic
 apscheduler
+matplotlib
+starlette
 
 ruff>=0.6.2
 isort>=5.13.2
