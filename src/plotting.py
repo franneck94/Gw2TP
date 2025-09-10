@@ -14,6 +14,8 @@ mpl.use("Agg")
 def get_date_plot(
     data: Sequence[ItemBase],
     name: str,
+    *,
+    plot_mean: bool = False,
 ) -> str:
     if len(data) == 0:
         return ""
@@ -32,24 +34,24 @@ def get_date_plot(
     plt.figure(figsize=(16, 9))
     plt.plot(timestamps, sell_price, marker="o", label="Sell Price")
     plt.plot(timestamps, crafting_price, marker="o", label="Crafting Price")
-    plt.axhline(
-        y=sum(sell_price) / len(sell_price),
-        color="orange",
-        linestyle="--",
-        label="Mean Sell Price",
-    )
-    plt.axhline(
-        y=sum(crafting_price) / len(crafting_price),
-        color="cyan",
-        linestyle="--",
-        label="Mean Crafting Price",
-    )
-    plt.plot(timestamps, crafting_price, marker="o", label="Crafting Price")
+    if plot_mean:
+        plt.axhline(
+            y=sum(sell_price) / len(sell_price),
+            color="orange",
+            linestyle="--",
+            label="Mean Sell Price",
+        )
+        plt.axhline(
+            y=sum(crafting_price) / len(crafting_price),
+            color="cyan",
+            linestyle="--",
+            label="Mean Crafting Price",
+        )
     plt.gca().get_yaxis().set_major_formatter(
-        mpl.ticker.StrMethodFormatter("{x:.3f}")
+        mpl.ticker.StrMethodFormatter("{x:.2f}")
     )
     plt.xticks(rotation=50)
-    plt.title(f"{name} Timestamps")
+    plt.title(f"{name}")
     plt.ylabel("Price in Gold")
     plt.legend()
     buf = io.BytesIO()

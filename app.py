@@ -128,31 +128,51 @@ def index() -> str:
     return render_template_string(HTML_PAGE)
 
 
-def make_history_route(item_key: str, item_name: str):
-    @flask_app.route(f"/{item_key}_history")
-    def history() -> str:
-        data = get_db_data(item_key)
-        plot = get_date_plot(data=data, name=item_name)
-        content = Path("./templates/plot.html").read_text(encoding="utf-8")
-        style = Path("./style.css").read_text(encoding="utf-8")
-        return render_template_string(
-            content,
-            item_name=item_name,
-            history=data,
-            plot=plot,
-            style=style,
-        )
+def history_base(
+    key_name: str,
+    full_name: str,
+) -> str:
+    data = get_db_data(key_name)
+    plot = get_date_plot(data=data, name=full_name)
+    content = Path("./templates/plot.html").read_text(encoding="utf-8")
+    style = Path("./style.css").read_text(encoding="utf-8")
+    return render_template_string(
+        content,
+        item_name=full_name,
+        history=data,
+        plot=plot,
+        style=style,
+    )
 
-    return history
+
+@flask_app.route("/scholar_rune_history")
+def history_scholar() -> str:
+    return history_base("scholar_rune", "Scholar Rune")
 
 
-make_history_route("scholar_rune", "Scholar Rune")
-make_history_route("guardian_rune", "Guardian Rune")
-make_history_route("dragonhunter_rune", "Dragonhunter Rune")
-make_history_route("relic_of_fireworks", "Relic of Fireworks")
-make_history_route("relic_of_thief", "Relic of Thief")
-make_history_route("relic_of_aristocracy", "Relic of Aristocracy")
-make_history_route("rare_weapon_craft", "Rare Weapon Craft")
+@flask_app.route("/guardian_rune_history")
+def history_guardian() -> str:
+    return history_base("guardian_rune", "Guardian Rune")
+
+
+@flask_app.route("/dragonhunter_rune_history")
+def history_dragonhunter() -> str:
+    return history_base("dragonhunter_rune", "Dragonhunter Rune")
+
+
+@flask_app.route("/relic_of_fireworks_history")
+def history_fireworks() -> str:
+    return history_base("relic_of_fireworks", "Relic of Fireworks")
+
+
+@flask_app.route("/relic_of_thief_history")
+def history_thief() -> str:
+    return history_base("relic_of_thief", "Relic of Thief")
+
+
+@flask_app.route("/relic_of_aristocracy_history")
+def history_aristocracy() -> str:
+    return history_base("relic_of_aristocracy", "Relic of Aristocracy")
 
 
 @fastapi_app.get("/price")

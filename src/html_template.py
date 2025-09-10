@@ -497,6 +497,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Guardian" target="_blank" style="color: inherit; text-decoration: none;">
                     Guardian Runes
                 </a>
+                <button onclick="window.open('guardian_rune_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {GUARDIAN_RUNE_TABLE}
 
@@ -504,6 +505,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Dragonhunter" target="_blank" style="color: inherit; text-decoration: none;">
                     Dragonhunter Runes
                 </a>
+                <button onclick="window.open('dragonhunter_rune_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {DRAGONHUNTER_RUNE_TABLE}
 
@@ -511,6 +513,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_Fireworks" target="_blank" style="color: inherit; text-decoration: none;">
                     Fireworks Relic
                 </a>
+                <button onclick="window.open('relic_of_fireworks_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {FIREWORKS_TABLE}
 
@@ -518,6 +521,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Thief" target="_blank" style="color: inherit; text-decoration: none;">
                     Thief Relic
                 </a>
+                <button onclick="window.open('relic_of_thief_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {THIEF_TABLE}
 
@@ -525,6 +529,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Aristocracy" target="_blank" style="color: inherit; text-decoration: none;">
                     Aristocracy Relic
                 </a>
+                <button onclick="window.open('relic_of_aristocracy_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {ARISTOCRACY_TABLE}
         </div>

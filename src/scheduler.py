@@ -1,16 +1,14 @@
-import asyncio
 import datetime
 from typing import Any
 
 import aiohttp
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy.orm import Session
 
 from .db import AristocracyRelic
 from .db import DragonHunterRune
 from .db import FireworksRelic
 from .db import GuardianRune
-from .db import RareWeaponCraft
 from .db import ScholarRune
 from .db import SessionLocal
 from .db import ThiefRelic
@@ -63,7 +61,6 @@ async def fetch_api_data() -> None:
         ("relic_of_fireworks", FireworksRelic),
         ("relic_of_thief", ThiefRelic),
         ("relic_of_aristocracy", AristocracyRelic),
-        ("rare_weapon_craft", RareWeaponCraft),
     ]
     for request, cls in requests:
         await _fetch_single_request(
@@ -77,16 +74,15 @@ async def fetch_api_data() -> None:
 
 
 def start_scheduler() -> None:
-    scheduler = BackgroundScheduler()
+    scheduler = AsyncIOScheduler()
 
-    def job() -> None:
-        asyncio.run(fetch_api_data())
+    async def job() -> None:
+        await fetch_api_data()
 
     scheduler.add_job(
         job,
         "interval",
-        seconds=10,
+        seconds=20,
         max_instances=1,
-        coalesce=True,
     )
     scheduler.start()

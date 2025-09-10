@@ -63,19 +63,15 @@ class DragonHunterRune(ItemBase, Base):  # type: ignore
 
 
 class FireworksRelic(ItemBase, Base):  # type: ignore
-    __tablename__ = "fireworks_relic"
+    __tablename__ = "relic_of_fireworks"
 
 
 class ThiefRelic(ItemBase, Base):  # type: ignore
-    __tablename__ = "thief_relic"
+    __tablename__ = "relic_of_thief"
 
 
 class AristocracyRelic(ItemBase, Base):  # type: ignore
-    __tablename__ = "aristocracy_relic"
-
-
-class RareWeaponCraft(ItemBase, Base):  # type: ignore
-    __tablename__ = "rare_weapon_craft"
+    __tablename__ = "relic_of_aristocracy"
 
 
 DB_CLASSES: list[ItemBase] = [
@@ -85,7 +81,6 @@ DB_CLASSES: list[ItemBase] = [
     FireworksRelic,
     ThiefRelic,
     AristocracyRelic,
-    RareWeaponCraft,
 ]
 
 
