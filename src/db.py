@@ -21,22 +21,13 @@ Base = declarative_base()
 
 
 class ItemBase:
+    __tablename__: str
+
     id: Mapped[int] = mapped_column(primary_key=True, index=True, unique=True)
     timestamp: Mapped[datetime.datetime] = mapped_column(
         nullable=False,
         default=datetime.datetime.now(tz=datetime.timezone.utc),
     )
-
-    @property
-    def formatted_timestamp(self) -> str:
-        return self.timestamp.strftime("%Y-%m-%d %H:%M")
-
-    def __repr__(self) -> str:
-        raise NotImplementedError
-
-
-class ScholarRune(ItemBase, Base):  # type: ignore
-    __tablename__ = "scholar_rune"
 
     crafting_cost_g: Mapped[int]
     crafting_cost_s: Mapped[int]
@@ -55,17 +46,83 @@ class ScholarRune(ItemBase, Base):  # type: ignore
             f"crafting_cost_g={self.crafting_cost_g}, "
             f"crafting_cost_s={self.crafting_cost_s}, "
             f"crafting_cost_c={self.crafting_cost_c}, "
-            f"timestamp={self.formatted_timestamp})>"
+            f"timestamp={self.timestamp})>"
         )
 
 
-DB_CLASSES = [ScholarRune]
+class ScholarRune(ItemBase, Base):  # type: ignore
+    __tablename__ = "scholar_rune"
 
 
-def get_db_data(table_name: str) -> list[ScholarRune]:
+class GuardianRune(ItemBase, Base):  # type: ignore
+    __tablename__ = "guardian_rune"
+
+
+class DragonHunterRune(ItemBase, Base):  # type: ignore
+    __tablename__ = "dragonhunter_rune"
+
+
+class FireworksRelic(ItemBase, Base):  # type: ignore
+    __tablename__ = "fireworks_relic"
+
+
+class ThiefRelic(ItemBase, Base):  # type: ignore
+    __tablename__ = "thief_relic"
+
+
+class AristocracyRelic(ItemBase, Base):  # type: ignore
+    __tablename__ = "aristocracy_relic"
+
+
+class RareWeaponCraft(ItemBase, Base):  # type: ignore
+    __tablename__ = "rare_weapon_craft"
+
+
+DB_CLASSES: list[ItemBase] = [
+    ScholarRune,
+    GuardianRune,
+    DragonHunterRune,
+    FireworksRelic,
+    ThiefRelic,
+    AristocracyRelic,
+    RareWeaponCraft,
+]
+
+
+def get_db_data(
+    table_name: str,
+    start_datetime: datetime.datetime | None = None,
+    end_datetime: datetime.datetime | None = None,
+) -> list[ItemBase]:
     db = SessionLocal()
     for db_class in DB_CLASSES:
         if db_class.__tablename__ == table_name:
+            if start_datetime and end_datetime:
+                data = (
+                    db.query(db_class)
+                    .filter(db_class.timestamp >= start_datetime)
+                    .filter(db_class.timestamp <= end_datetime)
+                    .all()
+                )
+                db.close()
+                return data
+            if start_datetime:
+                data = (
+                    db.query(db_class)
+                    .filter(db_class.timestamp >= start_datetime)
+                    .all()
+                )
+                db.close()
+                return data
+            if end_datetime:
+                data = (
+                    db.query(db_class)
+                    .filter(db_class.timestamp <= end_datetime)
+                    .all()
+                )
+                db.close()
+                return data
+
             data = db.query(db_class).all()
             db.close()
             return data

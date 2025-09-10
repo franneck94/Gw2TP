@@ -112,3 +112,12 @@ class API:
         "symbol_enh_forge",
         "loadstone_forge",
     }
+    CRAFTS: Final[set[str]] = [
+        "dragonhunter_rune",
+        "guardian_rune",
+        "scholar_rune",
+        "relic_of_fireworks",
+        "relic_of_thief",
+        "relic_of_aristocracy",
+        "rare_weapon_craft",
+    ]

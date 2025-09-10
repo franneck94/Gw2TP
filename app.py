@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Any
 from typing import Dict
 
@@ -127,21 +128,31 @@ def index() -> str:
     return render_template_string(HTML_PAGE)
 
 
-@flask_app.route("/scholar_rune_history")
-def scholar_rune_history() -> str:
-    data = get_db_data("scholar_rune")
-    plot = get_date_plot(data=data, name="Scholar Rune")
-    with open("./templates/plot.html") as f:
-        content = f.read()
-    with open("./style.css") as f:
-        style = f.read()
-    return render_template_string(
-        content,
-        item_name="Scholar Rune",
-        history=data,
-        plot=plot,
-        style=style,
-    )
+def make_history_route(item_key: str, item_name: str):
+    @flask_app.route(f"/{item_key}_history")
+    def history() -> str:
+        data = get_db_data(item_key)
+        plot = get_date_plot(data=data, name=item_name)
+        content = Path("./templates/plot.html").read_text(encoding="utf-8")
+        style = Path("./style.css").read_text(encoding="utf-8")
+        return render_template_string(
+            content,
+            item_name=item_name,
+            history=data,
+            plot=plot,
+            style=style,
+        )
+
+    return history
+
+
+make_history_route("scholar_rune", "Scholar Rune")
+make_history_route("guardian_rune", "Guardian Rune")
+make_history_route("dragonhunter_rune", "Dragonhunter Rune")
+make_history_route("relic_of_fireworks", "Relic of Fireworks")
+make_history_route("relic_of_thief", "Relic of Thief")
+make_history_route("relic_of_aristocracy", "Relic of Aristocracy")
+make_history_route("rare_weapon_craft", "Rare Weapon Craft")
 
 
 @fastapi_app.get("/price")
@@ -782,18 +793,9 @@ def get_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/profits")
 def get_profits() -> JSONResponse:
-    crafts = [
-        "dragonhunter_rune",
-        "guardian_rune",
-        "scholar_rune",
-        "relic_of_fireworks",
-        "relic_of_thief",
-        "relic_of_aristocracy",
-        "rare_weapon_craft",
-    ]
     data = {}
     try:
-        for craft in crafts:
+        for craft in API.CRAFTS:
             response = httpx.Client().get(
                 f"{api_base}{craft}",
             )

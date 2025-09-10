@@ -6,8 +6,14 @@ import aiohttp
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy.orm import Session
 
+from .db import AristocracyRelic
+from .db import DragonHunterRune
+from .db import FireworksRelic
+from .db import GuardianRune
+from .db import RareWeaponCraft
 from .db import ScholarRune
 from .db import SessionLocal
+from .db import ThiefRelic
 from .helper import host_url
 
 
@@ -20,7 +26,7 @@ async def _fetch_single_request(
     data_keys: list[str],
     data_cls: type,
 ) -> None:
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession() as session:  # noqa: SIM117
         async with session.get(f"{api_base}{api_command}") as response:
             data: dict[str, Any] = await response.json()
             if data.get("detail", "") == "Not Found":
@@ -29,14 +35,18 @@ async def _fetch_single_request(
             kwargs = {}
 
             for data_key in data_keys:
-                for key, value in data.items():
-                    if key.startswith(data_key):
-                        kwargs[key] = value
+                kwargs.update(
+                    {
+                        key: value
+                        for key, value in data.items()
+                        if key.startswith(data_key)
+                    }
+                )
 
             db.add(
                 data_cls(
                     **kwargs,
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=datetime.datetime.now(),  # noqa: DTZ005
                 )
             )
             db.commit()
@@ -44,13 +54,24 @@ async def _fetch_single_request(
 
 async def fetch_api_data() -> None:
     print("Fetching data...")
+    fetch_keys = ["crafting_cost", "sell"]
     db = SessionLocal()
-    await _fetch_single_request(
-        db,
-        "scholar_rune",
-        ["crafting_cost", "sell"],
-        ScholarRune,
-    )
+    requests = [
+        ("scholar_rune", ScholarRune),
+        ("guardian_rune", GuardianRune),
+        ("dragonhunter_rune", DragonHunterRune),
+        ("relic_of_fireworks", FireworksRelic),
+        ("relic_of_thief", ThiefRelic),
+        ("relic_of_aristocracy", AristocracyRelic),
+        ("rare_weapon_craft", RareWeaponCraft),
+    ]
+    for request, cls in requests:
+        await _fetch_single_request(
+            db,
+            request,
+            fetch_keys,
+            cls,
+        )
     db.close()
     print("Fetching done...")
 
@@ -64,7 +85,7 @@ def start_scheduler() -> None:
     scheduler.add_job(
         job,
         "interval",
-        minutes=10,
+        seconds=10,
         max_instances=1,
         coalesce=True,
     )
