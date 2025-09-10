@@ -19,10 +19,12 @@ from src.constants import API
 from src.constants import TAX_RATE
 from src.constants import ItemIDs
 from src.constants import Kits
+from src.db import get_db_data
 from src.helper import copper_to_gsc
 from src.helper import gsc_dict_to_copper
 from src.helper import host_url
 from src.html_template import HTML_PAGE
+from src.plotting import get_date_plot
 from src.scheduler import start_scheduler
 
 
@@ -123,6 +125,23 @@ def get_unid_gear_data(
 @flask_app.route("/")
 def index() -> str:
     return render_template_string(HTML_PAGE)
+
+
+@flask_app.route("/scholar_rune_history")
+def scholar_rune_history() -> str:
+    data = get_db_data("scholar_rune")
+    plot = get_date_plot(data=data, name="Scholar Rune")
+    with open("./templates/plot.html") as f:
+        content = f.read()
+    with open("./style.css") as f:
+        style = f.read()
+    return render_template_string(
+        content,
+        item_name="Scholar Rune",
+        history=data,
+        plot=plot,
+        style=style,
+    )
 
 
 @fastapi_app.get("/price")

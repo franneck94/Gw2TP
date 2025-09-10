@@ -64,7 +64,7 @@ def start_scheduler() -> None:
     scheduler.add_job(
         job,
         "interval",
-        seconds=10,
+        minutes=10,
         max_instances=1,
         coalesce=True,
     )

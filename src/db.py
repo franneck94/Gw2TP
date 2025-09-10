@@ -55,11 +55,17 @@ class ScholarRune(ItemBase, Base):  # type: ignore
         )
 
 
-def get_scholar_history() -> list[ScholarRune]:
+DB_CLASSES = [ScholarRune]
+
+
+def get_db_data(table_name: str) -> list[ScholarRune]:
     db = SessionLocal()
-    history = db.query(ScholarRune).all()
-    db.close()
-    return history
+    for db_class in DB_CLASSES:
+        if db_class.__tablename__ == table_name:
+            data = db.query(db_class).all()
+            db.close()
+            return data
+    return []
 
 
 Base.metadata.create_all(bind=db)

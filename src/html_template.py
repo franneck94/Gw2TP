@@ -489,6 +489,7 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Scholar" target="_blank" style="color: inherit; text-decoration: none;">
                     Scholar Runes
                 </a>
+                <button onclick="window.open('scholar_rune_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {SCHOLAR_RUNE_TABLE}
 

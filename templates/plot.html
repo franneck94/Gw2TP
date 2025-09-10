@@ -2,24 +2,20 @@
 
 <html>
     <head>
-        <title>{{ item_name }} Data Viewer</title>
+        <style>
+            {{ style  }}
+        </style>
     </head>
     <body>
-        <h1>{{ item_name }} History</h1>
-        <ul>
-            {% for entry in history %}
-            <li>
-                {{ entry.timestamp }}: Sell {{ entry.sell }}: Buy {{ entry.buy}}
-            </li>
-            {% endfor %}
-        </ul>
+        <h1 style="text-align: center">{{ item_name }} History</h1>
 
         {% if plot %}
-        <h2>{{ item_name }} History Plot</h2>
-        <img
-            src="data:image/png;base64,{{ plot }}"
-            alt="{{ item_name }} History Plot"
-        />
+        <div style="text-align: center">
+            <img
+                src="data:image/png;base64,{{ plot }}"
+                alt="{{ item_name }} History Plot"
+            />
+        </div>
         {% endif %}
     </body>
 </html>
