@@ -788,34 +788,6 @@ def get_profits() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/mats_craft_compare")
-def get_mats_craft_compare() -> JSONResponse:
-    try:
-        fetched_data = fetch_tp_prices(
-            [
-                ItemIDs.LUCENT_MOTE,
-                ItemIDs.MIRTHIL,
-                ItemIDs.ELDER_WOOD,
-                ItemIDs.THICK_LEATHER,
-            ],
-        )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
-
-    lucent_mote_sell = fetched_data[ItemIDs.LUCENT_MOTE]["sell"]
-    mithril_sell = fetched_data[ItemIDs.MIRTHIL]["sell"]
-    elder_wood_sell = fetched_data[ItemIDs.ELDER_WOOD]["sell"]
-    thick_leather_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
-
-    data = {
-        **get_sub_dct("lucent_mote", lucent_mote_sell * 250.0),
-        **get_sub_dct("mithril_ore", mithril_sell * 250.0),
-        **get_sub_dct("elder_wood_log", elder_wood_sell * 250.0),
-        **get_sub_dct("thick_leather", thick_leather_sell * 250.0),
-    }
-    return JSONResponse(content=jsonable_encoder(data))
-
-
 @fastapi_app.get("/symbol_enh_forge")
 def get_symbol_enh_forge() -> JSONResponse:
     try:

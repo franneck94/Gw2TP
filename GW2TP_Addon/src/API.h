@@ -29,7 +29,7 @@ public:
         "common_gear_salvage",
         // t5
         "t5_mats_buy",
-        "mats_craft_compare",
+        "mats_crafting_compare",
         // forge
         "symbol_enh_forge",
         "loadstone_forge",
@@ -60,7 +60,7 @@ public:
         "large_scale",
     };
 
-    static const inline std::array<const char *, 6> MATS_CRAFT_COMPARE_NAMES = {
+    static const inline std::array<const char *, 6> MATS_CRAFTING_COMPARE_NAMES = {
         "mithril_ore_to_ingot",
         "mithril_ingot_buy",
         "elder_wood_log_to_plank",

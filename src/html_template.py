@@ -154,17 +154,17 @@ T5_MATS_BUY_TABLE = get_table_html(
     clipboard_copy=True,
 )
 
-MATS_CRAFT_COMPARE_NAMES = [
-    "mithril_ore_to_ingot",
+MATS_CRAFTING_COMPARE_NAMES = [
+    "lucent_mote",
     "mithril_ingot_buy",
     "elder_wood_log_to_plank",
     "elder_wood_plank_buy",
     "lucent_mote_to_crystal",
     "lucent_crystal_buy",
 ]
-MATS_CRAFT_COMPARE_TABLE = get_table_html(
-    price_names=MATS_CRAFT_COMPARE_NAMES,
-    category_name="mats_craft_compare",
+MATS_CRAFTING_COMPARE_TABLE = get_table_html(
+    price_names=MATS_CRAFTING_COMPARE_NAMES,
+    category_name="mats_crafting_compare",
 )
 
 COMMON_GEAR_NAMES = [
@@ -465,7 +465,7 @@ HTML_PAGE = f"""
             {RARE_WEAPON_CRAFT_TABLE}
 
             <h3 style="text-align: center;">Mats Crafting Compare</h3>
-            {MATS_CRAFT_COMPARE_TABLE}
+            {MATS_CRAFTING_COMPARE_TABLE}
 
             <h3 style="text-align: center;">T5 Mats Buy Order</h3>
             {T5_MATS_BUY_TABLE}

@@ -166,8 +166,8 @@ namespace
         // t5
         else if (request_id == "t5_mats_buy")
             _get_ordered_row_data(API::T5_MATS_BUY_NAMES, rows);
-        else if (request_id == "mats_craft_compare")
-            _get_ordered_row_data(API::MATS_CRAFT_COMPARE_NAMES, rows);
+        else if (request_id == "mats_crafting_compare")
+            _get_ordered_row_data(API::MATS_CRAFTING_COMPARE_NAMES, rows);
         // forge
         else if (request_id == "symbol_enh_forge")
             _get_ordered_row_data(API::FORGE_ENH_NAMES, rows);
