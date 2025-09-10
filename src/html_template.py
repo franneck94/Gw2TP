@@ -155,7 +155,7 @@ T5_MATS_BUY_TABLE = get_table_html(
 )
 
 MATS_CRAFTING_COMPARE_NAMES = [
-    "lucent_mote",
+    "mithril_ore_to_ingot",
     "mithril_ingot_buy",
     "elder_wood_log_to_plank",
     "elder_wood_plank_buy",
