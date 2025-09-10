@@ -82,7 +82,7 @@ def start_scheduler() -> None:
     scheduler.add_job(
         job,
         "interval",
-        seconds=20,
+        minutes=20,
         max_instances=1,
     )
     scheduler.start()
