@@ -86,43 +86,52 @@ DB_CLASSES: list[ItemBase] = [
 ]
 
 
+def cleanup_old_records(days: int = 14) -> None:
+    cutoff_date = (
+        datetime.datetime.now(tz=datetime.timezone.utc)
+        - datetime.timedelta(days=days)
+    )
+    db = SessionLocal()
+    try:
+        for db_class in DB_CLASSES:
+            db.query(db_class).filter(db_class.timestamp < cutoff_date).delete()
+        db.commit()
+    finally:
+        db.close()
+
+
 def get_db_data(
     table_name: str,
     start_datetime: datetime.datetime | None = None,
     end_datetime: datetime.datetime | None = None,
 ) -> list[ItemBase]:
     db = SessionLocal()
-    for db_class in DB_CLASSES:
-        if db_class.__tablename__ == table_name:
-            if start_datetime and end_datetime:
-                data = (
-                    db.query(db_class)
-                    .filter(db_class.timestamp >= start_datetime)
-                    .filter(db_class.timestamp <= end_datetime)
-                    .all()
-                )
-                db.close()
-                return data
-            if start_datetime:
-                data = (
-                    db.query(db_class)
-                    .filter(db_class.timestamp >= start_datetime)
-                    .all()
-                )
-                db.close()
-                return data
-            if end_datetime:
-                data = (
-                    db.query(db_class)
-                    .filter(db_class.timestamp <= end_datetime)
-                    .all()
-                )
-                db.close()
-                return data
+    try:
+        for db_class in DB_CLASSES:
+            if db_class.__tablename__ == table_name:
+                if start_datetime and end_datetime:
+                    return (
+                        db.query(db_class)
+                        .filter(db_class.timestamp >= start_datetime)
+                        .filter(db_class.timestamp <= end_datetime)
+                        .all()
+                    )
+                if start_datetime:
+                    return (
+                        db.query(db_class)
+                        .filter(db_class.timestamp >= start_datetime)
+                        .all()
+                    )
+                if end_datetime:
+                    return (
+                        db.query(db_class)
+                        .filter(db_class.timestamp <= end_datetime)
+                        .all()
+                    )
 
-            data = db.query(db_class).all()
-            db.close()
-            return data
+                return db.query(db_class).all()
+    finally:
+        db.close()
     return []
 
 

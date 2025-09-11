@@ -12,6 +12,7 @@ from .db import GuardianRune
 from .db import ScholarRune
 from .db import SessionLocal
 from .db import ThiefRelic
+from .db import cleanup_old_records
 from .helper import host_url
 from .helper import is_running_on_railway
 
@@ -79,21 +80,38 @@ async def fetch_api_data() -> None:
 def start_scheduler() -> None:
     scheduler = AsyncIOScheduler()
 
-    async def job() -> None:
+    async def fetch_job() -> None:
         await fetch_api_data()
+
+    def cleanup_job() -> None:
+        cleanup_old_records(days=14)
+        print("Database cleanup completed...")
 
     if is_running_on_railway():
         scheduler.add_job(
-            job,
+            fetch_job,
             "interval",
             minutes=15,
             max_instances=1,
         )
+        scheduler.add_job(
+            cleanup_job,
+            "cron",
+            hour=0,  # daily at midnight UTC
+            minute=0,
+            max_instances=1,
+        )
     else:
         scheduler.add_job(
-            job,
+            fetch_job,
             "interval",
             seconds=10,
+            max_instances=1,
+        )
+        scheduler.add_job(
+            cleanup_job,
+            "interval",
+            hours=1,
             max_instances=1,
         )
     scheduler.start()
