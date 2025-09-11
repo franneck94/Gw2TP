@@ -1,0 +1,41 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+{
+    "name": "Ubuntu",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/jsburckhardt/devcontainer-features/ruff:1": {},
+        "ghcr.io/swift-server-community/swift-devcontainer-features/sqlite:1": {},
+        "ghcr.io/va-h/devcontainers-features/uv:1": {
+            "shellautocompletion": true,
+            "version": "latest"
+        }
+    },
+    // "forwardPorts": [],
+    "postCreateCommand": "python3.12 -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "qwtel.sqlite-viewer",
+                "franneck94.vscode-coding-tools-extension-pack",
+                "franneck94.vscode-python-dev-extension-pack"
+            ],
+            "settings": {
+                "trailing-spaces.trimOnSave": true,
+                "editor.renderWhitespace": "all",
+                "editor.inlayHints.enabled": "onUnlessPressed",
+                "editor.insertSpaces": true,
+                "editor.rulers": [
+                    120
+                ]
+            }
+        }
+    },
+    // "remoteUser": "root"
+    "mounts": [
+        "source=/mnt/c,target=/mnt/c,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/uv-cache,target=/opt/uv-cache,type=bind,consistency=cached"
+    ]
+}
