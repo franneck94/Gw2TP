@@ -86,32 +86,17 @@ def get_date_plot(
     fig.update_layout(height=700)
     config = {
         "displayModeBar": True,
-        "modeBarButtonsToRemove": [
-            "lasso2d",
-            "hoverClosestCartesian",
-            "hoverCompareCartesian",
-            "toggleSpikelines",
-            "toImage",
-            "sendDataToCloud",
-            "drawline",
-            "drawopenpath",
-            "drawclosedpath",
-            "drawcircle",
-            "drawrect",
-            "eraseshape",
-            "select2d",
-        ],
         "modeBarButtonsToAdd": [],
         "scrollZoom": True,
+        "modeBarButtons": [[
+            "zoom2d",
+            "pan2d",
+            "zoomIn2d",
+            "zoomOut2d",
+            "resetScale2d",
+            "autoScale2d"
+        ]]
     }
-    config["modeBarButtonsToKeep"] = [
-        "zoom2d",
-        "pan2d",
-        "zoomIn2d",
-        "zoomOut2d",
-        "resetScale2d",
-        "autoScale2d",
-    ]
     return plot(
         fig,
         output_type="div",
