@@ -9,6 +9,7 @@ pydantic
 apscheduler
 matplotlib
 starlette
+plotly
 
 ruff>=0.6.2
 isort>=5.13.2
