@@ -9,13 +9,6 @@
     <body>
         <h1 style="text-align: center">{{ item_name }} History</h1>
 
-        {% if plot %}
-        <div style="text-align: center">
-            <img
-                src="data:image/png;base64,{{ plot }}"
-                alt="{{ item_name }} History Plot"
-            />
-        </div>
-        {% endif %}
+        <div style="text-align: center">{{ plot | safe }}</div>
     </body>
 </html>

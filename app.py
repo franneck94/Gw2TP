@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import datetime
 import os
 from pathlib import Path
 from typing import Any
 from typing import Dict
 
 import httpx
-import uvicorn
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -132,8 +132,16 @@ def history_base(
     key_name: str,
     full_name: str,
 ) -> str:
-    data = get_db_data(key_name)
-    plot = get_date_plot(data=data, name=full_name)
+    end_datetime = datetime.datetime.now(
+        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
+    )
+    start_datetime = end_datetime - datetime.timedelta(hours=24)
+    data = get_db_data(
+        key_name,
+        start_datetime=start_datetime,
+        end_datetime=end_datetime,
+    )
+    plot = get_date_plot(data=data)
     content = Path("./templates/plot.html").read_text(encoding="utf-8")
     style = Path("./style.css").read_text(encoding="utf-8")
     return render_template_string(
@@ -977,11 +985,3 @@ app = Starlette(
 )
 
 start_scheduler()
-
-if __name__ == "_main_":
-    uvicorn.run(
-        "flask_fastapi_shared:app",
-        host="0.0.0.0",  # noqa: S104
-        port=port,
-        reload=True,
-    )

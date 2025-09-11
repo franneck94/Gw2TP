@@ -13,6 +13,7 @@ from .db import ScholarRune
 from .db import SessionLocal
 from .db import ThiefRelic
 from .helper import host_url
+from .helper import is_running_on_railway
 
 
 api_base = host_url()
@@ -44,7 +45,9 @@ async def _fetch_single_request(
             db.add(
                 data_cls(
                     **kwargs,
-                    timestamp=datetime.datetime.now(),  # noqa: DTZ005
+                    timestamp=datetime.datetime.now(
+                        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
+                    ),
                 )
             )
             db.commit()
@@ -79,10 +82,18 @@ def start_scheduler() -> None:
     async def job() -> None:
         await fetch_api_data()
 
-    scheduler.add_job(
-        job,
-        "interval",
-        minutes=20,
-        max_instances=1,
-    )
+    if is_running_on_railway():
+        scheduler.add_job(
+            job,
+            "interval",
+            minutes=15,
+            max_instances=1,
+        )
+    else:
+        scheduler.add_job(
+            job,
+            "interval",
+            seconds=10,
+            max_instances=1,
+        )
     scheduler.start()

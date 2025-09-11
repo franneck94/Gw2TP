@@ -26,7 +26,9 @@ class ItemBase:
     id: Mapped[int] = mapped_column(primary_key=True, index=True, unique=True)
     timestamp: Mapped[datetime.datetime] = mapped_column(
         nullable=False,
-        default=datetime.datetime.now(tz=datetime.timezone.utc),
+        default=lambda: datetime.datetime.now(
+            tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
+        ),
     )
 
     crafting_cost_g: Mapped[int]
