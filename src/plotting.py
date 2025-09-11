@@ -100,6 +100,6 @@ def get_date_plot(
     return plot(
         fig,
         output_type="div",
-        include_plotlyjs=True,
+        include_plotlyjs="cdn",
         config=config,
     )
