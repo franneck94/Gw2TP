@@ -40,11 +40,7 @@ optional-dependencies = { dev = [
 ] }
 
 [tool.setuptools]
-platforms = ["unix", "linux", "osx", "cygwin", "win32"]
 packages = ["gw2tp"]
-
-[tool.setuptools.dynamic]
-version = { attr = "fastvector.__version__" }
 
 [tool.black]
 target-version = ['py310']
