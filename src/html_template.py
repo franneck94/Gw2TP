@@ -293,7 +293,7 @@ FORGE_ENH_TABLE = get_table_html(
     hidden_name="Symbol of Enhancement",
 )
 
-with (CWD / "style.css").open() as f:
+with (CWD / "static" / "style.css").open() as f:
     CSS_CONTENT = f.read()
 STYLE = f"<style>{CSS_CONTENT}</style>"
 
@@ -367,7 +367,7 @@ try {{
 """
 
 
-with (CWD / "scripts.js").open() as f:
+with (CWD / "static" / "scripts.js").open() as f:
     SCRIPT_FUNCTIONS = f.read()
 
 FETCH_PRICES = f"""

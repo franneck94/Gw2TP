@@ -143,7 +143,7 @@ def history_base(
     )
     plot = get_date_plot(data=data)
     content = Path("./templates/plot.html").read_text(encoding="utf-8")
-    style = Path("./style.css").read_text(encoding="utf-8")
+    style = Path("./static/style.css").read_text(encoding="utf-8")
     return render_template_string(
         content,
         item_name=full_name,
