@@ -39,8 +39,9 @@ optional-dependencies = { dev = [
     "mypy>=1.0.0",
 ] }
 
-[tool.setuptools.packages.find]
-where = ["gw2tp/"]
+[tool.setuptools]
+packages.find = {}
+package-dir = { "" = "." }
 
 [tool.black]
 target-version = ['py310']
