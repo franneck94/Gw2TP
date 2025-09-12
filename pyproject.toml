@@ -6,8 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "gw2tp"
 authors = [{ name = "Jan Schaffranek" }]
 version = "0.1.0"
-description = "Utility functions for the Guild Wars 2 Trading Post"
-readme = "README.md"
+description = "Utility functions for the GW2TP website and API"
 requires-python = ">=3.10"
 
 classifiers = [
