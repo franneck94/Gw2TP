@@ -5,7 +5,6 @@ from typing import Any
 from typing import Dict
 
 import httpx
-from db_schema import get_db_data
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -23,6 +22,7 @@ from gw2tp.constants import Kits
 from gw2tp.helper import copper_to_gsc
 from gw2tp.helper import gsc_dict_to_copper
 from gw2tp.helper import host_url
+from gw2tp.db_schema import get_db_data
 
 
 api_base = host_url()

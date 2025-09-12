@@ -6,7 +6,7 @@ api_token.py
 *.dll
 *.pdb
 index.html
-data.db_schema
+data.db
 
 ################################
 ########### FOLDERS ############
