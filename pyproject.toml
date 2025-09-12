@@ -30,6 +30,7 @@ dependencies = [
     "apscheduler",
     "matplotlib",
     "starlette",
+    "requests",
     "plotly==6.3.0",
 ]
 optional-dependencies = { dev = [
