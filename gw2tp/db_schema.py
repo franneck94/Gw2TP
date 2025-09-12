@@ -1,22 +1,11 @@
 import datetime
-import os
-from pathlib import Path
 
-from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import sessionmaker
 
 
-FILE_DIR = Path(__file__).parent
-DEFAULT_DB_PATH = FILE_DIR / ".." / "database" / "data.db_schema"
-DATABASE_PATH = Path(os.getenv("DATABASE_URL", str(DEFAULT_DB_PATH)))
-DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
-DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-db = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(bind=db)
 Base = declarative_base()
 
 
@@ -86,12 +75,13 @@ DB_CLASSES: list[ItemBase] = [
 ]
 
 
-def cleanup_old_records(days: int = 14) -> None:
-    cutoff_date = (
-        datetime.datetime.now(tz=datetime.timezone.utc)
-        - datetime.timedelta(days=days)
-    )
-    db = SessionLocal()
+def cleanup_old_records(
+    db: Session,
+    days: int = 14,
+) -> None:
+    cutoff_date = datetime.datetime.now(
+        tz=datetime.timezone.utc
+    ) - datetime.timedelta(days=days)
     try:
         for db_class in DB_CLASSES:
             db.query(db_class).filter(db_class.timestamp < cutoff_date).delete()
@@ -101,11 +91,11 @@ def cleanup_old_records(days: int = 14) -> None:
 
 
 def get_db_data(
+    db: Session,
     table_name: str,
     start_datetime: datetime.datetime | None = None,
     end_datetime: datetime.datetime | None = None,
 ) -> list[ItemBase]:
-    db = SessionLocal()
     try:
         for db_class in DB_CLASSES:
             if db_class.__tablename__ == table_name:
@@ -133,6 +123,3 @@ def get_db_data(
     finally:
         db.close()
     return []
-
-
-Base.metadata.create_all(bind=db)

@@ -9,6 +9,7 @@ from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
+from backend.db import SessionLocal
 from frontend.html_template import HTML_PAGE
 from frontend.plotting import get_date_plot
 from gw2tp.db_schema import get_db_data
@@ -28,11 +29,13 @@ def history_base(
     key_name: str,
     full_name: str,
 ) -> str:
+    db = SessionLocal()
     end_datetime = datetime.datetime.now(
         tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
     )
     start_datetime = end_datetime - datetime.timedelta(hours=24)
     data = get_db_data(
+        db,
         key_name,
         start_datetime=start_datetime,
         end_datetime=end_datetime,

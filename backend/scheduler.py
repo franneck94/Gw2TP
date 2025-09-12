@@ -10,11 +10,12 @@ from gw2tp.db_schema import DragonHunterRune
 from gw2tp.db_schema import FireworksRelic
 from gw2tp.db_schema import GuardianRune
 from gw2tp.db_schema import ScholarRune
-from gw2tp.db_schema import SessionLocal
 from gw2tp.db_schema import ThiefRelic
 from gw2tp.db_schema import cleanup_old_records
 from gw2tp.helper import host_url
 from gw2tp.helper import is_running_on_railway
+
+from .db import SessionLocal
 
 
 api_base = host_url()
@@ -79,12 +80,13 @@ async def fetch_api_data() -> None:
 
 def start_scheduler() -> None:
     scheduler = AsyncIOScheduler()
+    db = SessionLocal()
 
     async def fetch_job() -> None:
         await fetch_api_data()
 
     def cleanup_job() -> None:
-        cleanup_old_records(days=14)
+        cleanup_old_records(db, days=14)
         print("Database cleanup completed...")
 
     if is_running_on_railway():
