@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import os
+import datetime
 from typing import Any
 from typing import Dict
 
 import httpx
+from db_schema import get_db_data
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -13,6 +14,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.routing import Mount
 
+from backend.db import SessionLocal
 from backend.scheduler import start_scheduler
 from gw2tp.constants import API
 from gw2tp.constants import TAX_RATE
@@ -113,6 +115,30 @@ def get_unid_gear_data(
         return None
 
     return fetched_data
+
+
+@fastapi_app.get("/history")
+async def get_item_history(
+    item_name: str,
+) -> JSONResponse:
+    db = SessionLocal()
+    end_datetime = datetime.datetime.now(
+        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
+    )
+    start_datetime = end_datetime - datetime.timedelta(hours=24)
+    try:
+        data = get_db_data(
+            db,
+            item_name,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
+        )
+        return JSONResponse(content=jsonable_encoder(data))
+    except Exception as e:
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500,
+        )
 
 
 @fastapi_app.get("/price")

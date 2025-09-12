@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-import datetime
 from pathlib import Path
+from urllib.parse import urljoin
 
+import requests
 from flask import Flask
 from flask import render_template_string
 from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
-from backend.db import SessionLocal
 from frontend.html_template import HTML_PAGE
 from frontend.plotting import get_date_plot
-from gw2tp.db_schema import get_db_data
 from gw2tp.helper import host_url
 
 
@@ -26,20 +25,15 @@ def index() -> str:
 
 
 def history_base(
-    key_name: str,
+    item_name: str,
     full_name: str,
 ) -> str:
-    db = SessionLocal()
-    end_datetime = datetime.datetime.now(
-        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
-    )
-    start_datetime = end_datetime - datetime.timedelta(hours=24)
-    data = get_db_data(
-        db,
-        key_name,
-        start_datetime=start_datetime,
-        end_datetime=end_datetime,
-    )
+    api_url = urljoin(api_base, f"/api/history?item_name={item_name}")
+    response = requests.get(api_url, timeout=10.0)
+    if response.status_code != 200:
+        return f"Error fetching data: {response.text}"
+
+    data = response.json()
     plot = get_date_plot(data=data)
     content = Path("./templates/plot.html").read_text(encoding="utf-8")
     style = Path("./static/style.css").read_text(encoding="utf-8")

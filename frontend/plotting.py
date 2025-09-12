@@ -1,25 +1,29 @@
+from datetime import datetime
 from typing import Sequence
 
 import matplotlib as mpl
 import plotly.graph_objs as go
 from plotly.offline import plot
 
-from gw2tp.db_schema import ItemBase
-
 
 mpl.use("Agg")
 
 
 def _get_plot_data(
-    data: Sequence[ItemBase],
+    data: Sequence[dict],
 ) -> tuple[list[str], list[float], list[float]]:
-    timestamps = [e.timestamp.strftime("%d %b %H:%M") for e in data]
-    sell_price = [(e.sell_g + e.sell_s / 100 + e.sell_c / 10_000) for e in data]
+    timestamps = [
+        datetime.fromisoformat(e["timestamp"]).strftime("%d %b %H:%M")
+        for e in data
+    ]
+    sell_price = [
+        (e["sell_g"] + e["sell_s"] / 100 + e["sell_c"] / 10_000) for e in data
+    ]
     crafting_price = [
         (
-            e.crafting_cost_g
-            + e.crafting_cost_s / 100
-            + e.crafting_cost_c / 10_000
+            e["crafting_cost_g"]
+            + e["crafting_cost_s"] / 100
+            + e["crafting_cost_c"] / 10_000
         )
         for e in data
     ]
@@ -27,7 +31,7 @@ def _get_plot_data(
 
 
 def get_date_plot(
-    data: Sequence[ItemBase],
+    data: Sequence[dict],
     *,
     plot_mean: bool = False,
 ) -> str:
