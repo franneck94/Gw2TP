@@ -1,6 +1,6 @@
 import os
 
-from src.constants import API
+from gw2tp.constants import API
 
 
 def is_running_on_railway() -> bool:

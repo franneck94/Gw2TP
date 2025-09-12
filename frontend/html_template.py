@@ -1,12 +1,14 @@
 # ruff: noqa: E501
 from pathlib import Path
 
-from src.constants import ItemIDs
-from src.helper import is_running_on_railway
+from gw2tp.constants import ItemIDs
+from gw2tp.helper import host_url
+from gw2tp.helper import is_running_on_railway
 
 
 CWD = Path.cwd()
 uses_server = is_running_on_railway()
+url = host_url()
 
 TABLE_HEADER = """
 <tr>
@@ -328,8 +330,9 @@ PROFIT_CALCULATION_HTML = """
 
 
 def get_fetch_price_html(item_id: int) -> str:
+    api_endpoint = f"price?item_id={item_id}"
     return f"""
-const response = await fetch("/api/price?item_id={item_id}");
+const response = await fetch('{url}{api_endpoint}');
 const data = await response.json();
 if (data.error) {{
     alert(data.error);
@@ -355,7 +358,7 @@ def get_all_fetch_price_html(
 ) -> str:
     return f"""
 try {{
-    const response = await fetch('/api/{api_endpoint}');
+    const response = await fetch('{url}{api_endpoint}');
     const data = await response.json();
 
     for (const [key, value] of Object.entries(data)) {{
@@ -539,6 +542,6 @@ HTML_PAGE = f"""
 """
 
 if not uses_server:
-    index = Path("index.html")
+    index = Path("static") / "index.html"
     with index.open("w", encoding="utf-8") as f:
         f.write(HTML_PAGE)

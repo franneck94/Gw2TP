@@ -4,8 +4,8 @@ from typing import Any
 import aiohttp
 import discord
 
-from src.constants import API
-from src.helper import host_url
+from gw2tp.constants import API
+from gw2tp.helper import host_url
 
 
 TOKEN = os.getenv("DISCORD_TOKEN")

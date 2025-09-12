@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import datetime
 import os
-from pathlib import Path
 from typing import Any
 from typing import Dict
 
@@ -10,29 +8,23 @@ import httpx
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from flask import Flask
-from flask import render_template_string
 from starlette.applications import Starlette
-from starlette.middleware.wsgi import WSGIMiddleware
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.routing import Mount
 
-from src.constants import API
-from src.constants import TAX_RATE
-from src.constants import ItemIDs
-from src.constants import Kits
-from src.db import get_db_data
-from src.helper import copper_to_gsc
-from src.helper import gsc_dict_to_copper
-from src.helper import host_url
-from src.html_template import HTML_PAGE
-from src.plotting import get_date_plot
-from src.scheduler import start_scheduler
+from backend.scheduler import start_scheduler
+from gw2tp.constants import API
+from gw2tp.constants import TAX_RATE
+from gw2tp.constants import ItemIDs
+from gw2tp.constants import Kits
+from gw2tp.helper import copper_to_gsc
+from gw2tp.helper import gsc_dict_to_copper
+from gw2tp.helper import host_url
 
 
 api_base = host_url()
 fastapi_app = FastAPI()
-flask_app = Flask(__name__)
-port = int(os.environ.get("PORT", "8000"))
 
 
 def get_sub_dct(
@@ -123,74 +115,14 @@ def get_unid_gear_data(
     return fetched_data
 
 
-@flask_app.route("/")
-def index() -> str:
-    return render_template_string(HTML_PAGE)
-
-
-def history_base(
-    key_name: str,
-    full_name: str,
-) -> str:
-    end_datetime = datetime.datetime.now(
-        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
-    )
-    start_datetime = end_datetime - datetime.timedelta(hours=24)
-    data = get_db_data(
-        key_name,
-        start_datetime=start_datetime,
-        end_datetime=end_datetime,
-    )
-    plot = get_date_plot(data=data)
-    content = Path("./templates/plot.html").read_text(encoding="utf-8")
-    style = Path("./static/style.css").read_text(encoding="utf-8")
-    return render_template_string(
-        content,
-        item_name=full_name,
-        history=data,
-        plot=plot,
-        style=style,
-    )
-
-
-@flask_app.route("/scholar_rune_history")
-def history_scholar() -> str:
-    return history_base("scholar_rune", "Scholar Rune")
-
-
-@flask_app.route("/guardian_rune_history")
-def history_guardian() -> str:
-    return history_base("guardian_rune", "Guardian Rune")
-
-
-@flask_app.route("/dragonhunter_rune_history")
-def history_dragonhunter() -> str:
-    return history_base("dragonhunter_rune", "Dragonhunter Rune")
-
-
-@flask_app.route("/relic_of_fireworks_history")
-def history_fireworks() -> str:
-    return history_base("relic_of_fireworks", "Relic of Fireworks")
-
-
-@flask_app.route("/relic_of_thief_history")
-def history_thief() -> str:
-    return history_base("relic_of_thief", "Relic of Thief")
-
-
-@flask_app.route("/relic_of_aristocracy_history")
-def history_aristocracy() -> str:
-    return history_base("relic_of_aristocracy", "Relic of Aristocracy")
-
-
 @fastapi_app.get("/price")
 async def get_price(
     item_id: int,
 ) -> JSONResponse:
     try:
-        with flask_app.app_context():
-            data = fetch_tp_prices([item_id])
-            return JSONResponse(content=jsonable_encoder(data[item_id]))
+        # with flask_app.app_context():
+        data = fetch_tp_prices([item_id])
+        return JSONResponse(content=jsonable_encoder(data[item_id]))
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
@@ -977,11 +909,15 @@ def get_thesis_on_masterful_malice() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+origins = [
+    api_base.replace("8000", "5000"),
+]
+middleware = [Middleware(CORSMiddleware, allow_origins=["*"])]
 app = Starlette(
     routes=[
         Mount("/api", app=fastapi_app),
-        Mount("/", app=WSGIMiddleware(flask_app)),
     ],
+    middleware=middleware,
 )
 
 start_scheduler()

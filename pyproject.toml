@@ -1,3 +1,54 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gw2tp"
+authors = [{ name = "Jan Schaffranek" }]
+version = "0.1.0"
+description = "Utility functions for the Guild Wars 2 Trading Post"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "setuptools",
+    "fastapi",
+    "uvicorn",
+    "httpx",
+    "flask",
+    "aiohttp",
+    "discord.py",
+    "sqlalchemy",
+    "pydantic",
+    "apscheduler",
+    "matplotlib",
+    "starlette",
+    "plotly==6.3.0",
+]
+optional-dependencies = { dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "ruff>=0.0.300",
+    "mypy>=1.0.0",
+] }
+
+[tool.setuptools]
+platforms = ["unix", "linux", "osx", "cygwin", "win32"]
+packages = ["gw2tp"]
+
+[tool.setuptools.dynamic]
+version = { attr = "fastvector.__version__" }
+
 [tool.black]
 target-version = ['py310']
 line-length = 80

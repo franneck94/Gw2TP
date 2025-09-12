@@ -4,7 +4,7 @@ import matplotlib as mpl
 import plotly.graph_objs as go
 from plotly.offline import plot
 
-from .db import ItemBase
+from gw2tp.db_schema import ItemBase
 
 
 mpl.use("Agg")
@@ -88,14 +88,16 @@ def get_date_plot(
         "displayModeBar": True,
         "modeBarButtonsToAdd": [],
         "scrollZoom": True,
-        "modeBarButtons": [[
-            "zoom2d",
-            "pan2d",
-            "zoomIn2d",
-            "zoomOut2d",
-            "resetScale2d",
-            "autoScale2d"
-        ]]
+        "modeBarButtons": [
+            [
+                "zoom2d",
+                "pan2d",
+                "zoomIn2d",
+                "zoomOut2d",
+                "resetScale2d",
+                "autoScale2d",
+            ]
+        ],
     }
     return plot(
         fig,
