@@ -909,9 +909,6 @@ def get_thesis_on_masterful_malice() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-origins = [
-    api_base.replace("8000", "5000"),
-]
 middleware = [Middleware(CORSMiddleware, allow_origins=["*"])]
 app = Starlette(
     routes=[

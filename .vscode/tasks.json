@@ -18,7 +18,7 @@
         {
             "label": "Discord Bot",
             "type": "shell",
-            "command": "${command:python.interpreterPath} ${workspaceFolder}/discord_app.py",
+            "command": "${command:python.interpreterPath} ${workspaceFolder}/discord_bot/app.py",
             "args": [],
             "group": "build"
         }

@@ -37,7 +37,7 @@
             "name": "Discord Bot",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/discord_app.py",
+            "program": "${workspaceFolder}/discord_bot/app.py",
             "console": "integratedTerminal",
             "args": [],
             "justMyCode": true
