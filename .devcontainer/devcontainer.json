@@ -25,11 +25,7 @@
             "settings": {
                 "trailing-spaces.trimOnSave": true,
                 "editor.renderWhitespace": "all",
-                "editor.inlayHints.enabled": "onUnlessPressed",
-                "editor.insertSpaces": true,
-                "editor.rulers": [
-                    120
-                ]
+                "editor.rulers": [120]
             }
         }
     },

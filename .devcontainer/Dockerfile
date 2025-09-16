@@ -8,5 +8,3 @@ RUN apt-get update && \
     python3.12-venv \
     libpython3.12-dev \
     git
-
-RUN curl -LsSf https://astral.sh/uv/install.sh | bash -s -- /usr/local/bin
