@@ -2,6 +2,9 @@
 requires = ["setuptools>=77", "setuptools_scm[toml]==8.3.1"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+package-dir = { "gw2tp" = "." }
+
 [project]
 name = "gw2tp"
 authors = [{ name = "Jan Schaffranek" }]
@@ -24,10 +27,6 @@ optional-dependencies = { dev = [
     "ruff>=0.0.300",
     "mypy>=1.0.0",
 ] }
-
-[tool.setuptools]
-packages.find = {}
-package-dir = { "" = "." }
 
 [tool.black]
 target-version = ['py310']

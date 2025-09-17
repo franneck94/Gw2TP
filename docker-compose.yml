@@ -3,8 +3,8 @@ services:
         image: gw2tp-backend
         container_name: gw2tp-backend
         build:
-            context: ./backend
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: backend/Dockerfile
         ports:
             - "8000:8000"
 
@@ -12,7 +12,7 @@ services:
         image: gw2tp-frontend
         container_name: gw2tp-frontend
         build:
-            context: ./frontend
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: frontend/Dockerfile
         ports:
             - "5000:5000"

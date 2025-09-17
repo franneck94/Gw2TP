@@ -29,7 +29,6 @@ dependencies = [
     "apscheduler",
     "starlette",
     "requests",
-    "gw2tp",
 ]
 optional-dependencies = { dev = [
     "black>=25.1.0",

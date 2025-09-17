@@ -8,11 +8,15 @@ VOLUME /app/database
 
 COPY pyproject.toml .
 
-COPY ../gw2tp ./gw2tp
+COPY gw2tp gw2tp
+
+RUN cd gw2tp && pip install -e .
 
 RUN pip install .
 
-COPY . backend
+RUN python -c 'import gw2tp.constants'
+
+COPY . .
 
 EXPOSE 8000
 
