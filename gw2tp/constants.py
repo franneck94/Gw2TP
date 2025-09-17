@@ -83,7 +83,7 @@ TAX_RATE: float = 0.85
 class API:
     GW2_COMMERCE_API_URL: str = "https://api.guildwars2.com/v2/commerce/prices"
     PRODUCTION_API_URL: str = "https://gw2tp-production.up.railway.app/api/"
-    DEV_API_URL: str = "http://backend:8000/api/"
+    DEV_API_URL: str = "http://localhost:8000/api/"
     COMMAND_PREFIX: str = "/gw2tp"
     COMMANDS_LIST: Final[set[str]] = {
         # runes

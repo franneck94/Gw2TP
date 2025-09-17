@@ -10,12 +10,7 @@ def is_running_on_railway() -> bool:
 def host_url() -> str:
     uses_server = is_running_on_railway()
     if uses_server:
-        print("Using production API URL")
         return API.PRODUCTION_API_URL
-    if "BACKEND_URL" in os.environ:
-        print("Using backend API URL")
-        return os.environ["BACKEND_URL"]
-    print("Using development API URL")
     return API.DEV_API_URL
 
 

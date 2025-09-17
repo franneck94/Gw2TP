@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -17,6 +18,7 @@ from frontend.plotting import get_date_plot
 
 
 api_base = host_url()
+api_base = os.environ.get("BACKEND_URL", api_base)
 flask_app = Flask(__name__)
 FILE_DIR = Path(__file__).parent
 
@@ -30,6 +32,7 @@ def history_base(
     item_name: str,
     full_name: str,
 ) -> str:
+    print(os.environ)
     api_url = urljoin(api_base, f"/api/history?item_name={item_name}")
     response = requests.get(api_url, timeout=10.0)
     if response.status_code != 200:

@@ -10,8 +10,6 @@ RUN cd gw2tp && pip install -e .
 
 RUN pip install .
 
-RUN python -c 'import gw2tp.constants'
-
 COPY . .
 
 EXPOSE 5000
