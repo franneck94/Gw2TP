@@ -12,8 +12,8 @@
             "version": "latest"
         }
     },
-    // "forwardPorts": [],
-    "postCreateCommand": "python3.12 -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt",
+    "forwardPorts": [5000, 8000],
+    "postCreateCommand": "python3.12 -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e .",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -30,8 +30,5 @@
         }
     },
     // "remoteUser": "root"
-    "mounts": [
-        "source=/mnt/c,target=/mnt/c,type=bind,consistency=cached",
-        "source=${localEnv:HOME}/uv-cache,target=/opt/uv-cache,type=bind,consistency=cached"
-    ]
+    "mounts": []
 }
