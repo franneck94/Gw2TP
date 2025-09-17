@@ -17,22 +17,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-dependencies = [
-    "setuptools",
-    "fastapi",
-    "uvicorn",
-    "httpx",
-    "flask",
-    "aiohttp",
-    "discord.py",
-    "sqlalchemy",
-    "pydantic",
-    "apscheduler",
-    "matplotlib",
-    "starlette",
-    "requests",
-    "plotly==6.3.0",
-]
+dependencies = ["sqlalchemy"]
 optional-dependencies = { dev = [
     "black>=25.1.0",
     "isort>=6.0.1",
@@ -61,8 +46,8 @@ py_version = 310
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
 known_third_party = []
-known_first_party = ["gw2tp"]
-known_local_folder = ["backend", "frontend"]
+known_first_party = []
+known_local_folder = []
 # style: black
 multi_line_output = 3
 include_trailing_comma = true
@@ -109,8 +94,8 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 force-single-line = true
 force-sort-within-sections = false
 lines-after-imports = 2
-known-first-party = ["gw2tp"]
-known-local-folder = ["backend", "frontend"]
+known-first-party = []
+known-local-folder = []
 known-third-party = []
 section-order = [
     "future",

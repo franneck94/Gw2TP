@@ -10,9 +10,10 @@ from starlette.applications import Starlette
 from starlette.middleware.wsgi import WSGIMiddleware
 from starlette.routing import Mount
 
+from gw2tp.helper import host_url
+
 from frontend.html_template import HTML_PAGE
 from frontend.plotting import get_date_plot
-from gw2tp.helper import host_url
 
 
 api_base = host_url()

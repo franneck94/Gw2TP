@@ -13,16 +13,17 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.routing import Mount
 
-from backend.db import SessionLocal
-from backend.scheduler import start_scheduler
 from gw2tp.constants import API
 from gw2tp.constants import TAX_RATE
 from gw2tp.constants import ItemIDs
 from gw2tp.constants import Kits
-from gw2tp.db_schema import get_db_data
 from gw2tp.helper import copper_to_gsc
 from gw2tp.helper import gsc_dict_to_copper
 from gw2tp.helper import host_url
+
+from backend.db import SessionLocal
+from backend.db_schema import get_db_data
+from backend.scheduler import start_scheduler
 
 
 api_base = host_url()

@@ -5,17 +5,17 @@ import aiohttp
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sqlalchemy.orm import Session
 
-from gw2tp.db_schema import AristocracyRelic
-from gw2tp.db_schema import DragonHunterRune
-from gw2tp.db_schema import FireworksRelic
-from gw2tp.db_schema import GuardianRune
-from gw2tp.db_schema import ScholarRune
-from gw2tp.db_schema import ThiefRelic
-from gw2tp.db_schema import cleanup_old_records
 from gw2tp.helper import host_url
 from gw2tp.helper import is_running_on_railway
 
 from .db import SessionLocal
+from .db_schema import AristocracyRelic
+from .db_schema import DragonHunterRune
+from .db_schema import FireworksRelic
+from .db_schema import GuardianRune
+from .db_schema import ScholarRune
+from .db_schema import ThiefRelic
+from .db_schema import cleanup_old_records
 
 
 api_base = host_url()
