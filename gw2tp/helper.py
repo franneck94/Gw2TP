@@ -4,12 +4,19 @@ from gw2tp.constants import API
 
 
 def is_running_on_railway() -> bool:
-    return "RAILWAY_STATIC_URL" in os.environ or "PORT" in os.environ
+    return "RAILWAY_STATIC_URL" in os.environ
 
 
 def host_url() -> str:
     uses_server = is_running_on_railway()
-    return API.PRODUCTION_API_URL if uses_server else API.DEV_API_URL
+    if uses_server:
+        print("Using production API URL")
+        return API.PRODUCTION_API_URL
+    if "BACKEND_URL" in os.environ:
+        print("Using backend API URL")
+        return os.environ["BACKEND_URL"]
+    print("Using development API URL")
+    return API.DEV_API_URL
 
 
 def copper_to_gsc(

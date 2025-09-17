@@ -6,9 +6,9 @@ from gw2tp.helper import host_url
 from gw2tp.helper import is_running_on_railway
 
 
-CWD = Path.cwd()
+FILE_DIR = Path(__file__).parent
 uses_server = is_running_on_railway()
-url = host_url()
+api_base = host_url()
 
 TABLE_HEADER = """
 <tr>
@@ -295,7 +295,7 @@ FORGE_ENH_TABLE = get_table_html(
     hidden_name="Symbol of Enhancement",
 )
 
-with (CWD / "static" / "style.css").open() as f:
+with (FILE_DIR / "static" / "style.css").open() as f:
     CSS_CONTENT = f.read()
 STYLE = f"<style>{CSS_CONTENT}</style>"
 
@@ -332,7 +332,7 @@ PROFIT_CALCULATION_HTML = """
 def get_fetch_price_html(item_id: int) -> str:
     api_endpoint = f"price?item_id={item_id}"
     return f"""
-const response = await fetch('{url}{api_endpoint}');
+const response = await fetch('{api_base}{api_endpoint}');
 const data = await response.json();
 if (data.error) {{
     alert(data.error);
@@ -358,7 +358,7 @@ def get_all_fetch_price_html(
 ) -> str:
     return f"""
 try {{
-    const response = await fetch('{url}{api_endpoint}');
+    const response = await fetch('{api_base}{api_endpoint}');
     const data = await response.json();
 
     for (const [key, value] of Object.entries(data)) {{
@@ -370,7 +370,7 @@ try {{
 """
 
 
-with (CWD / "static" / "scripts.js").open() as f:
+with (FILE_DIR / "static" / "scripts.js").open() as f:
     SCRIPT_FUNCTIONS = f.read()
 
 FETCH_PRICES = f"""
@@ -542,6 +542,6 @@ HTML_PAGE = f"""
 """
 
 if not uses_server:
-    index = Path("static") / "index.html"
+    index = FILE_DIR / "static" / "index.html"
     with index.open("w", encoding="utf-8") as f:
         f.write(HTML_PAGE)

@@ -18,6 +18,7 @@ from frontend.plotting import get_date_plot
 
 api_base = host_url()
 flask_app = Flask(__name__)
+FILE_DIR = Path(__file__).parent
 
 
 @flask_app.route("/")
@@ -36,8 +37,8 @@ def history_base(
 
     data = response.json()
     plot = get_date_plot(data=data)
-    content = Path("./templates/plot.html").read_text(encoding="utf-8")
-    style = Path("./static/style.css").read_text(encoding="utf-8")
+    content = (FILE_DIR / "./templates/plot.html").read_text(encoding="utf-8")
+    style = (FILE_DIR / "./static/style.css").read_text(encoding="utf-8")
     return render_template_string(
         content,
         item_name=full_name,
