@@ -413,7 +413,10 @@ SCRIPT = f"""
 <script>
     {FETCH_PRICES}
     {SCRIPT_FUNCTIONS}
-    window.addEventListener('DOMContentLoaded', fetchPrices);
+    window.addEventListener('DOMContentLoaded', () => {{
+        fetchPrices();
+        updateLastUpdated();
+    }});
 </script>
 """
 

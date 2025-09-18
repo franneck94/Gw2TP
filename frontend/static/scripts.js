@@ -9,6 +9,7 @@ function showFetchPopup() {
 
 async function fetchPrices() {
     await _fetchPrices();
+    updateLastUpdated();
     showFetchPopup();
 }
 
@@ -59,4 +60,21 @@ function calculateManualProfit() {
     const resultElem = document.getElementById("manual-profit-result");
     resultElem.innerText = resultText;
     resultElem.style.color = color;
+}
+
+function updateLastUpdated() {
+    const span = document.getElementById("last-updated");
+    const now = new Date();
+    span.dataset.timestamp = now.getTime();
+    span.innerText = "Just now";
+    if (window.lastUpdatedInterval) clearInterval(window.lastUpdatedInterval);
+    window.lastUpdatedInterval = setInterval(() => {
+        const ts = parseInt(span.dataset.timestamp, 10);
+        const diff = Math.floor((Date.now() - ts) / 1000);
+        let text = "";
+        if (diff < 60) text = `${diff} seconds ago`;
+        else if (diff < 3600) text = `${Math.floor(diff / 60)} minutes ago`;
+        else text = `${Math.floor(diff / 3600)} hours ago`;
+        span.innerText = text;
+    }, 1000);
 }
