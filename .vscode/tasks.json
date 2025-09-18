@@ -21,6 +21,20 @@
             "command": "${command:python.interpreterPath} ${workspaceFolder}/discord_bot/app.py",
             "args": [],
             "group": "build"
+        },
+        {
+            "label": "MongoDB",
+            "type": "shell",
+            "command": "mongod --dbpath ./mongo_data --bind_ip 127.0.0.1",
+            "args": [],
+            "group": "build"
+        },
+        {
+            "label": "Mongo Express",
+            "type": "shell",
+            "command": "mongo-express",
+            "args": [],
+            "group": "build"
         }
     ]
 }
