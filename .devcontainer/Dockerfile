@@ -1,10 +1,7 @@
-FROM mcr.microsoft.com/devcontainers/base:noble
+FROM mcr.microsoft.com/devcontainers/python:3.12
 
 RUN apt-get update && \
     apt-get install -y \
     python-is-python3 \
     pip \
-    python3.12 \
-    python3.12-venv \
-    libpython3.12-dev \
     git

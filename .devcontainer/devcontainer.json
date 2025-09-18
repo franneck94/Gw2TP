@@ -13,7 +13,7 @@
         }
     },
     "forwardPorts": [5000, 8000],
-    "postCreateCommand": "python3.12 -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e .",
+    "postCreateCommand": "pip install --upgrade pip && pip install -e .",
     "customizations": {
         "vscode": {
             "extensions": [

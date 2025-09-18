@@ -110,9 +110,10 @@ class API:
         "thesis_on_masterful_malice",
         # forge
         "symbol_enh_forge",
+        "charm_brilliance_forge",
         "loadstone_forge",
     }
-    CRAFTS: Final[set[str]] = [
+    CRAFTS: Final[set[str]] = {
         "dragonhunter_rune",
         "guardian_rune",
         "scholar_rune",
@@ -120,4 +121,4 @@ class API:
         "relic_of_thief",
         "relic_of_aristocracy",
         "rare_weapon_craft",
-    ]
+    }

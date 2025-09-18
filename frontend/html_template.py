@@ -295,6 +295,17 @@ FORGE_ENH_TABLE = get_table_html(
     hidden_name="Symbol of Enhancement",
 )
 
+CHARM_BRILLIANCE_FORGE_NAMES = [
+    "cost",
+    "profit_per_try",
+    "profit_per_shard",
+]
+CHARM_BRILLIANCE_FORGE_TABLE = get_table_html(
+    price_names=CHARM_BRILLIANCE_FORGE_NAMES,
+    category_name="charm_brilliance_forge",
+    hidden_name="Charm of Brilliance",
+)
+
 with (FILE_DIR / "static" / "style.css").open() as f:
     CSS_CONTENT = f.read()
 STYLE = f"<style>{CSS_CONTENT}</style>"
@@ -391,6 +402,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("mats_crafting_compare")} }})(),
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
         (async () => {{ {get_all_fetch_price_html("symbol_enh_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("charm_brilliance_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
     ]);
@@ -405,11 +417,13 @@ SCRIPT = f"""
 </script>
 """
 
+FAVICON_URL = FILE_DIR / "favicon.ico"
 HTML_PAGE = f"""
 <!DOCTYPE html>
 <html>
 <head>
     <title>GW2 TP King</title>
+    <link rel="icon" href="{FAVICON_URL}" type="image/x-icon">
     {STYLE}
     {SCRIPT}
 </head>
@@ -420,6 +434,9 @@ HTML_PAGE = f"""
     </h1>
     <div style="display: flex; justify-content: center;">
         <button onclick="fetchPrices()" style="margin-bottom: 20px;">Refresh Prices</button>
+    </div>
+    <div style="font-size: 0.8em; color: #666; text-align: center; margin-bottom: 8px;">
+        Last updated: <span id="last-updated">Loading...</span>
     </div>
     <div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; margin: 0 auto; max-width: 1400px;">
         <div style="flex: 1;">
@@ -455,6 +472,13 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {LOADSTONE_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
+                    Forge Charm of Brilliance
+                </a>
+            </h3>
+            {CHARM_BRILLIANCE_FORGE_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">Ectoplasm</h3>
@@ -474,18 +498,18 @@ HTML_PAGE = f"""
             {T5_MATS_BUY_TABLE}
 
             <h3 style="text-align: center;">
-                <a href="https://fast.farming-community.eu/conversions/spirit-shard/symbol-of-enhancement" target="_blank" style="color: inherit; text-decoration: none;">
-                    Forge Symbol of Enhancement
-                </a>
-            </h3>
-            {FORGE_ENH_TABLE}
-
-            <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Thesis_on_Masterful_Malice" target="_blank" style="color: inherit; text-decoration: none;">
                     Thesis on Masterful Malice
                 </a>
             </h3>
             {THESIS_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/symbol-of-enhancement" target="_blank" style="color: inherit; text-decoration: none;">
+                    Forge Symbol of Enhancement
+                </a>
+            </h3>
+            {FORGE_ENH_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">

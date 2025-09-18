@@ -99,6 +99,7 @@ ignore = [
     "FBT",
     "EM",
     "COM812",
+    "EXE002",
 ]
 fixable = ["ALL"]
 unfixable = []

@@ -824,6 +824,40 @@ def get_symbol_enh_forge() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+@fastapi_app.get("/charm_brilliance_forge")
+def get_charm_brilliance_forge() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.CHARM_OF_BRILLIANCE,
+                ItemIDs.CHARM_OF_POTENCE,
+                ItemIDs.CHARM_OF_SKILL,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    charm_brilliance_buy = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["buy"]
+    charm_brilliance_sell = fetched_data[ItemIDs.CHARM_OF_BRILLIANCE]["sell"]
+    charm_potence_sell = fetched_data[ItemIDs.CHARM_OF_POTENCE]["sell"]
+    charm_skill_sell = fetched_data[ItemIDs.CHARM_OF_SKILL]["sell"]
+
+    cost = charm_brilliance_buy * 3.0
+    reward = (
+        charm_brilliance_sell * 0.2
+        + charm_potence_sell * 0.4
+        + charm_skill_sell * 0.4
+    )
+    profit = (reward * TAX_RATE) - cost
+
+    data = {
+        **get_sub_dct("cost", cost),
+        **get_sub_dct("profit_per_try", profit),
+        **get_sub_dct("profit_per_shard", profit * 10.0),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
 @fastapi_app.get("/loadstone_forge")
 def get_loadstone_forge() -> JSONResponse:
     try:
