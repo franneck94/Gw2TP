@@ -1,3 +1,4 @@
+# ruff: noqa: SIM117
 import datetime
 from typing import Any
 

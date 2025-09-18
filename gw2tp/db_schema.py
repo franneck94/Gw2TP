@@ -1,4 +1,5 @@
 import datetime
+from typing import Any
 
 from pymongo.database import Database
 
@@ -41,4 +42,7 @@ def get_db_data(
             query["timestamp"]["$lte"] = end_datetime.isoformat()
         else:
             query["timestamp"] = {"$lte": end_datetime.isoformat()}
-    return list(collection.find(query))
+    results: list[dict[str, Any]] = list(collection.find(query))
+    for doc in results:
+        doc.pop("_id", None)
+    return results

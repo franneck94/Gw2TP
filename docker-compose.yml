@@ -1,5 +1,5 @@
 services:
-    backend:
+    gw2tp-backend:
         image: gw2tp-backend
         container_name: gw2tp-backend
         build:
@@ -10,9 +10,9 @@ services:
         env_file:
             - ./backend/.env
         depends_on:
-            - mongodb
+            - gw2tp-mongodb
 
-    frontend:
+    gw2tp-frontend:
         image: gw2tp-frontend
         container_name: gw2tp-frontend
         build:
@@ -22,15 +22,17 @@ services:
             - "5000:5000"
         environment:
             - BACKEND_URL=http://backend:8000
-    mongodb:
+    gw2tp-mongodb:
         image: mongo:7.0.12
         container_name: mysite-mongodb
         volumes:
-            - mongodb-data:/data/db
+            - gw2tp-mongodb-data:/data/db
         env_file:
             - ./mongodb/.env
+        depends_on:
+            - gw2tp-mongo-express
 
-    mongo-express:
+    gw2tp-mongo-express:
         image: mongo-express:1.0.2
         ports:
             - 8081:8081
@@ -39,4 +41,4 @@ services:
             - ./mongo-express/.env
 
 volumes:
-    mongodb-data:
+    gw2tp-mongodb-data:

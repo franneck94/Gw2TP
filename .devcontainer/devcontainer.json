@@ -1,16 +1,18 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 {
-    "name": "Ubuntu",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "name": "GW2TP Project",
+    "dockerComposeFile": ["../docker-compose.yml", "docker-compose.extend.yml"],
+    "service": "gw2tp-mongodb",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
     "features": {
         "ghcr.io/jsburckhardt/devcontainer-features/ruff:1": {},
         "ghcr.io/swift-server-community/swift-devcontainer-features/sqlite:1": {},
         "ghcr.io/va-h/devcontainers-features/uv:1": {
             "shellautocompletion": true,
             "version": "latest"
-        }
+        },
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
     "forwardPorts": [5000, 8000],
     "postCreateCommand": "pip install --upgrade pip && pip install -e .",

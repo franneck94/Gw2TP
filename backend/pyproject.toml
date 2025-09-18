@@ -24,7 +24,6 @@ dependencies = [
     "httpx",
     "flask",
     "aiohttp",
-    "sqlalchemy",
     "pydantic",
     "apscheduler",
     "starlette",

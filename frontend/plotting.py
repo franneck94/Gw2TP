@@ -79,7 +79,7 @@ def get_date_plot(
         )
 
     layout = go.Layout(
-        xaxis={"title": "Time (UTC)", "tickangle": 50},
+        xaxis={"title": "Time (UTC+2)", "tickangle": 50},
         yaxis={"title": "Price in Gold", "tickformat": ".2f"},
         template="plotly_dark",
         legend={"x": 0.5, "y": 1.15, "orientation": "h", "xanchor": "center"},

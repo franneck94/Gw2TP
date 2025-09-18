@@ -25,7 +25,6 @@ dependencies = [
     "flask",
     "aiohttp",
     "discord.py",
-    "sqlalchemy",
     "pydantic",
     "apscheduler",
     "matplotlib",

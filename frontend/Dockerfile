@@ -14,4 +14,6 @@ COPY . .
 
 EXPOSE 5000
 
+RUN pip install debugpy
+
 CMD ["uvicorn", "frontend.app:app", "--host", "0.0.0.0", "--port", "5000"]

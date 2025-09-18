@@ -42,14 +42,35 @@
             "args": [],
             "justMyCode": true
         },
-         {
-            "name": "DB Test",
+        {
+            "name": "Attach to Backend (Docker)",
             "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/database/db.py",
-            "console": "integratedTerminal",
-            "args": [],
-            "justMyCode": true
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/backend",
+                    "remoteRoot": "/app/backend"
+                }
+            ]
+        },
+        {
+            "name": "Attach to Frontend (Docker)",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/frontend",
+                    "remoteRoot": "/app/frontend"
+                }
+            ]
         }
     ]
 }
