@@ -44,18 +44,6 @@ optional-dependencies = { dev = [
 packages.find = {}
 package-dir = { "" = "." }
 
-[tool.black]
-target-version = ['py310']
-line-length = 80
-skip-string-normalization = false
-skip-magic-trailing-comma = false
-force-exclude = '''
-/(
-  | docs
-  | setup.py
-)/
-'''
-
 [tool.isort]
 py_version = 310
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
