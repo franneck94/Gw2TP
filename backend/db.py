@@ -1,18 +1,14 @@
 import os
-from pathlib import Path
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-from backend.db_schema import Base
+from pymongo import MongoClient
 
 
-FILE_DIR = Path(__file__).parent
-DEFAULT_DB_PATH = FILE_DIR / "database" / "data.db"
-DATABASE_PATH = Path(os.getenv("DATABASE_URL", str(DEFAULT_DB_PATH)))
-DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
-DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+if "MONGODB_CONNECTION_STRING" in os.environ:
+    MONGODB_CONNECTION_STRING = os.environ["MONGODB_CONNECTION_STRING"]
+    client = MongoClient(MONGODB_CONNECTION_STRING)
+else:
+    MONGO_HOST = os.environ.get("MONGO_HOST", "mongodb")
+    MONGO_PORT = int(os.environ.get("MONGO_PORT", 27017))
+    client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
 
-db = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(bind=db)
-Base.metadata.create_all(bind=db)
+db = client["gw2tp_db"]

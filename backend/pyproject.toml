@@ -29,6 +29,7 @@ dependencies = [
     "apscheduler",
     "starlette",
     "requests",
+    "pymongo",
 ]
 optional-dependencies = { dev = [
     "black>=25.1.0",

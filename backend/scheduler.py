@@ -3,84 +3,62 @@ from typing import Any
 
 import aiohttp
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from sqlalchemy.orm import Session
+from pymongo.database import Database
 
+from gw2tp.db_schema import cleanup_old_records
 from gw2tp.helper import host_url
 from gw2tp.helper import is_running_on_railway
 
-from .db import SessionLocal
-from .db_schema import AristocracyRelic
-from .db_schema import DragonHunterRune
-from .db_schema import FireworksRelic
-from .db_schema import GuardianRune
-from .db_schema import ScholarRune
-from .db_schema import ThiefRelic
-from .db_schema import cleanup_old_records
+from .db import db
 
 
 api_base = host_url()
 
 
 async def _fetch_single_request(
-    db: Session,
-    api_command: str,
+    db: Database,
+    collection_name: str,
     data_keys: list[str],
-    data_cls: type,
 ) -> None:
-    async with aiohttp.ClientSession() as session:  # noqa: SIM117
-        async with session.get(f"{api_base}{api_command}") as response:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{api_base}{collection_name}") as response:
             data: dict[str, Any] = await response.json()
             if data.get("detail", "") == "Not Found":
-                print(f"API command '{api_command}' not found.")
+                print(f"API command '{collection_name}' not found.")
                 return
-            kwargs = {}
-
-            for data_key in data_keys:
-                kwargs.update(
-                    {
-                        key: value
-                        for key, value in data.items()
-                        if key.startswith(data_key)
-                    }
-                )
-
-            db.add(
-                data_cls(
-                    **kwargs,
-                    timestamp=datetime.datetime.now(
-                        tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
-                    ),
-                )
-            )
-            db.commit()
+            doc = {
+                key: value
+                for key, value in data.items()
+                if any(key.startswith(data_key) for data_key in data_keys)
+            }
+            doc["timestamp"] = datetime.datetime.now(
+                tz=datetime.timezone(datetime.timedelta(hours=2), "UTC")
+            ).isoformat()
+            db[collection_name].insert_one(doc)
 
 
 async def fetch_api_data() -> None:
     print("Fetching data...")
     fetch_keys = ["crafting_cost", "sell"]
-    db = SessionLocal()
-    requests = [
-        ("scholar_rune", ScholarRune),
-        ("guardian_rune", GuardianRune),
-        ("dragonhunter_rune", DragonHunterRune),
-        ("relic_of_fireworks", FireworksRelic),
-        ("relic_of_thief", ThiefRelic),
-        ("relic_of_aristocracy", AristocracyRelic),
+    collections = [
+        "scholar_rune",
+        "guardian_rune",
+        "dragonhunter_rune",
+        "relic_of_fireworks",
+        "relic_of_thief",
+        "relic_of_aristocracy",
     ]
-    for request, cls in requests:
+    for collection_name in collections:
         await _fetch_single_request(
             db,
-            request,
+            collection_name,
             fetch_keys,
-            cls,
         )
-    db.close()
     print("Fetching done...")
 
 
 def start_scheduler() -> None:
     scheduler = AsyncIOScheduler()
-    db = SessionLocal()
 
     async def fetch_job() -> None:
         await fetch_api_data()
