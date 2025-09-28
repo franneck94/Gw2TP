@@ -1,6 +1,11 @@
+import logging
 import os
 
 from gw2tp.constants import API
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def is_running_on_railway() -> bool:
@@ -9,6 +14,7 @@ def is_running_on_railway() -> bool:
 
 def host_url() -> str:
     uses_server = is_running_on_railway()
+    logger.debug(f"Running on Railway: {uses_server}")
     if uses_server:
         return API.PRODUCTION_API_URL
     return API.DEV_API_URL
