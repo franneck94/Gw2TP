@@ -99,9 +99,17 @@ async def on_message(
     else:
         return
 
-    async with aiohttp.ClientSession() as session:  # noqa: SIM117
-        async with session.get(api_url) as resp:
-            data: dict[str, Any] = await resp.json()
+    timeout = aiohttp.ClientTimeout(total=8.0)
+    try:
+        async with aiohttp.ClientSession(timeout=timeout) as session:  # noqa: SIM117
+            async with session.get(api_url) as resp:
+                data: dict[str, Any] = await resp.json()
+    except aiohttp.ServerTimeoutError:
+        await message.channel.send("Request timed out. Please try again later.")
+        return
+    except aiohttp.ClientError as e:
+        await message.channel.send(f"Request failed: {e}")
+        return
 
     embed = create_price_embed(data, title)
     await message.channel.send(embed=embed)
