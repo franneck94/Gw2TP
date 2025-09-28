@@ -10,9 +10,11 @@
             "shellautocompletion": true,
             "version": "latest"
         },
-        "ghcr.io/devcontainers-extra/features/mongosh-homebrew:1":{}
+        "ghcr.io/devcontainers-extra/features/mongosh-homebrew:1": {},
+        "ghcr.io/devcontainers-extra/features/mongodb-atlas-cli-homebrew:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
     },
-    "forwardPorts": [5000, 8000, 8081],
+    "forwardPorts": [5000, 8000, 8081, 27017],
     "postCreateCommand": "pip install --upgrade pip && pip install -e .",
     "customizations": {
         "vscode": {
@@ -20,7 +22,9 @@
                 "ms-azuretools.vscode-docker",
                 "qwtel.sqlite-viewer",
                 "franneck94.vscode-coding-tools-extension-pack",
-                "franneck94.vscode-python-dev-extension-pack"
+                "franneck94.vscode-python-dev-extension-pack",
+                "github.copilot-chat",
+                "mongodb.mongodb-vscode"
             ],
             "settings": {
                 "trailing-spaces.trimOnSave": true,

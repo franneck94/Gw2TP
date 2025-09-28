@@ -6,6 +6,7 @@ import aiohttp
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pymongo.database import Database
 
+from gw2tp.db_schema import COLLECTIONS
 from gw2tp.db_schema import cleanup_old_records
 from gw2tp.helper import host_url
 from gw2tp.helper import is_running_on_railway
@@ -41,15 +42,7 @@ async def _fetch_single_request(
 async def fetch_api_data() -> None:
     print("Fetching data...")
     fetch_keys = ["crafting_cost", "sell"]
-    collections = [
-        "scholar_rune",
-        "guardian_rune",
-        "dragonhunter_rune",
-        "relic_of_fireworks",
-        "relic_of_thief",
-        "relic_of_aristocracy",
-    ]
-    for collection_name in collections:
+    for collection_name in COLLECTIONS:
         await _fetch_single_request(
             db,
             collection_name,
