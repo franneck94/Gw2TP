@@ -987,8 +987,8 @@ def get_thick_leather_strap() -> JSONResponse:
     coarse_leather_section_sell = fetched_data[ItemIDs.COARSE_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    lower_rate = 0.0648
+    higher_rate = 2.254
 
     sell = (coarse_leather_section_sell * lower_rate) + (
         rugged_leather_section_sell * higher_rate
@@ -1021,8 +1021,8 @@ def get_rugged_leather_strap() -> JSONResponse:
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    lower_rate = 0.437
+    higher_rate = 1.1
 
     sell = (thick_leather_section_sell * lower_rate) + (
         rugged_leather_section_sell * higher_rate
@@ -1055,8 +1055,8 @@ def get_hard_leather_strap() -> JSONResponse:
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     hardd_leather_section_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    lower_rate = 0.97037
+    higher_rate = 0.0625
 
     sell = (thick_leather_section_sell * lower_rate) + (
         hardd_leather_section_sell * higher_rate
