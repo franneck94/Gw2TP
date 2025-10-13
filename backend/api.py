@@ -1065,8 +1065,8 @@ def get_hard_leather_strap() -> JSONResponse:
 
     data = {
         **get_sub_dct("buy", hard_leather_strap_buy),
-        **get_sub_dct("salvage", sell),
-        **get_sub_dct("profit", profit),
+        **get_sub_dct("profit_per_salvage", sell),
+        **get_sub_dct("profit_per_stack", profit),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
