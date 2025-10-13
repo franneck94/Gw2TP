@@ -306,6 +306,40 @@ CHARM_BRILLIANCE_FORGE_TABLE = get_table_html(
     hidden_name="Charm of Brilliance",
 )
 
+THICK_LEATHER_STRAP_NAMES = [
+    "buy",
+    "profit_per_salvage",
+    "profit_per_stack",
+]
+THICK_LEATHER_STRAP_TABLE = get_table_html(
+    price_names=THICK_LEATHER_STRAP_NAMES,
+    category_name="thick_leather_strap",
+    hidden_name="Thick Leather Strap",
+)
+
+RUGGED_LEATHER_STRAP_NAMES = [
+    "buy",
+    "profit_per_salvage",
+    "profit_per_stack",
+]
+RUGGED_LEATHER_STRAP_TABLE = get_table_html(
+    price_names=RUGGED_LEATHER_STRAP_NAMES,
+    category_name="rugged_leather_strap",
+    hidden_name="Rugged Leather Strap",
+)
+
+
+HARD_LEATHER_STRAP_NAMES = [
+    "buy",
+    "profit_per_salvage",
+    "profit_per_stack",
+]
+HARD_LEATHER_STRAP_TABLE = get_table_html(
+    price_names=HARD_LEATHER_STRAP_NAMES,
+    category_name="hard_leather_strap",
+    hidden_name="Hard Leather Strap",
+)
+
 with (FILE_DIR / "static" / "style.css").open() as f:
     CSS_CONTENT = f.read()
 STYLE = f"<style>{CSS_CONTENT}</style>"
@@ -405,6 +439,9 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("charm_brilliance_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
+        (async () => {{ {get_all_fetch_price_html("thick_leather_strap")} }})(),
+        (async () => {{ {get_all_fetch_price_html("rugged_leather_strap")} }})(),
+        (async () => {{ {get_all_fetch_price_html("hard_leather_strap")} }})(),
     ]);
 }}
 """
@@ -482,6 +519,13 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {CHARM_BRILLIANCE_FORGE_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
+                    Rugged Leather Strap
+                </a>
+            </h3>
+            {RUGGED_LEATHER_STRAP_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">Ectoplasm</h3>
@@ -513,6 +557,13 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {FORGE_ENH_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
+                    Thick Leather Strap
+                </a>
+            </h3>
+            {THICK_LEATHER_STRAP_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">
@@ -562,6 +613,13 @@ HTML_PAGE = f"""
                 <button onclick="window.open('relic_of_aristocracy_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {ARISTOCRACY_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
+                    Hard Leather Strap
+                </a>
+            </h3>
+            {HARD_LEATHER_STRAP_TABLE}
         </div>
     </div>
 </body>
