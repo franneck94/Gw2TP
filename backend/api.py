@@ -780,7 +780,7 @@ def get_gear_salvage() -> JSONResponse:
 
 @fastapi_app.get("/profits")
 def get_profits() -> JSONResponse:
-    data = {}
+    data: dict[str, Any] = {}
     try:
         for craft in API.CRAFTS:
             response = httpx.Client().get(
@@ -983,7 +983,7 @@ def get_thick_leather_strap() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    rugged_leather_strap_buy = fetched_data[ItemIDs.RUGGED_LEATHER_STRAP]["buy"]
+    thick_leather_strap_buy = fetched_data[ItemIDs.THICK_LEATHER_STRAP]["buy"]
     coarse_leather_section_sell = fetched_data[ItemIDs.COARSE_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
@@ -993,11 +993,11 @@ def get_thick_leather_strap() -> JSONResponse:
     sell = (coarse_leather_section_sell * lower_rate) + (
         rugged_leather_section_sell * higher_rate
     )
-    profit_per_salvage = (sell * TAX_RATE) - rugged_leather_strap_buy
+    profit_per_salvage = (sell * TAX_RATE) - thick_leather_strap_buy
     profit_per_stack = 250.0 * profit_per_salvage
 
     data = {
-        **get_sub_dct("buy", rugged_leather_strap_buy),
+        **get_sub_dct("buy", thick_leather_strap_buy),
         **get_sub_dct("profit_per_salvage", profit_per_salvage),
         **get_sub_dct("profit_per_stack", profit_per_stack),
     }
