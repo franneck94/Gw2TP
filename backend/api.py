@@ -987,8 +987,8 @@ def get_thick_leather_strap() -> JSONResponse:
     coarse_leather_section_sell = fetched_data[ItemIDs.COARSE_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 0.0648
-    higher_rate = 2.254
+    lower_rate = 1.28
+    higher_rate = 0.08
 
     sell = (coarse_leather_section_sell * lower_rate) + (
         rugged_leather_section_sell * higher_rate
@@ -1021,8 +1021,8 @@ def get_rugged_leather_strap() -> JSONResponse:
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 0.437
-    higher_rate = 1.1
+    lower_rate = 1.28
+    higher_rate = 0.08
 
     sell = (thick_leather_section_sell * lower_rate) + (
         rugged_leather_section_sell * higher_rate
@@ -1055,18 +1055,19 @@ def get_hard_leather_strap() -> JSONResponse:
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     hardd_leather_section_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
 
-    lower_rate = 0.97037
-    higher_rate = 0.0625
+    lower_rate = 1.28
+    higher_rate = 0.08
 
     sell = (thick_leather_section_sell * lower_rate) + (
         hardd_leather_section_sell * higher_rate
     )
-    profit = (sell * TAX_RATE) - hard_leather_strap_buy
+    profit_per_salvage = (sell * TAX_RATE) - hard_leather_strap_buy
+    profit_per_stack = 250.0 * profit_per_salvage
 
     data = {
         **get_sub_dct("buy", hard_leather_strap_buy),
-        **get_sub_dct("profit_per_salvage", sell),
-        **get_sub_dct("profit_per_stack", profit),
+        **get_sub_dct("profit_per_salvage", profit_per_salvage),
+        **get_sub_dct("profit_per_stack", profit_per_stack),
     }
     return JSONResponse(content=jsonable_encoder(data))
 
