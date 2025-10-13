@@ -970,6 +970,17 @@ def get_thesis_on_masterful_malice() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+def get_strap_data(sell: float, strap_buy: float) -> dict[str, Any]:
+    profit_per_salvage = (sell * TAX_RATE) - strap_buy
+    profit_per_stack = 250.0 * profit_per_salvage
+
+    return {
+        **get_sub_dct("buy", strap_buy),
+        **get_sub_dct("profit_per_salvage", profit_per_salvage),
+        **get_sub_dct("profit_per_stack", profit_per_stack),
+    }
+
+
 @fastapi_app.get("/thick_leather_strap")
 def get_thick_leather_strap() -> JSONResponse:
     try:
@@ -983,24 +994,17 @@ def get_thick_leather_strap() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    thick_leather_strap_buy = fetched_data[ItemIDs.THICK_LEATHER_STRAP]["buy"]
+    strap_buy = fetched_data[ItemIDs.THICK_LEATHER_STRAP]["buy"]
     coarse_leather_section_sell = fetched_data[ItemIDs.COARSE_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    coarse_leather_section_rate = 1.28
+    rugged_leather_section_rate = 0.08
 
-    sell = (coarse_leather_section_sell * lower_rate) + (
-        rugged_leather_section_sell * higher_rate
+    sell = (coarse_leather_section_sell * coarse_leather_section_rate) + (
+        rugged_leather_section_sell * rugged_leather_section_rate
     )
-    profit_per_salvage = (sell * TAX_RATE) - thick_leather_strap_buy
-    profit_per_stack = 250.0 * profit_per_salvage
-
-    data = {
-        **get_sub_dct("buy", thick_leather_strap_buy),
-        **get_sub_dct("profit_per_salvage", profit_per_salvage),
-        **get_sub_dct("profit_per_stack", profit_per_stack),
-    }
+    data = get_strap_data(sell, strap_buy)
     return JSONResponse(content=jsonable_encoder(data))
 
 
@@ -1017,24 +1021,17 @@ def get_rugged_leather_strap() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    rugged_leather_strap_buy = fetched_data[ItemIDs.RUGGED_LEATHER_STRAP]["buy"]
+    strap_buy = fetched_data[ItemIDs.RUGGED_LEATHER_STRAP]["buy"]
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     rugged_leather_section_sell = fetched_data[ItemIDs.RUGGED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    thick_leather_section_rate = 1.28
+    rugged_leather_section_rate = 0.08
 
-    sell = (thick_leather_section_sell * lower_rate) + (
-        rugged_leather_section_sell * higher_rate
+    sell = (thick_leather_section_sell * thick_leather_section_rate) + (
+        rugged_leather_section_sell * rugged_leather_section_rate
     )
-    profit_per_salvage = (sell * TAX_RATE) - rugged_leather_strap_buy
-    profit_per_stack = 250.0 * profit_per_salvage
-
-    data = {
-        **get_sub_dct("buy", rugged_leather_strap_buy),
-        **get_sub_dct("profit_per_salvage", profit_per_salvage),
-        **get_sub_dct("profit_per_stack", profit_per_stack),
-    }
+    data = get_strap_data(sell, strap_buy)
     return JSONResponse(content=jsonable_encoder(data))
 
 
@@ -1051,24 +1048,17 @@ def get_hard_leather_strap() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    hard_leather_strap_buy = fetched_data[ItemIDs.HARD_LEATHER_STRAP]["buy"]
+    strap_buy = fetched_data[ItemIDs.HARD_LEATHER_STRAP]["buy"]
     thick_leather_section_sell = fetched_data[ItemIDs.THICK_LEATHER]["sell"]
     hardd_leather_section_sell = fetched_data[ItemIDs.HARDENED_LEATHER]["sell"]
 
-    lower_rate = 1.28
-    higher_rate = 0.08
+    thick_leather_section_rate = 1.28
+    harden_leather_section_rate = 0.08
 
-    sell = (thick_leather_section_sell * lower_rate) + (
-        hardd_leather_section_sell * higher_rate
+    sell = (thick_leather_section_sell * thick_leather_section_rate) + (
+        hardd_leather_section_sell * harden_leather_section_rate
     )
-    profit_per_salvage = (sell * TAX_RATE) - hard_leather_strap_buy
-    profit_per_stack = 250.0 * profit_per_salvage
-
-    data = {
-        **get_sub_dct("buy", hard_leather_strap_buy),
-        **get_sub_dct("profit_per_salvage", profit_per_salvage),
-        **get_sub_dct("profit_per_stack", profit_per_stack),
-    }
+    data = get_strap_data(sell, strap_buy)
     return JSONResponse(content=jsonable_encoder(data))
 
 
