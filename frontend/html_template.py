@@ -306,27 +306,28 @@ CHARM_BRILLIANCE_FORGE_TABLE = get_table_html(
     hidden_name="Charm of Brilliance",
 )
 
-THICK_LEATHER_STRAP_NAMES = [
-    "buy",
-    "profit_per_salvage",
-    "profit_per_stack",
-]
-THICK_LEATHER_STRAP_TABLE = get_table_html(
-    price_names=THICK_LEATHER_STRAP_NAMES,
-    category_name="thick_leather_strap",
-    hidden_name="Thick Leather Strap",
-)
+if ALL_STRAPS:
+    THICK_LEATHER_STRAP_NAMES = [
+        "buy",
+        "profit_per_salvage",
+        "profit_per_stack",
+    ]
+    THICK_LEATHER_STRAP_TABLE = get_table_html(
+        price_names=THICK_LEATHER_STRAP_NAMES,
+        category_name="thick_leather_strap",
+        hidden_name="Thick Leather Strap",
+    )
 
-RUGGED_LEATHER_STRAP_NAMES = [
-    "buy",
-    "profit_per_salvage",
-    "profit_per_stack",
-]
-RUGGED_LEATHER_STRAP_TABLE = get_table_html(
-    price_names=RUGGED_LEATHER_STRAP_NAMES,
-    category_name="rugged_leather_strap",
-    hidden_name="Rugged Leather Strap",
-)
+    RUGGED_LEATHER_STRAP_NAMES = [
+        "buy",
+        "profit_per_salvage",
+        "profit_per_stack",
+    ]
+    RUGGED_LEATHER_STRAP_TABLE = get_table_html(
+        price_names=RUGGED_LEATHER_STRAP_NAMES,
+        category_name="rugged_leather_strap",
+        hidden_name="Rugged Leather Strap",
+    )
 
 
 HARD_LEATHER_STRAP_NAMES = [
@@ -519,13 +520,6 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {CHARM_BRILLIANCE_FORGE_TABLE}
-
-            <h3 style="text-align: center;">
-                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
-                    Rugged Leather Strap
-                </a>
-            </h3>
-            {RUGGED_LEATHER_STRAP_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">Ectoplasm</h3>
@@ -557,13 +551,6 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {FORGE_ENH_TABLE}
-
-            <h3 style="text-align: center;">
-                <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
-                    Thick Leather Strap
-                </a>
-            </h3>
-            {THICK_LEATHER_STRAP_TABLE}
         </div>
         <div style="flex: 1;">
             <h3 style="text-align: center;">
