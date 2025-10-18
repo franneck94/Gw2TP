@@ -9,6 +9,7 @@ from gw2tp.helper import is_running_on_railway
 FILE_DIR = Path(__file__).parent
 uses_server = is_running_on_railway()
 api_base = host_url()
+ALL_STRAPS = False
 
 TABLE_HEADER = """
 <tr>
