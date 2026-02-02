@@ -51,7 +51,7 @@ class ItemIDs:
     SIGIL_OF_IMPACT: int = 24868
     SIGIL_OF_TORMENT: int = 48911
     SIGIL_OF_DOOMM: int = 24609
-    SIGIL_OF_BURSTING: int = 7295
+    SIGIL_OF_BURSTING: int = 44944
     SIGIL_OF_PARALYSIS: int = 24639
     # Relics
     RELIC_OF_FIREWORKS: int = 100947

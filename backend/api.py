@@ -372,8 +372,16 @@ def get_scholar_rune() -> JSONResponse:
                 ItemIDs.SCHOLAR_RUNE,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     totem_buy = fetched_data[ItemIDs.ELABORATE_TOTEM]["buy"]
@@ -423,17 +431,25 @@ def get_guardian_rune() -> JSONResponse:
                 ItemIDs.ECTOPLASM,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     rune_sell = fetched_data[ItemIDs.GUARD_RUNE]["sell"]
-    charged_LODESTONE_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
+    charged_lodestone_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     crafting_cost = (
-        charged_LODESTONE_sell
+        charged_lodestone_sell
         + charm_buy
         + ecto_buy * 5.0
         + lucent_crystal_buy * 12.0
@@ -465,19 +481,27 @@ def get_dragonhunter_rune() -> JSONResponse:
                 ItemIDs.ECTOPLASM,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     rune_sell = fetched_data[ItemIDs.DRAGONHUNTER_RUNE]["sell"]
-    charged_LODESTONE_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
-    evergreen_LODESTONE_buy = fetched_data[ItemIDs.EVERGREEN_LODESTONE]["buy"]
+    charged_lodestone_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
+    evergreen_lodestone_buy = fetched_data[ItemIDs.EVERGREEN_LODESTONE]["buy"]
     thorns_buy = fetched_data[ItemIDs.BARBED_THORN]["buy"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     guardian_rune_cost = (
-        charged_LODESTONE_sell
+        charged_lodestone_sell
         + charm_buy
         + ecto_buy * 5.0
         + lucent_crystal_buy * 12.0
@@ -485,7 +509,7 @@ def get_dragonhunter_rune() -> JSONResponse:
 
     crafting_cost = (
         guardian_rune_cost * 1.0
-        + evergreen_LODESTONE_buy * 1.0
+        + evergreen_lodestone_buy * 1.0
         + thorns_buy * 10.0
     )
 
@@ -522,8 +546,16 @@ def get_relic_of_fireworks() -> JSONResponse:
                 ItemIDs.RELIC_OF_FIREWORKS,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
@@ -569,8 +601,16 @@ def get_relic_of_thief() -> JSONResponse:
                 ItemIDs.RELIC_OF_THIEF,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
@@ -616,8 +656,16 @@ def get_relic_of_aristocracy() -> JSONResponse:
                 ItemIDs.RELIC_OF_ARISTOCRACY,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
@@ -849,8 +897,8 @@ def get_charm_brilliance_forge() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/LODESTONE_forge")
-def get_LODESTONE_forge() -> JSONResponse:
+@fastapi_app.get("/lodestone_forge")
+def get_lodestone_forge() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -1063,17 +1111,25 @@ def get_sigil_of_impact() -> JSONResponse:
                 ItemIDs.SYMBOL_OF_PAIN,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     sigil_of_impact = fetched_data[ItemIDs.SIGIL_OF_IMPACT]
     ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
-    onyx_LODESTONE_buy = fetched_data[ItemIDs.ONYX_LODESTONE]["buy"]
+    onyx_lodestone_buy = fetched_data[ItemIDs.ONYX_LODESTONE]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     symbol_of_pain_buy = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["buy"]
     crafting_cost = (
         ectoplasm_buy * 10.0
-        + onyx_LODESTONE_buy * 1.0
+        + onyx_lodestone_buy * 1.0
         + lucent_mote_buy * 50.0
         + symbol_of_pain_buy * 3.0
     )
@@ -1100,17 +1156,25 @@ def get_sigil_of_doom() -> JSONResponse:
                 ItemIDs.SYMBOL_OF_PAIN,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     sigil_of_doom = fetched_data[ItemIDs.SIGIL_OF_DOOMM]
     ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
-    molten_LODESTONE_buy = fetched_data[ItemIDs.MOLTEN_LODESTONE]["buy"]
+    molten_lodestone_buy = fetched_data[ItemIDs.MOLTEN_LODESTONE]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     symbol_of_pain_buy = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["buy"]
     crafting_cost = (
         ectoplasm_buy * 10.0
-        + molten_LODESTONE_buy * 1.0
+        + molten_lodestone_buy * 1.0
         + lucent_mote_buy * 100.0
         + symbol_of_pain_buy * 2.0
     )
@@ -1137,8 +1201,16 @@ def get_sigil_of_torment() -> JSONResponse:
                 ItemIDs.SYMBOL_OF_PAIN,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     sigil_of_torment = fetched_data[ItemIDs.SIGIL_OF_TORMENT]
     ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
@@ -1174,8 +1246,16 @@ def get_sigil_of_bursting() -> JSONResponse:
                 ItemIDs.SYMBOL_OF_ENH,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     sigil_of_bursting = fetched_data[ItemIDs.SIGIL_OF_BURSTING]
     ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
@@ -1211,8 +1291,16 @@ def get_sigil_of_paralyzation() -> JSONResponse:
                 ItemIDs.SYMBOL_OF_CONTROL,
             ],
         )
-    except Exception as e:
-        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+    except Exception:
+        return JSONResponse(
+            content=jsonable_encoder(
+                {
+                    "crafting_cost": -1,
+                    "sell": -1,
+                    "profit": -1,
+                }
+            )
+        )
 
     sigil_of_paralysis = fetched_data[ItemIDs.SIGIL_OF_PARALYSIS]
     ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]

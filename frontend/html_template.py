@@ -460,7 +460,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
         (async () => {{ {get_all_fetch_price_html("symbol_enh_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("charm_brilliance_forge")} }})(),
-        (async () => {{ {get_all_fetch_price_html("LODESTONE_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("lodestone_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
         (async () => {{ {get_all_fetch_price_html("thick_leather_strap")} }})(),
         (async () => {{ {get_all_fetch_price_html("rugged_leather_strap")} }})(),
