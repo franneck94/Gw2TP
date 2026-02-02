@@ -132,7 +132,7 @@ class API:
         # forge
         "symbol_enh_forge",
         "charm_brilliance_forge",
-        "loadstone_forge",
+        "lodestone_forge",
     }
     CRAFTS: Final[set[str]] = {
         "dragonhunter_rune",
