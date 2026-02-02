@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from urllib.parse import urljoin
 
-import requests
+import requests  # type: ignore
 from flask import Flask
 from flask import render_template_string
 from starlette.applications import Starlette
@@ -56,11 +56,6 @@ def history_scholar() -> str:
     return history_base("scholar_rune", "Scholar Rune")
 
 
-@flask_app.route("/guardian_rune_history")
-def history_guardian() -> str:
-    return history_base("guardian_rune", "Guardian Rune")
-
-
 @flask_app.route("/dragonhunter_rune_history")
 def history_dragonhunter() -> str:
     return history_base("dragonhunter_rune", "Dragonhunter Rune")
@@ -69,16 +64,6 @@ def history_dragonhunter() -> str:
 @flask_app.route("/relic_of_fireworks_history")
 def history_fireworks() -> str:
     return history_base("relic_of_fireworks", "Relic of Fireworks")
-
-
-@flask_app.route("/relic_of_thief_history")
-def history_thief() -> str:
-    return history_base("relic_of_thief", "Relic of Thief")
-
-
-@flask_app.route("/relic_of_aristocracy_history")
-def history_aristocracy() -> str:
-    return history_base("relic_of_aristocracy", "Relic of Aristocracy")
 
 
 app = Starlette(
