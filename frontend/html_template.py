@@ -468,6 +468,8 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("sigil_of_impact")} }})(),
         (async () => {{ {get_all_fetch_price_html("sigil_of_doom")} }})(),
         (async () => {{ {get_all_fetch_price_html("sigil_of_torment")} }})(),
+        (async () => {{ {get_all_fetch_price_html("sigil_of_bursting")} }})(),
+        (async () => {{ {get_all_fetch_price_html("sigil_of_paralyzation")} }})(),
     ]);
 }}
 """
