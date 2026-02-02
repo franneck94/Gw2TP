@@ -418,7 +418,7 @@ def get_guardian_rune() -> JSONResponse:
             [
                 ItemIDs.GUARD_RUNE,
                 ItemIDs.PILE_OF_LUCENT_CRYSTAL,
-                ItemIDs.CHARGED_LOADSTONE,
+                ItemIDs.CHARGED_LODESTONE,
                 ItemIDs.CHARM_OF_POTENCE,
                 ItemIDs.ECTOPLASM,
             ],
@@ -427,13 +427,13 @@ def get_guardian_rune() -> JSONResponse:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
     rune_sell = fetched_data[ItemIDs.GUARD_RUNE]["sell"]
-    charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
+    charged_LODESTONE_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     crafting_cost = (
-        charged_loadstone_sell
+        charged_LODESTONE_sell
         + charm_buy
         + ecto_buy * 5.0
         + lucent_crystal_buy * 12.0
@@ -457,10 +457,10 @@ def get_dragonhunter_rune() -> JSONResponse:
             [
                 ItemIDs.GUARD_RUNE,
                 ItemIDs.DRAGONHUNTER_RUNE,
-                ItemIDs.EVERGREEN_LOADSTONE,
+                ItemIDs.EVERGREEN_LODESTONE,
                 ItemIDs.BARBED_THORN,
                 ItemIDs.PILE_OF_LUCENT_CRYSTAL,
-                ItemIDs.CHARGED_LOADSTONE,
+                ItemIDs.CHARGED_LODESTONE,
                 ItemIDs.CHARM_OF_POTENCE,
                 ItemIDs.ECTOPLASM,
             ],
@@ -469,15 +469,15 @@ def get_dragonhunter_rune() -> JSONResponse:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
     rune_sell = fetched_data[ItemIDs.DRAGONHUNTER_RUNE]["sell"]
-    charged_loadstone_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
-    evergreen_loadstone_buy = fetched_data[ItemIDs.EVERGREEN_LOADSTONE]["buy"]
+    charged_LODESTONE_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
+    evergreen_LODESTONE_buy = fetched_data[ItemIDs.EVERGREEN_LODESTONE]["buy"]
     thorns_buy = fetched_data[ItemIDs.BARBED_THORN]["buy"]
     charm_buy = fetched_data[ItemIDs.CHARM_OF_POTENCE]["buy"]
     ecto_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
     lucent_crystal_buy = fetched_data[ItemIDs.PILE_OF_LUCENT_CRYSTAL]["buy"]
 
     guardian_rune_cost = (
-        charged_loadstone_sell
+        charged_LODESTONE_sell
         + charm_buy
         + ecto_buy * 5.0
         + lucent_crystal_buy * 12.0
@@ -485,7 +485,7 @@ def get_dragonhunter_rune() -> JSONResponse:
 
     crafting_cost = (
         guardian_rune_cost * 1.0
-        + evergreen_loadstone_buy * 1.0
+        + evergreen_LODESTONE_buy * 1.0
         + thorns_buy * 10.0
     )
 
@@ -530,7 +530,6 @@ def get_relic_of_fireworks() -> JSONResponse:
     charm_buy = fetched_data[ItemIDs.CHARM_OF_SKILL]["buy"]
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     relic_sell = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["sell"]
-    relic_buy = fetched_data[ItemIDs.RELIC_OF_FIREWORKS]["buy"]
 
     crafting_cost_base = ecto_buy * 15.0 + charm_buy * 3.0
     crafting_cost, crafting_cost2 = _get_relic_profits(
@@ -547,12 +546,10 @@ def get_relic_of_fireworks() -> JSONResponse:
         crafting_cost2,
     )
     highest_profit = max(profit, profit2)
-    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
 
     data = {
         **get_sub_dct("crafting_cost", cheap_crafting_cost),
         **get_sub_dct("sell", relic_sell),
-        **get_sub_dct("flip", relic_of_fireworks_flip),
         **get_sub_dct("profit", highest_profit),
     }
 
@@ -581,7 +578,6 @@ def get_relic_of_thief() -> JSONResponse:
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     leather_buy = fetched_data[ItemIDs.CURED_HARDENED_LEATHER_SQUARE]["buy"]
     relic_sell = fetched_data[ItemIDs.RELIC_OF_THIEF]["sell"]
-    relic_buy = fetched_data[ItemIDs.RELIC_OF_THIEF]["buy"]
 
     crafting_cost_base = ecto_buy * 15.0 + charm_buy * 3.0 + leather_buy * 5.0
     crafting_cost, crafting_cost2 = _get_relic_profits(
@@ -598,12 +594,10 @@ def get_relic_of_thief() -> JSONResponse:
         crafting_cost2,
     )
     highest_profit = max(profit, profit2)
-    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
 
     data = {
         **get_sub_dct("crafting_cost", cheap_crafting_cost),
         **get_sub_dct("sell", relic_sell),
-        **get_sub_dct("flip", relic_of_fireworks_flip),
         **get_sub_dct("profit", highest_profit),
     }
 
@@ -631,7 +625,6 @@ def get_relic_of_aristocracy() -> JSONResponse:
     lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
     bottle_elonian_wine_buy = 2504.0
     relic_sell = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["sell"]
-    relic_buy = fetched_data[ItemIDs.RELIC_OF_ARISTOCRACY]["buy"]
 
     crafting_cost_base = (
         ecto_buy * 15.0 + charm_buy * 3.0 + bottle_elonian_wine_buy * 3.0
@@ -650,12 +643,10 @@ def get_relic_of_aristocracy() -> JSONResponse:
         crafting_cost2,
     )
     highest_profit = max(profit, profit2)
-    relic_of_fireworks_flip = (relic_sell * TAX_RATE) - relic_buy
 
     data = {
         **get_sub_dct("crafting_cost", cheap_crafting_cost),
         **get_sub_dct("sell", relic_sell),
-        **get_sub_dct("flip", relic_of_fireworks_flip),
         **get_sub_dct("profit", highest_profit),
     }
 
@@ -858,15 +849,15 @@ def get_charm_brilliance_forge() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/loadstone_forge")
-def get_loadstone_forge() -> JSONResponse:
+@fastapi_app.get("/LODESTONE_forge")
+def get_LODESTONE_forge() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
-                ItemIDs.ONYX_LOADSTONE,
-                ItemIDs.CHARGED_LOADSTONE,
-                ItemIDs.CORRUPTED_LOADSTONE,
-                ItemIDs.DESTROYER_LOADSTONE,
+                ItemIDs.ONYX_LODESTONE,
+                ItemIDs.CHARGED_LODESTONE,
+                ItemIDs.CORRUPTED_LODESTONE,
+                ItemIDs.DESTROYER_LODESTONE,
                 ItemIDs.CRYSTALINE_DUST,
                 ItemIDs.ONYX_CORE,
                 ItemIDs.DESTROYER_CORE,
@@ -877,10 +868,10 @@ def get_loadstone_forge() -> JSONResponse:
     except Exception as e:
         return JSONResponse(content=jsonable_encoder({"error": str(e)}))
 
-    onyx_sell = fetched_data[ItemIDs.ONYX_LOADSTONE]["buy"]
-    charged_sell = fetched_data[ItemIDs.CHARGED_LOADSTONE]["sell"]
-    corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LOADSTONE]["sell"]
-    destroyer_sell = fetched_data[ItemIDs.DESTROYER_LOADSTONE]["sell"]
+    onyx_sell = fetched_data[ItemIDs.ONYX_LODESTONE]["buy"]
+    charged_sell = fetched_data[ItemIDs.CHARGED_LODESTONE]["sell"]
+    corrupted_sell = fetched_data[ItemIDs.CORRUPTED_LODESTONE]["sell"]
+    destroyer_sell = fetched_data[ItemIDs.DESTROYER_LODESTONE]["sell"]
     crystal_dust_buy = fetched_data[ItemIDs.CRYSTALINE_DUST]["buy"]
     onyx_core_cost = fetched_data[ItemIDs.ONYX_CORE]["buy"]
     charged_core_cost = fetched_data[ItemIDs.CHARGED_CORE]["buy"]
@@ -957,13 +948,11 @@ def get_thesis_on_masterful_malice() -> JSONResponse:
     )
 
     sell = masterful_malice_data["sell"]
-    flip = (sell * TAX_RATE) - masterful_malice_buy
     profit = (sell * TAX_RATE) - crafting_cost
 
     data = {
         **get_sub_dct("crafting_cost", crafting_cost),
         **get_sub_dct("sell", sell),
-        **get_sub_dct("flip", flip),
         **get_sub_dct("profit", profit),
     }
 
@@ -1059,6 +1048,191 @@ def get_hard_leather_strap() -> JSONResponse:
         hardd_leather_section_sell * harden_leather_section_rate
     )
     data = get_strap_data(sell, strap_buy)
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/sigil_of_impact")
+def get_sigil_of_impact() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SIGIL_OF_IMPACT,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.ONYX_LODESTONE,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SYMBOL_OF_PAIN,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    sigil_of_impact = fetched_data[ItemIDs.SIGIL_OF_IMPACT]
+    ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    onyx_LODESTONE_buy = fetched_data[ItemIDs.ONYX_LODESTONE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    symbol_of_pain_buy = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["buy"]
+    crafting_cost = (
+        ectoplasm_buy * 10.0
+        + onyx_LODESTONE_buy * 1.0
+        + lucent_mote_buy * 50.0
+        + symbol_of_pain_buy * 3.0
+    )
+    sell = sigil_of_impact["sell"]
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("profit", profit),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/sigil_of_doom")
+def get_sigil_of_doom() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SIGIL_OF_DOOMM,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.MOLTEN_LODESTONE,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SYMBOL_OF_PAIN,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    sigil_of_doom = fetched_data[ItemIDs.SIGIL_OF_DOOMM]
+    ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    molten_LODESTONE_buy = fetched_data[ItemIDs.MOLTEN_LODESTONE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    symbol_of_pain_buy = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["buy"]
+    crafting_cost = (
+        ectoplasm_buy * 10.0
+        + molten_LODESTONE_buy * 1.0
+        + lucent_mote_buy * 100.0
+        + symbol_of_pain_buy * 2.0
+    )
+    sell = sigil_of_doom["sell"]
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("profit", profit),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/sigil_of_torment")
+def get_sigil_of_torment() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SIGIL_OF_TORMENT,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.PRISTINE_TOXIC_SPORE,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SYMBOL_OF_PAIN,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    sigil_of_torment = fetched_data[ItemIDs.SIGIL_OF_TORMENT]
+    ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    pristine_toxic_spore_buy = fetched_data[ItemIDs.PRISTINE_TOXIC_SPORE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    symbol_of_pain_buy = fetched_data[ItemIDs.SYMBOL_OF_PAIN]["buy"]
+    crafting_cost = (
+        ectoplasm_buy * 10.0
+        + pristine_toxic_spore_buy * 100.0
+        + lucent_mote_buy * 150.0
+        + symbol_of_pain_buy * 1.0
+    )
+    sell = sigil_of_torment["sell"]
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("profit", profit),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/sigil_of_bursting")
+def get_sigil_of_bursting() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SIGIL_OF_BURSTING,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.WATCHWORK_SPROCKET,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SYMBOL_OF_ENH,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    sigil_of_bursting = fetched_data[ItemIDs.SIGIL_OF_BURSTING]
+    ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    watchwork_sprocket_buy = fetched_data[ItemIDs.WATCHWORK_SPROCKET]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    symbol_of_enh_buy = fetched_data[ItemIDs.SYMBOL_OF_ENH]["buy"]
+    crafting_cost = (
+        ectoplasm_buy * 10.0
+        + watchwork_sprocket_buy * 250.0
+        + lucent_mote_buy * 150.0
+        + symbol_of_enh_buy * 1.0
+    )
+    sell = sigil_of_bursting["sell"]
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("profit", profit),
+    }
+    return JSONResponse(content=jsonable_encoder(data))
+
+
+@fastapi_app.get("/sigil_of_paralyzation")
+def get_sigil_of_paralyzation() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.SIGIL_OF_PARALYSIS,
+                ItemIDs.ECTOPLASM,
+                ItemIDs.ONYX_LODESTONE,
+                ItemIDs.LUCENT_MOTE,
+                ItemIDs.SYMBOL_OF_CONTROL,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    sigil_of_paralysis = fetched_data[ItemIDs.SIGIL_OF_PARALYSIS]
+    ectoplasm_buy = fetched_data[ItemIDs.ECTOPLASM]["buy"]
+    onyx_lodestone_buy = fetched_data[ItemIDs.ONYX_LODESTONE]["buy"]
+    lucent_mote_buy = fetched_data[ItemIDs.LUCENT_MOTE]["buy"]
+    symbol_of_control_buy = fetched_data[ItemIDs.SYMBOL_OF_CONTROL]["buy"]
+    crafting_cost = (
+        ectoplasm_buy * 10.0
+        + onyx_lodestone_buy * 1.0
+        + lucent_mote_buy * 150.0
+        + symbol_of_control_buy * 1.0
+    )
+    sell = sigil_of_paralysis["sell"]
+    profit = (sell * TAX_RATE) - crafting_cost
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost),
+        **get_sub_dct("sell", sell),
+        **get_sub_dct("profit", profit),
+    }
     return JSONResponse(content=jsonable_encoder(data))
 
 
