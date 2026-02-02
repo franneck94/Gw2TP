@@ -196,7 +196,7 @@ LODESTONE_NAMES = [
 ]
 LODESTONE_TABLE = get_table_html(
     price_names=LODESTONE_NAMES,
-    category_name="LODESTONE_forge",
+    category_name="lodestone_forge",
     clipboard_copy=True,
 )
 
@@ -534,7 +534,7 @@ HTML_PAGE = f"""
 
             <h3 style="text-align: center;">
                 <a href="https://fast.farming-community.eu/conversions/spirit-shard" target="_blank" style="color: inherit; text-decoration: none;">
-                    Forge LODESTONEs Profit
+                    Forge Lodestone Profit
                 </a>
             </h3>
             {LODESTONE_TABLE}
