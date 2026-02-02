@@ -47,6 +47,12 @@ class ItemIDs:
     SCHOLAR_RUNE: int = 24836
     GUARD_RUNE: int = 24824
     DRAGONHUNTER_RUNE: int = 74978
+    # Sigil
+    SIGIL_OF_IMPACT: int = 24868
+    SIGIL_OF_TORMENT: int = 48911
+    SIGIL_OF_DOOMM: int = 24609
+    SIGIL_OF_BURSTING: int = 7295
+    SIGIL_OF_PARALYSIS: int = 24639
     # Relics
     RELIC_OF_FIREWORKS: int = 100947
     RELIC_OF_ARISTOCRACY: int = 100849
@@ -58,12 +64,13 @@ class ItemIDs:
     CHARM_OF_BRILLIANCE: int = 89103
     CHARM_OF_POTENCE: int = 89258
     CHARM_OF_SKILL: int = 89216
-    # Loadstones
-    EVERGREEN_LOADSTONE: int = 68942
-    CHARGED_LOADSTONE: int = 24305
-    CORRUPTED_LOADSTONE: int = 24340
-    DESTROYER_LOADSTONE: int = 24325
-    ONYX_LOADSTONE: int = 24310
+    # LODESTONEs
+    EVERGREEN_LODESTONE: int = 68942
+    CHARGED_LODESTONE: int = 24305
+    CORRUPTED_LODESTONE: int = 24340
+    DESTROYER_LODESTONE: int = 24325
+    ONYX_LODESTONE: int = 24310
+    MOLTEN_LODESTONE: int = 24315
     # Cores
     ONYX_CORE: int = 24309
     DESTROYER_CORE: int = 24324
@@ -75,6 +82,8 @@ class ItemIDs:
     POUCH_OF_BLACK_PIGMENTS: int = 70426
     POUCH_OF_WHITE_PIGMENTS: int = 75862
     JUG_OF_WATER: int = 12156
+    PRISTINE_TOXIC_SPORE: int = 48884
+    WATCHWORK_SPROCKET: int = 44941
 
 
 class Kits:
@@ -100,6 +109,12 @@ class API:
         "relic_of_fireworks",
         "relic_of_aristocracy",
         "relic_of_thief",
+        # sigil
+        "sigil_of_impact",
+        "sigil_of_doom",
+        "sigil_of_torment",
+        "sigil_of_bursting",
+        "sigil_of_paralyzation",
         # rare / ecto
         "rare_weapon_craft",
         "rare_gear_salvage",
