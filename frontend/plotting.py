@@ -60,7 +60,7 @@ def get_date_plot(
         mean_crafting = sum(crafting_price) / len(crafting_price)
 
         traces.extend(
-            go.Scatter(
+            go.Scatter(  # type: ignore
                 x=timestamps,
                 y=[mean_sell] * len(timestamps),
                 mode="lines",
@@ -69,7 +69,7 @@ def get_date_plot(
             )
         )
         traces.extend(
-            go.Scatter(
+            go.Scatter(  # type: ignore
                 x=timestamps,
                 y=[mean_crafting] * len(timestamps),
                 mode="lines",
