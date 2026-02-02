@@ -118,6 +118,12 @@ def get_flip_table_html(item_id: int) -> str:
 ECTO_TABLE = get_flip_table_html(ItemIDs.ECTOPLASM)
 RARE_GEAR_TABLE = get_flip_table_html(ItemIDs.RARE_UNID_GEAR)
 
+CRAFT_NAMES = [
+    "crafting_cost",
+    "sell",
+    "profit",
+]
+
 RARE_GEAR_NAMES = [
     "stack_buy",
     "salvage_costs",
@@ -182,15 +188,15 @@ COMMON_GEAR_SALVAGE_TABLE = get_table_html(
     hidden_name="Common Gear",
 )
 
-LOADSTONE_NAMES = [
+LODESTONE_NAMES = [
     "onyx",
     "charged",
     "corrupted",
     "destroyer",
 ]
-LOADSTONE_TABLE = get_table_html(
-    price_names=LOADSTONE_NAMES,
-    category_name="loadstone_forge",
+LODESTONE_TABLE = get_table_html(
+    price_names=LODESTONE_NAMES,
+    category_name="LODESTONE_forge",
     clipboard_copy=True,
 )
 
@@ -227,48 +233,28 @@ DRAGONHUNTER_RUNE_TABLE = get_table_html(
     hidden_name="Dragonhunter Rune",
 )
 
-FIREWORKS_NAMES = [
-    "crafting_cost",
-    "sell",
-    "flip",
-    "profit",
-]
+FIREWORKS_NAMES = CRAFT_NAMES
 FIREWORKS_TABLE = get_table_html(
     price_names=FIREWORKS_NAMES,
     category_name="relic_of_fireworks",
     hidden_name="Relic of Fireworks",
 )
 
-THIEF_NAMES = [
-    "crafting_cost",
-    "sell",
-    "flip",
-    "profit",
-]
+THIEF_NAMES = CRAFT_NAMES
 THIEF_TABLE = get_table_html(
     price_names=FIREWORKS_NAMES,
     category_name="relic_of_thief",
     hidden_name="Relic of Thief",
 )
 
-ARISTOCRACY_NAMES = [
-    "crafting_cost",
-    "sell",
-    "flip",
-    "profit",
-]
+ARISTOCRACY_NAMES = CRAFT_NAMES
 ARISTOCRACY_TABLE = get_table_html(
     price_names=ARISTOCRACY_NAMES,
     category_name="relic_of_aristocracy",
     hidden_name="Relic of Aristocracy",
 )
 
-THESIS_NAMES = [
-    "crafting_cost",
-    "sell",
-    "flip",
-    "profit",
-]
+THESIS_NAMES = CRAFT_NAMES
 THESIS_TABLE = get_table_html(
     price_names=THESIS_NAMES,
     category_name="thesis_on_masterful_malice",
@@ -340,6 +326,41 @@ HARD_LEATHER_STRAP_TABLE = get_table_html(
     price_names=HARD_LEATHER_STRAP_NAMES,
     category_name="hard_leather_strap",
     hidden_name="Hard Leather Strap",
+)
+
+SIGIL_OF_IMPACT_NAMES = CRAFT_NAMES
+SIGIL_OF_IMPACT_TABLE = get_table_html(
+    price_names=SIGIL_OF_IMPACT_NAMES,
+    category_name="sigil_of_impact",
+    hidden_name="Sigil of Impact",
+)
+
+SIGIL_OF_TORMENT_NAMES = CRAFT_NAMES
+SIGIL_OF_TORMENT_TABLE = get_table_html(
+    price_names=SIGIL_OF_TORMENT_NAMES,
+    category_name="sigil_of_torment",
+    hidden_name="Sigil of Torment",
+)
+
+SIGIL_OF_DOOM_NAMES = CRAFT_NAMES
+SIGIL_OF_DOOM_TABLE = get_table_html(
+    price_names=SIGIL_OF_DOOM_NAMES,
+    category_name="sigil_of_doom",
+    hidden_name="Sigil of Doom",
+)
+
+SIGIL_OF_BURSTING_NAMES = CRAFT_NAMES
+SIGIL_OF_BURSTING_TABLE = get_table_html(
+    price_names=SIGIL_OF_BURSTING_NAMES,
+    category_name="sigil_of_bursting",
+    hidden_name="Sigil of Bursting",
+)
+
+SIGIL_OF_PARALYZATION_NAMES = CRAFT_NAMES
+SIGIL_OF_PARALYZATION_TABLE = get_table_html(
+    price_names=SIGIL_OF_PARALYZATION_NAMES,
+    category_name="sigil_of_paralyzation",
+    hidden_name="Sigil of Paralyzation",
 )
 
 with (FILE_DIR / "static" / "style.css").open() as f:
@@ -439,11 +460,14 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
         (async () => {{ {get_all_fetch_price_html("symbol_enh_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("charm_brilliance_forge")} }})(),
-        (async () => {{ {get_all_fetch_price_html("loadstone_forge")} }})(),
+        (async () => {{ {get_all_fetch_price_html("LODESTONE_forge")} }})(),
         (async () => {{ {get_all_fetch_price_html("thesis_on_masterful_malice")} }})(),
         (async () => {{ {get_all_fetch_price_html("thick_leather_strap")} }})(),
         (async () => {{ {get_all_fetch_price_html("rugged_leather_strap")} }})(),
         (async () => {{ {get_all_fetch_price_html("hard_leather_strap")} }})(),
+        (async () => {{ {get_all_fetch_price_html("sigil_of_impact")} }})(),
+        (async () => {{ {get_all_fetch_price_html("sigil_of_doom")} }})(),
+        (async () => {{ {get_all_fetch_price_html("sigil_of_torment")} }})(),
     ]);
 }}
 """
@@ -510,10 +534,10 @@ HTML_PAGE = f"""
 
             <h3 style="text-align: center;">
                 <a href="https://fast.farming-community.eu/conversions/spirit-shard" target="_blank" style="color: inherit; text-decoration: none;">
-                    Forge Loadstones Profit
+                    Forge LODESTONEs Profit
                 </a>
             </h3>
-            {LOADSTONE_TABLE}
+            {LODESTONE_TABLE}
 
             <h3 style="text-align: center;">
                 <a href="https://fast.farming-community.eu/conversions/spirit-shard/charm-of-brilliance" target="_blank" style="color: inherit; text-decoration: none;">
@@ -566,7 +590,6 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Superior_Rune_of_the_Guardian" target="_blank" style="color: inherit; text-decoration: none;">
                     Guardian Runes
                 </a>
-                <button onclick="window.open('guardian_rune_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {GUARDIAN_RUNE_TABLE}
 
@@ -590,7 +613,6 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Thief" target="_blank" style="color: inherit; text-decoration: none;">
                     Thief Relic
                 </a>
-                <button onclick="window.open('relic_of_thief_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {THIEF_TABLE}
 
@@ -598,7 +620,6 @@ HTML_PAGE = f"""
                 <a href="https://wiki.guildwars2.com/wiki/Relic_of_the_Aristocracy" target="_blank" style="color: inherit; text-decoration: none;">
                     Aristocracy Relic
                 </a>
-                <button onclick="window.open('relic_of_aristocracy_history', '_blank')" style="margin-left:8px;" title="History">&#128279;</button>
             </h3>
             {ARISTOCRACY_TABLE}
 
@@ -608,6 +629,42 @@ HTML_PAGE = f"""
                 </a>
             </h3>
             {HARD_LEATHER_STRAP_TABLE}
+        </div>
+        <div style="flex: 1;">
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Sigil_of_Impact" target="_blank" style="color: inherit; text-decoration: none;">
+                    Impact Sigil
+                </a>
+            </h3>
+            {SIGIL_OF_IMPACT_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Sigil_of_Doom" target="_blank" style="color: inherit; text-decoration: none;">
+                    Doom Sigil
+                </a>
+            </h3>
+            {SIGIL_OF_DOOM_TABLE}
+
+              <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Sigil_of_Torment" target="_blank" style="color: inherit; text-decoration: none;">
+                    Torment Sigil
+                </a>
+            </h3>
+            {SIGIL_OF_TORMENT_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Sigil_of_Bursting" target="_blank" style="color: inherit; text-decoration: none;">
+                    Bursting Sigil
+                </a>
+            </h3>
+            {SIGIL_OF_BURSTING_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Superior_Sigil_of_Paralyzation" target="_blank" style="color: inherit; text-decoration: none;">
+                    Paralyzation Sigil
+                </a>
+            </h3>
+            {SIGIL_OF_PARALYZATION_TABLE}
         </div>
     </div>
 </body>
