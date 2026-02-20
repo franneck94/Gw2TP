@@ -1332,4 +1332,4 @@ app = Starlette(
     middleware=middleware,
 )
 
-start_scheduler()
+# start_scheduler()
