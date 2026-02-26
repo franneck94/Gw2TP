@@ -1,0 +1,17 @@
+# Requirements for building the executable
+pyinstaller>=6.0
+setuptools
+fastapi
+uvicorn[standard]
+httpx
+aiohttp
+sqlalchemy
+pydantic
+apscheduler
+starlette
+requests
+
+# Additional requirements that might be needed for PyInstaller
+altgraph
+pywin32-ctypes
+pefile
