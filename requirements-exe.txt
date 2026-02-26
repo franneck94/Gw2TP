@@ -9,7 +9,10 @@ sqlalchemy
 pydantic
 apscheduler
 starlette
+flask
 requests
+matplotlib
+plotly
 
 # Additional requirements that might be needed for PyInstaller
 altgraph
