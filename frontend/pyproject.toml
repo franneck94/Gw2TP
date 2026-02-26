@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gw2tp_frontend"
 authors = [{ name = "Jan Schaffranek" }]
-version = "0.2.0"
+version = "2.0.0"
 description = "Utility functions for the GW2TP website and API"
 requires-python = ">=3.10"
 
