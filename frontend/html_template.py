@@ -271,6 +271,16 @@ RARE_WEAPON_CRAFT_TABLE = get_table_html(
     category_name="rare_weapon_craft",
 )
 
+RARE_WEAPON_CRAFT2_NAMES = [
+    "crafting_cost",
+    "ecto_sell_after_tax",
+    "profit",
+]
+RARE_WEAPON_CRAFT2_TABLE = get_table_html(
+    price_names=RARE_WEAPON_CRAFT2_NAMES,
+    category_name="rare_weapon_craft2",
+)
+
 FORGE_ENH_NAMES = [
     "cost",
     "profit_per_try",

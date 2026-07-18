@@ -284,6 +284,82 @@ def get_rare_weapon_craft() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
+@fastapi_app.get("/rare_weapon_craft2")
+def get_rare_weapon_craft2() -> JSONResponse:
+    try:
+        fetched_data = fetch_tp_prices(
+            [
+                ItemIDs.ECTOPLASM,
+                ItemIDs.MITHRIL_INGOT,
+                ItemIDs.MITHRIL_ORE,
+                ItemIDs.ELDER_WOOD_PLANK,
+                ItemIDs.ELDER_WOOD_LOG,
+                ItemIDs.LARGE_CLAW,
+                ItemIDs.POTENT_BLOOD,
+                ItemIDs.LARGE_BONE,
+                ItemIDs.INTRICATE_TOTEM,
+                ItemIDs.LARGE_FANG,
+                ItemIDs.POTENT_VENOM_SAC,
+            ],
+        )
+    except Exception as e:
+        return JSONResponse(content=jsonable_encoder({"error": str(e)}))
+
+    ecto_sell_after_tax = fetched_data[ItemIDs.ECTOPLASM]["sell"] * TAX_RATE
+    mithril_ore_buy = fetched_data[ItemIDs.MITHRIL_ORE]["buy"]
+    mithril_ingot_buy = fetched_data[ItemIDs.MITHRIL_INGOT]["buy"]
+    elder_wood_log_buy = fetched_data[ItemIDs.ELDER_WOOD_LOG]["buy"]
+    elder_wood_plank_buy = fetched_data[ItemIDs.ELDER_WOOD_PLANK]["buy"]
+    large_claw_buy = fetched_data[ItemIDs.LARGE_CLAW]["buy"]
+    potent_blood_buy = fetched_data[ItemIDs.POTENT_BLOOD]["buy"]
+    large_bone_buy = fetched_data[ItemIDs.LARGE_BONE]["buy"]
+    intricate_totem_buy = fetched_data[ItemIDs.INTRICATE_TOTEM]["buy"]
+    large_fang_buy = fetched_data[ItemIDs.LARGE_FANG]["buy"]
+    potent_sac_buy = fetched_data[ItemIDs.POTENT_VENOM_SAC]["buy"]
+
+    lowest_t5_mat = min(
+        large_claw_buy,
+        potent_blood_buy,
+        large_bone_buy,
+        intricate_totem_buy,
+        large_fang_buy,
+        potent_sac_buy,
+    )
+
+    crafting_cost_ingot = (
+        mithril_ingot_buy
+        if mithril_ingot_buy < 2.0 * mithril_ore_buy
+        else mithril_ore_buy * 2.0
+    )
+    crafting_cost_plank = (
+        elder_wood_plank_buy
+        if elder_wood_plank_buy < 3.0 * elder_wood_log_buy
+        else elder_wood_log_buy * 3.0
+    )
+
+    crafting_cost_trident_head = 2.0 * crafting_cost_ingot
+    crafting_cost_trident_shaft = 2.0 * crafting_cost_plank
+    crafting_cost_dowwl = 2.0 * crafting_cost_plank + 3.0 * crafting_cost_ingot
+    crafting_cost_inscr = 15.0 * lowest_t5_mat + 2.0 * crafting_cost_dowwl
+
+    crafting_cost_with_cheap_materials = (
+        crafting_cost_inscr
+        + crafting_cost_trident_head
+        + crafting_cost_trident_shaft
+    )
+    rare_gear_craft_profit = (
+        ecto_sell_after_tax * 0.9 - crafting_cost_with_cheap_materials
+    )
+
+    data = {
+        **get_sub_dct("crafting_cost", crafting_cost_with_cheap_materials),
+        **get_sub_dct("ecto_sell_after_tax", ecto_sell_after_tax),
+        **get_sub_dct("profit", rare_gear_craft_profit),
+    }
+
+    return JSONResponse(content=jsonable_encoder(data))
+
+
 @fastapi_app.get("/t5_mats_buy")
 def get_t5_mats_buy() -> JSONResponse:
     try:

@@ -117,6 +117,7 @@ class API:
         "sigil_of_paralyzation",
         # rare / ecto
         "rare_weapon_craft",
+        "rare_weapon_craft2",
         "rare_gear_salvage",
         "ecto",
         # gear
@@ -142,4 +143,5 @@ class API:
         "relic_of_thief",
         "relic_of_aristocracy",
         "rare_weapon_craft",
+        "rare_weapon_craft2",
     }
