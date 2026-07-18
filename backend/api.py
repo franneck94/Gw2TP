@@ -210,7 +210,7 @@ def get_rare_gear_salvage() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/rare_weapon_craft")
+@fastapi_app.get("/krait_shield_craft")
 def get_rare_weapon_craft() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
@@ -284,7 +284,7 @@ def get_rare_weapon_craft() -> JSONResponse:
     return JSONResponse(content=jsonable_encoder(data))
 
 
-@fastapi_app.get("/rare_weapon_craft2")
+@fastapi_app.get("/krait_trident_craft")
 def get_rare_weapon_craft2() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(

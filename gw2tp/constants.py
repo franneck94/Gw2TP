@@ -116,8 +116,8 @@ class API:
         "sigil_of_bursting",
         "sigil_of_paralyzation",
         # rare / ecto
-        "rare_weapon_craft",
-        "rare_weapon_craft2",
+        "krait_shield_craft",
+        "krait_trident_craft",
         "rare_gear_salvage",
         "ecto",
         # gear
@@ -142,6 +142,6 @@ class API:
         "relic_of_fireworks",
         "relic_of_thief",
         "relic_of_aristocracy",
-        "rare_weapon_craft",
-        "rare_weapon_craft2",
+        "krait_shield_craft",
+        "krait_trident_craft",
     }

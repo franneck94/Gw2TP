@@ -268,7 +268,7 @@ RARE_WEAPON_CRAFT_NAMES = [
 ]
 RARE_WEAPON_CRAFT_TABLE = get_table_html(
     price_names=RARE_WEAPON_CRAFT_NAMES,
-    category_name="rare_weapon_craft",
+    category_name="krait_shield_craft",
 )
 
 RARE_WEAPON_CRAFT2_NAMES = [
@@ -278,7 +278,7 @@ RARE_WEAPON_CRAFT2_NAMES = [
 ]
 RARE_WEAPON_CRAFT2_TABLE = get_table_html(
     price_names=RARE_WEAPON_CRAFT2_NAMES,
-    category_name="rare_weapon_craft2",
+    category_name="krait_trident_craft",
 )
 
 FORGE_ENH_NAMES = [
@@ -464,7 +464,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("relic_of_fireworks")} }})(),
         (async () => {{ {get_all_fetch_price_html("relic_of_thief")} }})(),
         (async () => {{ {get_all_fetch_price_html("relic_of_aristocracy")} }})(),
-        (async () => {{ {get_all_fetch_price_html("rare_weapon_craft")} }})(),
+        (async () => {{ {get_all_fetch_price_html("krait_shield_craft")} }})(),
         (async () => {{ {get_all_fetch_price_html("t5_mats_buy")} }})(),
         (async () => {{ {get_all_fetch_price_html("mats_crafting_compare")} }})(),
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
