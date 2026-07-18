@@ -261,23 +261,23 @@ THESIS_TABLE = get_table_html(
     hidden_name="Thesis on Masterful Malice",
 )
 
-RARE_WEAPON_CRAFT_NAMES = [
+KRAIT_SHIELD_CRAFT_NAMES = [
     "crafting_cost",
     "ecto_sell_after_tax",
     "profit",
 ]
-RARE_WEAPON_CRAFT_TABLE = get_table_html(
-    price_names=RARE_WEAPON_CRAFT_NAMES,
+KRAIT_SHIELD_CRAFT_TABLE = get_table_html(
+    price_names=KRAIT_SHIELD_CRAFT_NAMES,
     category_name="krait_shield_craft",
 )
 
-RARE_WEAPON_CRAFT2_NAMES = [
+KRAIT_TRIDENT_CRAFT_NAMES = [
     "crafting_cost",
     "ecto_sell_after_tax",
     "profit",
 ]
-RARE_WEAPON_CRAFT2_TABLE = get_table_html(
-    price_names=RARE_WEAPON_CRAFT2_NAMES,
+KRAIT_TRIDENT_CRAFT_TABLE = get_table_html(
+    price_names=KRAIT_TRIDENT_CRAFT_NAMES,
     category_name="krait_trident_craft",
 )
 
@@ -564,10 +564,17 @@ HTML_PAGE = f"""
 
             <h3 style="text-align: center;">
                 <a href="https://wiki.guildwars2.com/wiki/Krait_Shell" target="_blank" style="color: inherit; text-decoration: none;">
-                    Rare Weapon Craft
+                    Krait Shield Craft
                 </a>
             </h3>
-            {RARE_WEAPON_CRAFT_TABLE}
+            {KRAIT_SHIELD_CRAFT_TABLE}
+
+            <h3 style="text-align: center;">
+                <a href="https://wiki.guildwars2.com/wiki/Krait_Trident" target="_blank" style="color: inherit; text-decoration: none;">
+                    Krait Trident Craft
+                </a>
+            </h3>
+            {KRAIT_TRIDENT_CRAFT_TABLE}
 
             <h3 style="text-align: center;">Mats Crafting Compare</h3>
             {MATS_CRAFTING_COMPARE_TABLE}

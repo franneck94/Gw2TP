@@ -26,11 +26,11 @@ echo Building executable with PyInstaller...
 pyinstaller backend.spec
 
 REM Check if build was successful
-if exist "dist\gw2tp-backend.exe" (
+if exist "dist\GW2TP_Python.exe" (
     echo.
     echo ===================================
     echo Build completed successfully!
-    echo Executable location: dist\gw2tp-backend.exe
+    echo Executable location: dist\GW2TP_Python.exe
     echo ===================================
     echo.
     echo You can now distribute the contents of the 'dist' folder to users.
@@ -41,6 +41,9 @@ if exist "dist\gw2tp-backend.exe" (
     echo Build failed! Check the output above for errors.
     echo ===================================
 )
+
+REM Copy to D:\GW2\addons\GW2TP
+xcopy /E /I dist D:\GW2\addons\GW2TP
 
 echo.
 pause

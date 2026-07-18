@@ -211,7 +211,7 @@ def get_rare_gear_salvage() -> JSONResponse:
 
 
 @fastapi_app.get("/krait_shield_craft")
-def get_rare_weapon_craft() -> JSONResponse:
+def get_krait_shield_craft() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
@@ -285,7 +285,7 @@ def get_rare_weapon_craft() -> JSONResponse:
 
 
 @fastapi_app.get("/krait_trident_craft")
-def get_rare_weapon_craft2() -> JSONResponse:
+def get_krait_trident_craft() -> JSONResponse:
     try:
         fetched_data = fetch_tp_prices(
             [
