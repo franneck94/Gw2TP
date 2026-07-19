@@ -6,6 +6,7 @@ api_token.py
 *.pdb
 index.html
 data.db
+!backend.spec
 
 ################################
 ########### FOLDERS ############

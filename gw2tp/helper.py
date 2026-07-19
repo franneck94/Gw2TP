@@ -15,9 +15,7 @@ def is_running_on_railway() -> bool:
 def host_url() -> str:
     uses_server = is_running_on_railway()
     logger.debug(f"Running on Railway: {uses_server}")
-    # if uses_server:
-    return API.PRODUCTION_API_URL
-    # return API.DEV_API_URL
+    return API.DEV_API_URL
 
 
 def copper_to_gsc(

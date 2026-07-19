@@ -465,6 +465,7 @@ async function _fetchPrices() {{
         (async () => {{ {get_all_fetch_price_html("relic_of_thief")} }})(),
         (async () => {{ {get_all_fetch_price_html("relic_of_aristocracy")} }})(),
         (async () => {{ {get_all_fetch_price_html("krait_shield_craft")} }})(),
+        (async () => {{ {get_all_fetch_price_html("krait_trident_craft")} }})(),
         (async () => {{ {get_all_fetch_price_html("t5_mats_buy")} }})(),
         (async () => {{ {get_all_fetch_price_html("mats_crafting_compare")} }})(),
         (async () => {{ {get_all_fetch_price_html("common_gear_salvage")} }})(),
